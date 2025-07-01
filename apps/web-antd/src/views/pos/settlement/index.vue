@@ -123,6 +123,63 @@ const paymentInfo = reactive<PaymentInfo>({
   change: 0
 });
 
+// 掛單相關數據
+const heldOrdersModalVisible = ref(false);
+const heldOrdersLoading = ref(false);
+const heldOrdersPagination = reactive({
+  current: 1,
+  pageSize: 10,
+  total: 0,
+  showSizeChanger: true,
+  showQuickJumper: true,
+  showTotal: (total: number) => `共 ${total} 條記錄`
+});
+
+// 模擬掛單數據
+const mockHeldOrders = ref([
+  {
+    id: '1',
+    location: 'store1',
+    documentNumber: 'POS20240101001',
+    productName: '澳門基本法',
+    saleDate: '2024-01-01',
+    salesPersonId: 'SP001',
+    quantity: 2,
+    unitPrice: 25.00,
+    totalAmount: 50.00,
+    status: 'pending',
+    paymentType: 'cash'
+  },
+  {
+    id: '2',
+    location: 'store2',
+    documentNumber: 'POS20240101002',
+    productName: '公共行政概論',
+    saleDate: '2024-01-01',
+    salesPersonId: 'SP002',
+    quantity: 1,
+    unitPrice: 45.00,
+    totalAmount: 45.00,
+    status: 'pending',
+    paymentType: 'electronic'
+  },
+  {
+    id: '3',
+    location: 'online',
+    documentNumber: 'POS20240102001',
+    productName: '澳門經濟發展報告',
+    saleDate: '2024-01-02',
+    salesPersonId: 'SP001',
+    quantity: 3,
+    unitPrice: 35.00,
+    totalAmount: 105.00,
+    status: 'pending',
+    paymentType: 'cash'
+  }
+]);
+
+const heldOrders = ref([...mockHeldOrders.value]);
+
 // 計算屬性
 const filteredProducts = computed(() => {
   let result = mockProducts;
@@ -282,8 +339,146 @@ function getCategoryLabel(category: ProductCategory) {
   return $t(`pos.categories.${category}`);
 }
 
+// 掛單相關方法
+function showHeldOrdersModal() {
+  heldOrdersModalVisible.value = true;
+  loadHeldOrders();
+}
+
+function loadHeldOrders() {
+  heldOrdersLoading.value = true;
+  
+  // 模擬API調用
+  setTimeout(() => {
+    heldOrders.value = [...mockHeldOrders.value];
+    heldOrdersPagination.total = heldOrders.value.length;
+    heldOrdersLoading.value = false;
+  }, 500);
+}
+
+function handleHeldOrderSettle(record: any) {
+  Modal.confirm({
+    title: '確認結算',
+    content: `確定要結算單據 ${record.documentNumber} 嗎？`,
+    onOk() {
+      // 打開支付界面
+      paymentInfo.amount = record.totalAmount;
+      paymentInfo.received = record.totalAmount;
+      paymentInfo.change = 0;
+      paymentModalVisible.value = true;
+      
+      // 關閉掛單模態框
+      heldOrdersModalVisible.value = false;
+      
+      message.success(`正在為單據 ${record.documentNumber} 進行結算`);
+    }
+  });
+}
+
+function getLocationText(location: string) {
+  const locationMap: Record<string, string> = {
+    'store1': $t('pos.salesRecords.locationOptions.store1'),
+    'store2': $t('pos.salesRecords.locationOptions.store2'),
+    'online': $t('pos.salesRecords.locationOptions.online')
+  };
+  return locationMap[location] || location;
+}
+
+function getPaymentTypeText(paymentType: string) {
+  const paymentTypeMap: Record<string, string> = {
+    'cash': $t('pos.salesRecords.paymentTypeOptions.cash'),
+    'electronic': $t('pos.salesRecords.paymentTypeOptions.electronic')
+  };
+  return paymentTypeMap[paymentType] || paymentType;
+}
+
+function handleHeldOrdersTableChange(pagination: any) {
+  heldOrdersPagination.current = pagination.current;
+  heldOrdersPagination.pageSize = pagination.pageSize;
+  loadHeldOrders();
+}
+
+// 掛單列表表格列定義
+const heldOrdersColumns = [
+  {
+    title: $t('pos.heldOrders.location'),
+    dataIndex: 'location',
+    key: 'location',
+    width: 120,
+    customRender: ({ text }: { text: string }) => getLocationText(text)
+  },
+  {
+    title: $t('pos.heldOrders.documentNumber'),
+    dataIndex: 'documentNumber',
+    key: 'documentNumber',
+    width: 150
+  },
+  {
+    title: $t('pos.heldOrders.productName'),
+    dataIndex: 'productName',
+    key: 'productName',
+    width: 200
+  },
+  {
+    title: $t('pos.heldOrders.saleDate'),
+    dataIndex: 'saleDate',
+    key: 'saleDate',
+    width: 120
+  },
+  {
+    title: $t('pos.heldOrders.salesPersonId'),
+    dataIndex: 'salesPersonId',
+    key: 'salesPersonId',
+    width: 120
+  },
+  {
+    title: $t('pos.heldOrders.quantity'),
+    dataIndex: 'quantity',
+    key: 'quantity',
+    width: 80,
+    align: 'center'
+  },
+  {
+    title: $t('pos.heldOrders.unitPrice'),
+    dataIndex: 'unitPrice',
+    key: 'unitPrice',
+    width: 100,
+    align: 'right',
+    customRender: ({ text }: { text: number }) => `$${text.toFixed(2)}`
+  },
+  {
+    title: $t('pos.heldOrders.totalAmount'),
+    dataIndex: 'totalAmount',
+    key: 'totalAmount',
+    width: 120,
+    align: 'right',
+    customRender: ({ text }: { text: number }) => `$${text.toFixed(2)}`
+  },
+  {
+    title: $t('pos.heldOrders.status'),
+    dataIndex: 'status',
+    key: 'status',
+    width: 100,
+    customRender: ({ text }: { text: string }) => $t(`pos.salesRecords.statusOptions.${text}`)
+  },
+  {
+    title: $t('pos.heldOrders.paymentType'),
+    dataIndex: 'paymentType',
+    key: 'paymentType',
+    width: 120,
+    customRender: ({ text }: { text: string }) => getPaymentTypeText(text)
+  },
+  {
+    title: $t('pos.heldOrders.operation'),
+    key: 'operation',
+    width: 100,
+    align: 'center'
+  }
+];
+
 onMounted(() => {
   // 組件掛載時的初始化邏輯
+  heldOrdersPagination.total = mockHeldOrders.value.length;
 });
 </script>
 
@@ -379,6 +574,16 @@ onMounted(() => {
                     </Button>
                   </Col>
                 </Row>
+                
+                <!-- 查看掛單按鈕 -->
+                <Button 
+                  block 
+                  size="large"
+                  @click="showHeldOrdersModal"
+                >
+                  <span class="icon-[lucide--list] mr-2"></span>
+                  {{ $t('pos.actions.viewHeldOrders') }}
+                </Button>
               </div>
             </div>
           </Card>
@@ -539,6 +744,56 @@ onMounted(() => {
           </Row>
         </div>
       </div>
+    </Modal>
+
+    <!-- 掛單列表模態框 -->
+    <Modal
+      v-model:open="heldOrdersModalVisible"
+      :title="$t('pos.heldOrders.title')"
+      width="1200px"
+      :footer="null"
+      :destroyOnClose="true"
+    >
+      <div class="held-orders-content">
+        <Table
+          :columns="heldOrdersColumns"
+          :dataSource="heldOrders"
+          :loading="heldOrdersLoading"
+          :pagination="{
+            current: heldOrdersPagination.current,
+            pageSize: heldOrdersPagination.pageSize,
+            total: heldOrdersPagination.total,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total, range) => `第 ${range[0]}-${range[1]} 條，共 ${total} 條記錄`
+          }"
+          :scroll="{ x: 1000 }"
+          rowKey="id"
+          @change="handleHeldOrdersTableChange"
+        >
+          <template #bodyCell="{ column, record }">
+            <template v-if="column.key === 'operation'">
+              <Space>
+                <Button 
+                  type="primary" 
+                  size="small" 
+                  @click="handleHeldOrderSettle(record)"
+                >
+                  {{ $t('pos.heldOrders.settle') }}
+                </Button>
+              </Space>
+            </template>
+          </template>
+        </Table>
+      </div>
+      
+      <template #footer>
+        <div class="flex justify-end">
+          <Button @click="heldOrdersModalVisible = false">
+            {{ $t('pos.heldOrders.close') }}
+          </Button>
+        </div>
+      </template>
     </Modal>
   </Page>
 </template>

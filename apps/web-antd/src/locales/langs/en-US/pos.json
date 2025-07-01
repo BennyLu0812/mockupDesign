@@ -71,7 +71,8 @@
     "checkout": "Checkout",
     "hold": "Hold",
     "cancel": "Cancel",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "viewHeldOrders": "View Held Orders"
   },
   "payment": {
     "title": "Payment",
@@ -132,6 +133,22 @@
       "title": "Sales Record Details",
       "close": "Close"
     }
+  },
+  "heldOrders": {
+    "title": "Held Orders List",
+    "location": "Sales Location",
+    "documentNumber": "Sales Document Number",
+    "productName": "Product Name",
+    "saleDate": "Sale Date",
+    "salesPersonId": "Salesperson ID",
+    "quantity": "Quantity Sold",
+    "unitPrice": "Unit Price",
+    "totalAmount": "Total Amount",
+    "status": "Sales Status",
+    "paymentType": "Payment Type",
+    "operation": "Operation",
+    "settle": "Settle",
+    "close": "Close"
   },
   "inventory": {
     "title": "Inventory Query",
