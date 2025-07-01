@@ -30,6 +30,15 @@ const routes: RouteRecordRaw[] = [
           title: $t('page.pos.salesRecords'),
         },
       },
+      {
+        name: 'Inventory',
+        path: '/inventory',
+        component: () => import('#/views/pos/inventory/index.vue'),
+        meta: {
+          icon: 'lucide:package',
+          title: $t('page.pos.inventory'),
+        },
+      },
     ],
   },
 ];

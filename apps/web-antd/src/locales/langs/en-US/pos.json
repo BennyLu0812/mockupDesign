@@ -102,5 +102,26 @@
       "title": "Sales Record Details",
       "close": "Close"
     }
+  },
+  "inventory": {
+    "title": "Inventory Query",
+    "location": "Sales Location",
+    "productCode": "Product Code",
+    "productName": "Product Name",
+    "printDate": "Print Date",
+    "stockInTime": "Stock In Time",
+    "stockQuantity": "Stock Quantity",
+    "search": "Search",
+    "reset": "Reset",
+    "filters": {
+      "location": "Filter by Sales Location",
+      "productCode": "Product Code",
+      "productName": "Product Name"
+    },
+    "locationOptions": {
+      "store1": "Physical Store 1",
+      "store2": "Physical Store 2",
+      "online": "Online Sales"
+    }
   }
 }

@@ -102,5 +102,26 @@
       "title": "銷售記録詳情",
       "close": "關閉"
     }
+  },
+  "inventory": {
+    "title": "庫存查詢",
+    "location": "銷售地點",
+    "productCode": "印刷品編碼",
+    "productName": "印刷品名稱",
+    "printDate": "印刷日期",
+    "stockInTime": "入庫時間",
+    "stockQuantity": "庫存數量",
+    "search": "搜索",
+    "reset": "重置",
+    "filters": {
+      "location": "按銷售地點篩選",
+      "productCode": "印刷品編碼",
+      "productName": "印刷品名稱"
+    },
+    "locationOptions": {
+      "store1": "實體店1",
+      "store2": "實體店2",
+      "online": "網上銷售"
+    }
   }
 }

@@ -170,4 +170,36 @@ export interface SalesRecordSearchParams {
   pageSize?: number;
 }
 
+/** 庫存記録 */
+export interface InventoryRecord {
+  /** 記録ID */
+  id: string;
+  /** 銷售地點 */
+  location: SalesLocation;
+  /** 印刷品編碼 */
+  productCode: string;
+  /** 印刷品名稱 */
+  productName: string;
+  /** 印刷日期 */
+  printDate: string;
+  /** 入庫時間 */
+  stockInTime: string;
+  /** 庫存數量 */
+  stockQuantity: number;
+}
+
+/** 庫存查詢搜索條件 */
+export interface InventorySearchParams {
+  /** 銷售地點 */
+  location?: SalesLocation;
+  /** 印刷品編碼 */
+  productCode?: string;
+  /** 印刷品名稱 */
+  productName?: string;
+  /** 頁碼 */
+  page?: number;
+  /** 每頁數量 */
+  pageSize?: number;
+}
+
 export type { };
