@@ -15,6 +15,7 @@
     "title": "Point of Sale (POS)",
     "settlement": "Settlement",
     "salesRecords": "Sales Records Query",
-    "inventory": "Inventory Query"
+    "inventory": "Inventory Query",
+    "manuscriptReceiving": "Manuscript Receiving"
   }
 }

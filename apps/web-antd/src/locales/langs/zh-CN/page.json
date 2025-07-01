@@ -15,6 +15,7 @@
     "title": "前台銷售(POS)",
     "settlement": "結賬",
     "salesRecords": "銷售單據記録查詢",
-    "inventory": "庫存查詢"
+    "inventory": "庫存查詢",
+    "manuscriptReceiving": "接收稿件"
   }
 }

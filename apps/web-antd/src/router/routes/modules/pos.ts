@@ -39,6 +39,15 @@ const routes: RouteRecordRaw[] = [
           title: $t('page.pos.inventory'),
         },
       },
+      {
+        name: 'ManuscriptReceiving',
+        path: '/manuscript-receiving',
+        component: () => import('#/views/pos/manuscript-receiving/index.vue'),
+        meta: {
+          icon: 'lucide:file-plus',
+          title: $t('page.pos.manuscriptReceiving'),
+        },
+      },
     ],
   },
 ];

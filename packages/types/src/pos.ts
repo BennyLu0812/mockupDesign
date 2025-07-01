@@ -202,4 +202,59 @@ export interface InventorySearchParams {
   pageSize?: number;
 }
 
+/** 金額類型 */
+export type AmountType = 'pricing' | 'deposit';
+
+/** 接收稿件記録 */
+export interface ManuscriptRecord {
+  /** 記録ID */
+  id: string;
+  /** 編號 */
+  number: string;
+  /** 接收時間 */
+  receiveTime: string;
+  /** 接收人名稱 */
+  receiverName: string;
+  /** 上傳人 */
+  uploader: string;
+  /** 稿件名稱 */
+  manuscriptName: string;
+  /** 金額類型 */
+  amountType: AmountType;
+  /** 金額 */
+  amount: number;
+  /** 文件名 */
+  fileName?: string;
+}
+
+/** 接收稿件搜索條件 */
+export interface ManuscriptSearchParams {
+  /** 稿件名稱 */
+  manuscriptName?: string;
+  /** 接收時間範圍 - 開始日期 */
+  startDate?: string;
+  /** 接收時間範圍 - 結束日期 */
+  endDate?: string;
+  /** 頁碼 */
+  page?: number;
+  /** 每頁數量 */
+  pageSize?: number;
+}
+
+/** 接收稿件表單 */
+export interface ManuscriptReceiveForm {
+  /** 接收人名稱 */
+  receiverName: string;
+  /** 上傳人 */
+  uploader: string;
+  /** 稿件名稱 */
+  manuscriptName: string;
+  /** 金額類型 */
+  amountType: AmountType;
+  /** 金額 */
+  amount: number;
+  /** 上傳的文件 */
+  file: File | null;
+}
+
 export type { };

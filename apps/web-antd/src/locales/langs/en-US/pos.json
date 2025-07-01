@@ -123,5 +123,67 @@
       "store2": "Physical Store 2",
       "online": "Online Sales"
     }
+  },
+  "manuscriptReceiving": {
+    "title": "Manuscript Receiving",
+    "list": {
+      "title": "Manuscript Receiving List",
+      "number": "Number",
+      "receiveTime": "Receive Time",
+      "receiverName": "Receiver Name",
+      "uploader": "Uploader",
+      "manuscriptName": "Manuscript Name",
+      "amountType": "Amount Type",
+      "amount": "Amount",
+      "operation": "Operation",
+      "download": "Download",
+      "edit": "Edit",
+      "delete": "Delete",
+      "search": "Search",
+      "reset": "Reset",
+      "receiveManuscript": "Receive Manuscript"
+    },
+    "amountTypes": {
+      "pricing": "Pricing",
+      "deposit": "Deposit"
+    },
+    "filters": {
+      "manuscriptName": "Manuscript Name",
+      "receiveTimeRange": "Receive Time Range"
+    },
+    "editModal": {
+      "title": "Edit Manuscript",
+      "amountType": "Amount Type",
+      "amount": "Amount (MOP)",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "receiveModal": {
+      "title": "Receive Manuscript",
+      "upload": "Upload Manuscript",
+      "uploadTip": "Click or drag file to this area to upload",
+      "uploadDescription": "Support single file upload",
+      "autoCalculate": "Auto Calculate",
+      "manualInput": "Manual Input",
+      "pricingAmount": "Pricing Amount (MOP)",
+      "depositAmount": "Deposit Amount (MOP)",
+      "generateReceipt": "Generate Receipt",
+      "temporaryReceipt": "Temporary Receipt",
+      "cancel": "Cancel",
+      "receiverName": "Receiver Name",
+      "uploader": "Uploader",
+      "manuscriptName": "Manuscript Name"
+    },
+    "messages": {
+      "uploadSuccess": "File uploaded successfully",
+      "deleteConfirm": "Are you sure to delete this manuscript?",
+      "deleteSuccess": "Deleted successfully",
+      "editSuccess": "Edited successfully",
+      "receiveSuccess": "Manuscript received successfully",
+      "pleaseUploadFile": "Please upload file first",
+      "pleaseInputAmount": "Please input amount",
+      "pleaseInputReceiverName": "Please input receiver name",
+      "pleaseInputUploader": "Please input uploader"
+    }
   }
 }
