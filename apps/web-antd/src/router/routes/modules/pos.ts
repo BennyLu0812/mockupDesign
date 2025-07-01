@@ -21,6 +21,15 @@ const routes: RouteRecordRaw[] = [
           title: $t('page.pos.settlement'),
         },
       },
+      {
+        name: 'SalesRecords',
+        path: '/sales-records',
+        component: () => import('#/views/pos/sales-records/index.vue'),
+        meta: {
+          icon: 'lucide:file-text',
+          title: $t('page.pos.salesRecords'),
+        },
+      },
     ],
   },
 ];

@@ -13,6 +13,7 @@
   },
   "pos": {
     "title": "Point of Sale (POS)",
-    "settlement": "Settlement"
+    "settlement": "Settlement",
+    "salesRecords": "Sales Records Query"
   }
 }

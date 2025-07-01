@@ -45,15 +45,62 @@
     "confirm": "確認"
   },
   "payment": {
-    "title": "支付方式",
+    "title": "支付",
     "cash": "現金結算",
     "electronic": "電子支付",
-    "govPay": "政付通平台",
-    "bankPay": "銀行智慧支付",
+    "governmentPay": "政付通平台",
+    "bankSmart": "銀行智慧支付",
     "creditCard": "信用卡支付",
     "other": "其他",
-    "amount": "支付金額",
+    "amount": "應付金額",
     "received": "實收金額",
     "change": "找零"
+  },
+  "salesRecords": {
+    "title": "銷售單據記録查詢",
+    "location": "銷售地點",
+    "documentNumber": "銷售單據編號",
+    "productName": "銷售印刷品名稱",
+    "saleDate": "銷售日期",
+    "salesPersonId": "銷售員編號",
+    "quantity": "銷售數量",
+    "unitPrice": "銷售單價",
+    "totalAmount": "銷售總金額",
+    "status": "銷售狀態",
+    "paymentType": "結算類型",
+    "search": "搜索",
+    "reset": "重置",
+    "detail": "詳情",
+    "invoice": "開發票",
+    "receipt": "開收據",
+    "tempReceipt": "開臨時收據",
+    "deliveryNote": "開送貨單",
+    "quotation": "開報價單",
+    "statusOptions": {
+      "pending": "掛單",
+      "settled": "已結算",
+      "settling": "結算中",
+      "refunded": "已退款"
+    },
+    "paymentTypeOptions": {
+      "cash": "現金結算",
+      "electronic": "電子支付"
+    },
+    "locationOptions": {
+      "store1": "實體店1",
+      "store2": "實體店2",
+      "online": "網上銷售"
+    },
+    "filters": {
+      "location": "按銷售地點篩選",
+      "dateRange": "銷售日期範圍",
+      "status": "按銷售狀態篩選",
+      "salesPersonId": "銷售員編號",
+      "productName": "印刷品名稱"
+    },
+    "detailModal": {
+      "title": "銷售記録詳情",
+      "close": "關閉"
+    }
   }
 }

@@ -115,4 +115,59 @@ export interface PageResult<T> {
   pageSize: number;
 }
 
+/** 銷售狀態 */
+export type SalesStatus = 'pending' | 'settled' | 'settling' | 'refunded';
+
+/** 結算類型 */
+export type SettlementType = 'cash' | 'electronic';
+
+/** 銷售地點 */
+export type SalesLocation = 'store1' | 'store2' | 'online';
+
+/** 銷售記録 */
+export interface SalesRecord {
+  /** 記録ID */
+  id: string;
+  /** 銷售地點 */
+  location: SalesLocation;
+  /** 銷售單據編號 */
+  documentNumber: string;
+  /** 銷售印刷品名稱 */
+  productName: string;
+  /** 銷售日期 */
+  saleDate: string;
+  /** 銷售員編號 */
+  salesPersonId: string;
+  /** 銷售數量 */
+  quantity: number;
+  /** 銷售單價 */
+  unitPrice: number;
+  /** 銷售總金額 */
+  totalAmount: number;
+  /** 銷售狀態 */
+  status: SalesStatus;
+  /** 結算類型 */
+  paymentType: SettlementType;
+}
+
+/** 銷售記録搜索條件 */
+export interface SalesRecordSearchParams {
+  /** 銷售地點 */
+  location?: SalesLocation;
+  /** 銷售日期範圍 - 開始日期 */
+  startDate?: string;
+  /** 銷售日期範圍 - 結束日期 */
+  endDate?: string;
+  /** 銷售狀態 */
+  status?: SalesStatus;
+  /** 銷售員編號 */
+  salesPersonId?: string;
+  /** 印刷品名稱 */
+  productName?: string;
+  /** 頁碼 */
+  page?: number;
+  /** 每頁數量 */
+  pageSize?: number;
+}
+
 export type { };

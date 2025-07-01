@@ -45,15 +45,62 @@
     "confirm": "Confirm"
   },
   "payment": {
-    "title": "Payment Method",
-    "cash": "Cash Payment",
+    "title": "Payment",
+    "cash": "Cash Settlement",
     "electronic": "Electronic Payment",
-    "govPay": "Government Payment Platform",
-    "bankPay": "Bank Smart Payment",
+    "governmentPay": "Government Payment Platform",
+    "bankSmart": "Bank Smart Payment",
     "creditCard": "Credit Card Payment",
     "other": "Other",
-    "amount": "Payment Amount",
+    "amount": "Amount Due",
     "received": "Amount Received",
     "change": "Change"
+  },
+  "salesRecords": {
+    "title": "Sales Records Query",
+    "location": "Sales Location",
+    "documentNumber": "Sales Document Number",
+    "productName": "Product Name",
+    "saleDate": "Sale Date",
+    "salesPersonId": "Salesperson ID",
+    "quantity": "Quantity Sold",
+    "unitPrice": "Unit Price",
+    "totalAmount": "Total Amount",
+    "status": "Sales Status",
+    "paymentType": "Payment Type",
+    "search": "Search",
+    "reset": "Reset",
+    "detail": "Detail",
+    "invoice": "Issue Invoice",
+    "receipt": "Issue Receipt",
+    "tempReceipt": "Issue Temp Receipt",
+    "deliveryNote": "Issue Delivery Note",
+    "quotation": "Issue Quotation",
+    "statusOptions": {
+      "pending": "Pending",
+      "settled": "Settled",
+      "settling": "Settling",
+      "refunded": "Refunded"
+    },
+    "paymentTypeOptions": {
+      "cash": "Cash Settlement",
+      "electronic": "Electronic Payment"
+    },
+    "locationOptions": {
+      "store1": "Physical Store 1",
+      "store2": "Physical Store 2",
+      "online": "Online Sales"
+    },
+    "filters": {
+      "location": "Filter by Sales Location",
+      "dateRange": "Sale Date Range",
+      "status": "Filter by Sales Status",
+      "salesPersonId": "Salesperson ID",
+      "productName": "Product Name"
+    },
+    "detailModal": {
+      "title": "Sales Record Details",
+      "close": "Close"
+    }
   }
 }
