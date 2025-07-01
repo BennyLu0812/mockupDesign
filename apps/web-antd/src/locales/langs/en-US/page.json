@@ -13,6 +13,7 @@
   },
   "pos": {
     "title": "Point of Sale (POS)",
+    "login": "Login Interface",
     "settlement": "Settlement",
     "salesRecords": "Sales Records Query",
     "inventory": "Inventory Query",

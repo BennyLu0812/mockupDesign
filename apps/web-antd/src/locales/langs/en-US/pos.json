@@ -1,5 +1,34 @@
 {
   "title": "Point of Sale (POS)",
+  "login": {
+    "title": "Login Interface",
+    "username": "Username",
+    "password": "Password",
+    "loginButton": "Login",
+    "usernamePlaceholder": "Please enter username",
+    "passwordPlaceholder": "Please enter password",
+    "cashBoxSetup": {
+      "title": "Cash Box Setup",
+      "salesLocation": "Sales Location",
+      "cashBox": "Cash Box",
+      "cashAmount": "Cash Amount",
+      "salesLocationPlaceholder": "Please select sales location",
+      "cashBoxPlaceholder": "Please select cash box",
+      "cashAmountPlaceholder": "Please enter cash amount",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "salesLocationOptions": {
+        "store1": "Store 1",
+        "store2": "Store 2",
+        "store3": "Store 3"
+      },
+      "cashBoxOptions": {
+        "box1": "Cash Box 1",
+        "box2": "Cash Box 2",
+        "box3": "Cash Box 3"
+      }
+    }
+  },
   "settlement": "Settlement",
   "cart": {
     "title": "Shopping Cart",

@@ -13,6 +13,15 @@ const routes: RouteRecordRaw[] = [
     path: '/pos',
     children: [
       {
+        name: 'PosLogin',
+        path: '/login',
+        component: () => import('#/views/pos/login/index.vue'),
+        meta: {
+          icon: 'lucide:log-in',
+          title: $t('page.pos.login'),
+        },
+      },
+      {
         name: 'Settlement',
         path: '/settlement',
         component: () => import('#/views/pos/settlement/index.vue'),

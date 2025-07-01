@@ -1,5 +1,34 @@
 {
   "title": "前台銷售(POS)",
+  "login": {
+    "title": "登陸界面",
+    "username": "用戶名",
+    "password": "密碼",
+    "loginButton": "登陸",
+    "usernamePlaceholder": "請輸入用戶名",
+    "passwordPlaceholder": "請輸入密碼",
+    "cashBoxSetup": {
+      "title": "銀錢箱設置",
+      "salesLocation": "銷售地",
+      "cashBox": "銀錢箱",
+      "cashAmount": "現金金額",
+      "salesLocationPlaceholder": "請選擇銷售地",
+      "cashBoxPlaceholder": "請選擇銀錢箱",
+      "cashAmountPlaceholder": "請填寫現金金額",
+      "confirm": "確認",
+      "cancel": "取消",
+      "salesLocationOptions": {
+        "store1": "實體店1",
+        "store2": "實體店2",
+        "store3": "實體店3"
+      },
+      "cashBoxOptions": {
+        "box1": "銀錢箱1",
+        "box2": "銀錢箱2",
+        "box3": "銀錢箱3"
+      }
+    }
+  },
   "settlement": "結賬",
   "cart": {
     "title": "購物車",
