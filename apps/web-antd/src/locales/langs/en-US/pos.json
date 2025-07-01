@@ -1,0 +1,59 @@
+{
+  "title": "Point of Sale (POS)",
+  "settlement": "Settlement",
+  "cart": {
+    "title": "Shopping Cart",
+    "productName": "Product Name",
+    "price": "Price",
+    "quantity": "Quantity",
+    "total": "Subtotal",
+    "empty": "Cart is empty",
+    "remove": "Remove",
+    "clear": "Clear",
+    "totalAmount": "Total"
+  },
+  "products": {
+    "title": "Publications Display",
+    "search": "Search",
+    "searchPlaceholder": "Enter product name or code",
+    "category": "Category",
+    "allCategories": "All Categories",
+    "addToCart": "Add to Cart",
+    "chineseName": "Chinese Name",
+    "portugueseName": "Portuguese Name",
+    "publisher": "Publisher",
+    "publishDate": "Publish Date",
+    "language": "Language",
+    "price": "Price",
+    "code": "Code"
+  },
+  "categories": {
+    "law": "Law",
+    "politics": "Politics & Public Administration",
+    "economy": "Economy",
+    "education": "Education",
+    "history": "History & Culture",
+    "literature": "Literature",
+    "art": "Art",
+    "science": "Science",
+    "comprehensive": "Comprehensive"
+  },
+  "actions": {
+    "checkout": "Checkout",
+    "hold": "Hold",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "payment": {
+    "title": "Payment Method",
+    "cash": "Cash Payment",
+    "electronic": "Electronic Payment",
+    "govPay": "Government Payment Platform",
+    "bankPay": "Bank Smart Payment",
+    "creditCard": "Credit Card Payment",
+    "other": "Other",
+    "amount": "Payment Amount",
+    "received": "Amount Received",
+    "change": "Change"
+  }
+}

@@ -10,5 +10,9 @@
     "title": "Dashboard",
     "analytics": "Analytics",
     "workspace": "Workspace"
+  },
+  "pos": {
+    "title": "Point of Sale (POS)",
+    "settlement": "Settlement"
   }
 }

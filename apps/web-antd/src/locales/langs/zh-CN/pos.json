@@ -1,0 +1,59 @@
+{
+  "title": "前台銷售(POS)",
+  "settlement": "結賬",
+  "cart": {
+    "title": "購物車",
+    "productName": "商品名稱",
+    "price": "單價",
+    "quantity": "數量",
+    "total": "小計",
+    "empty": "購物車為空",
+    "remove": "移除",
+    "clear": "清空",
+    "totalAmount": "總計"
+  },
+  "products": {
+    "title": "印刷品展示",
+    "search": "搜索",
+    "searchPlaceholder": "請輸入商品名稱或編碼",
+    "category": "分類",
+    "allCategories": "全部分類",
+    "addToCart": "加入購物車",
+    "chineseName": "中文名稱",
+    "portugueseName": "葡文名稱",
+    "publisher": "出版機構",
+    "publishDate": "出版日期",
+    "language": "語言",
+    "price": "單價",
+    "code": "編碼"
+  },
+  "categories": {
+    "law": "法律",
+    "politics": "政治及公共行政",
+    "economy": "經濟",
+    "education": "教育",
+    "history": "歷史文化",
+    "literature": "文學",
+    "art": "藝術",
+    "science": "科學",
+    "comprehensive": "綜合"
+  },
+  "actions": {
+    "checkout": "結算",
+    "hold": "掛單",
+    "cancel": "取消",
+    "confirm": "確認"
+  },
+  "payment": {
+    "title": "支付方式",
+    "cash": "現金結算",
+    "electronic": "電子支付",
+    "govPay": "政付通平台",
+    "bankPay": "銀行智慧支付",
+    "creditCard": "信用卡支付",
+    "other": "其他",
+    "amount": "支付金額",
+    "received": "實收金額",
+    "change": "找零"
+  }
+}
