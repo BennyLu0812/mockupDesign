@@ -267,6 +267,7 @@
       "startDate": "開始日期",
       "endDate": "結束日期",
       "employee": "員工",
+      "paymentType": "支付類型",
       "search": "查詢",
       "export": "導出",
       "reset": "重置",
@@ -281,13 +282,22 @@
       "noData": "暫無數據",
       "filters": {
         "dateRange": "選擇日期範圍",
-        "employee": "選擇員工"
+        "employee": "選擇員工",
+        "paymentType": "選擇支付類型"
       },
       "employeeOptions": {
         "emp001": "張三",
         "emp002": "李四",
         "emp003": "王五",
         "emp004": "趙六"
+      },
+      "paymentTypeOptions": {
+        "cash": "現金支付",
+        "electronic": "電子支付",
+        "government": "政付通平台",
+        "bank": "銀行智慧支付",
+        "credit": "信用卡支付",
+        "other": "其他"
       }
     }
   }

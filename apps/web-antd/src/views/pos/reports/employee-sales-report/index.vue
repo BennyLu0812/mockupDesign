@@ -61,6 +61,40 @@
               </Select>
             </div>
           </Col>
+        </Row>
+        <Row :gutter="16">
+          <Col :span="6">
+            <div class="mb-2">
+              <label class="block text-sm font-medium mb-1">
+                {{ $t('pos.reports.employeeSalesReport.paymentType') }}
+              </label>
+              <Select
+                v-model:value="filters.paymentType"
+                :placeholder="$t('pos.reports.employeeSalesReport.filters.paymentType')"
+                style="width: 100%"
+                allow-clear
+              >
+                <SelectOption value="cash">
+                  {{ $t('pos.reports.employeeSalesReport.paymentTypeOptions.cash') }}
+                </SelectOption>
+                <SelectOption value="electronic">
+                  {{ $t('pos.reports.employeeSalesReport.paymentTypeOptions.electronic') }}
+                </SelectOption>
+                <SelectOption value="government">
+                  {{ $t('pos.reports.employeeSalesReport.paymentTypeOptions.government') }}
+                </SelectOption>
+                <SelectOption value="bank">
+                  {{ $t('pos.reports.employeeSalesReport.paymentTypeOptions.bank') }}
+                </SelectOption>
+                <SelectOption value="credit">
+                  {{ $t('pos.reports.employeeSalesReport.paymentTypeOptions.credit') }}
+                </SelectOption>
+                <SelectOption value="other">
+                  {{ $t('pos.reports.employeeSalesReport.paymentTypeOptions.other') }}
+                </SelectOption>
+              </Select>
+            </div>
+          </Col>
           <Col :span="6">
             <div class="mb-2">
               <label class="block text-sm font-medium mb-1">&nbsp;</label>
@@ -110,14 +144,21 @@
               MOP {{ record.salesAmount.toFixed(2) }}
             </span>
           </template>
-          <template v-else-if="column.key === 'avgOrderAmount'">
-            <span class="text-blue-600 font-medium">
-              MOP {{ record.avgOrderAmount.toFixed(2) }}
-            </span>
-          </template>
           <template v-else-if="column.key === 'orderCount'">
             <span class="font-medium">
               {{ record.orderCount }}
+            </span>
+          </template>
+          <template v-else-if="column.key === 'paymentType'">
+            <span class="px-2 py-1 rounded text-xs font-medium" :class="{
+              'bg-green-100 text-green-800': record.paymentType === 'cash',
+              'bg-blue-100 text-blue-800': record.paymentType === 'electronic',
+              'bg-purple-100 text-purple-800': record.paymentType === 'government',
+              'bg-orange-100 text-orange-800': record.paymentType === 'bank',
+              'bg-red-100 text-red-800': record.paymentType === 'credit',
+              'bg-gray-100 text-gray-800': record.paymentType === 'other'
+            }">
+              {{ $t(`pos.reports.employeeSalesReport.paymentTypeOptions.${record.paymentType}`) }}
             </span>
           </template>
         </template>
@@ -126,7 +167,7 @@
       <!-- 統計總計 -->
       <div class="mt-4 p-4 bg-gray-50 rounded-lg">
         <Row :gutter="24">
-          <Col :span="8">
+          <Col :span="12">
             <div class="text-center">
               <div class="text-2xl font-bold text-green-600">
                 MOP {{ totalStats.totalSales.toFixed(2) }}
@@ -136,23 +177,13 @@
               </div>
             </div>
           </Col>
-          <Col :span="8">
+          <Col :span="12">
             <div class="text-center">
               <div class="text-2xl font-bold text-blue-600">
                 {{ totalStats.totalOrders }}
               </div>
               <div class="text-sm text-gray-600">
                 {{ $t('pos.reports.employeeSalesReport.totalOrders') }}
-              </div>
-            </div>
-          </Col>
-          <Col :span="8">
-            <div class="text-center">
-              <div class="text-2xl font-bold text-purple-600">
-                MOP {{ totalStats.avgOrderAmount.toFixed(2) }}
-              </div>
-              <div class="text-sm text-gray-600">
-                {{ $t('pos.reports.employeeSalesReport.avgOrderAmount') }}
               </div>
             </div>
           </Col>
@@ -190,13 +221,15 @@ interface ReportFilters {
   startDate: any;
   endDate: any;
   employee: string;
+  paymentType: string;
 }
 
 // 篩選條件
 const filters = reactive<ReportFilters>({
-  startDate: dayjs().subtract(30, 'day'),
+  startDate: dayjs(),
   endDate: dayjs(),
-  employee: ''
+  employee: '',
+  paymentType: ''
 });
 
 // 載入狀態
@@ -230,6 +263,13 @@ const columns: TableColumnsType = [
     width: 120
   },
   {
+    title: $t('pos.reports.employeeSalesReport.paymentType'),
+    dataIndex: 'paymentType',
+    key: 'paymentType',
+    width: 120,
+    align: 'center'
+  },
+  {
     title: $t('pos.reports.employeeSalesReport.salesAmount'),
     dataIndex: 'salesAmount',
     key: 'salesAmount',
@@ -242,13 +282,6 @@ const columns: TableColumnsType = [
     key: 'orderCount',
     width: 120,
     align: 'center'
-  },
-  {
-    title: $t('pos.reports.employeeSalesReport.avgOrderAmount'),
-    dataIndex: 'avgOrderAmount',
-    key: 'avgOrderAmount',
-    width: 150,
-    align: 'right'
   },
   {
     title: '統計期間',
@@ -272,11 +305,12 @@ const totalStats = computed(() => {
 });
 
 // 模擬數據
-const mockReportData: EmployeeSalesReportItem[] = [
+const mockReportData: (EmployeeSalesReportItem & { paymentType: string })[] = [
   {
     id: '1',
     employeeId: 'EMP001',
     employeeName: '張三',
+    paymentType: 'cash',
     salesAmount: 15680.50,
     orderCount: 45,
     avgOrderAmount: 348.46,
@@ -286,6 +320,7 @@ const mockReportData: EmployeeSalesReportItem[] = [
     id: '2',
     employeeId: 'EMP002',
     employeeName: '李四',
+    paymentType: 'electronic',
     salesAmount: 12450.00,
     orderCount: 38,
     avgOrderAmount: 327.63,
@@ -295,6 +330,7 @@ const mockReportData: EmployeeSalesReportItem[] = [
     id: '3',
     employeeId: 'EMP003',
     employeeName: '王五',
+    paymentType: 'government',
     salesAmount: 18920.75,
     orderCount: 52,
     avgOrderAmount: 363.86,
@@ -304,9 +340,30 @@ const mockReportData: EmployeeSalesReportItem[] = [
     id: '4',
     employeeId: 'EMP004',
     employeeName: '趙六',
+    paymentType: 'bank',
     salesAmount: 9875.25,
     orderCount: 28,
     avgOrderAmount: 352.69,
+    dateRange: '2024-01-01 ~ 2024-01-31'
+  },
+  {
+    id: '5',
+    employeeId: 'EMP001',
+    employeeName: '張三',
+    paymentType: 'credit',
+    salesAmount: 8520.30,
+    orderCount: 22,
+    avgOrderAmount: 387.29,
+    dateRange: '2024-01-01 ~ 2024-01-31'
+  },
+  {
+    id: '6',
+    employeeId: 'EMP002',
+    employeeName: '李四',
+    paymentType: 'other',
+    salesAmount: 6780.00,
+    orderCount: 18,
+    avgOrderAmount: 376.67,
     dateRange: '2024-01-01 ~ 2024-01-31'
   }
 ];
@@ -329,6 +386,11 @@ const fetchReportData = async () => {
         'emp004': 'EMP004'
       };
       filteredData = filteredData.filter(item => item.employeeId === employeeMap[filters.employee]);
+    }
+    
+    // 按支付類型篩選
+    if (filters.paymentType) {
+      filteredData = filteredData.filter(item => item.paymentType === filters.paymentType);
     }
     
     // 更新日期範圍顯示
@@ -365,9 +427,10 @@ const handleSearch = () => {
 
 // 重置
 const handleReset = () => {
-  filters.startDate = dayjs().subtract(30, 'day');
+  filters.startDate = dayjs();
   filters.endDate = dayjs();
   filters.employee = '';
+  filters.paymentType = '';
   pagination.current = 1;
   fetchReportData();
 };
@@ -390,6 +453,7 @@ const generateCSV = () => {
   const headers = [
     $t('pos.reports.employeeSalesReport.employeeId'),
     $t('pos.reports.employeeSalesReport.employeeName'),
+    $t('pos.reports.employeeSalesReport.paymentType'),
     $t('pos.reports.employeeSalesReport.salesAmount'),
     $t('pos.reports.employeeSalesReport.orderCount'),
     $t('pos.reports.employeeSalesReport.avgOrderAmount'),
@@ -399,6 +463,7 @@ const generateCSV = () => {
   const rows = reportData.value.map(item => [
     item.employeeId,
     item.employeeName,
+    $t(`pos.reports.employeeSalesReport.paymentTypeOptions.${item.paymentType}`),
     `MOP ${item.salesAmount.toFixed(2)}`,
     item.orderCount.toString(),
     `MOP ${item.avgOrderAmount.toFixed(2)}`,
@@ -408,6 +473,7 @@ const generateCSV = () => {
   // 添加統計行
   rows.push([
     $t('pos.reports.employeeSalesReport.total'),
+    '',
     '',
     `MOP ${totalStats.value.totalSales.toFixed(2)}`,
     totalStats.value.totalOrders.toString(),

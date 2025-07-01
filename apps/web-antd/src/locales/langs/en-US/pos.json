@@ -265,6 +265,7 @@
       "startDate": "Start Date",
       "endDate": "End Date",
       "employee": "Employee",
+      "paymentType": "Payment Type",
       "search": "Search",
       "export": "Export",
       "reset": "Reset",
@@ -279,13 +280,22 @@
       "noData": "No Data",
       "filters": {
         "dateRange": "Select Date Range",
-        "employee": "Select Employee"
+        "employee": "Select Employee",
+        "paymentType": "Select Payment Type"
       },
       "employeeOptions": {
         "emp001": "Zhang San",
         "emp002": "Li Si",
         "emp003": "Wang Wu",
         "emp004": "Zhao Liu"
+      },
+      "paymentTypeOptions": {
+        "cash": "Cash Payment",
+        "electronic": "Electronic Payment",
+        "government": "Government Platform",
+        "bank": "Bank Smart Payment",
+        "credit": "Credit Card Payment",
+        "other": "Other"
       }
     }
   }
