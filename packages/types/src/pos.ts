@@ -257,4 +257,80 @@ export interface ManuscriptReceiveForm {
   file: File | null;
 }
 
+/** 銀錢箱報表項 */
+export interface CashBoxReportItem {
+  /** 記録ID */
+  id: string;
+  /** 訂單編號 */
+  orderNumber: string;
+  /** 金額收入 */
+  income: number;
+  /** 現金找零值 */
+  change: number;
+  /** 日期 */
+  date: string;
+  /** 銷售地點 */
+  location: string;
+}
+
+/** 銀錢箱報表搜索條件 */
+export interface CashBoxReportSearchParams {
+  /** 日期 */
+  date?: string;
+  /** 銷售地點 */
+  location?: string;
+  /** 頁碼 */
+  page?: number;
+  /** 每頁數量 */
+  pageSize?: number;
+}
+
+/** 員工銷售報表項 */
+export interface EmployeeSalesReportItem {
+  /** 記録ID */
+  id: string;
+  /** 員工編號 */
+  employeeId: string;
+  /** 員工姓名 */
+  employeeName: string;
+  /** 銷售金額 */
+  salesAmount: number;
+  /** 訂單數量 */
+  orderCount: number;
+  /** 平均訂單金額 */
+  avgOrderAmount: number;
+  /** 統計日期範圍 */
+  dateRange: string;
+}
+
+/** 員工銷售報表搜索條件 */
+export interface EmployeeSalesReportSearchParams {
+  /** 開始日期 */
+  startDate?: string;
+  /** 結束日期 */
+  endDate?: string;
+  /** 員工編號 */
+  employeeId?: string;
+  /** 頁碼 */
+  page?: number;
+  /** 每頁數量 */
+  pageSize?: number;
+}
+
+/** 報表統計數據 */
+export interface ReportStats {
+  /** 總收入 */
+  totalIncome?: number;
+  /** 總找零 */
+  totalChange?: number;
+  /** 淨收入 */
+  netIncome?: number;
+  /** 總銷售額 */
+  totalSales?: number;
+  /** 總訂單數 */
+  totalOrders?: number;
+  /** 平均訂單金額 */
+  avgOrderAmount?: number;
+}
+
 export type { };

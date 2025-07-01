@@ -16,6 +16,9 @@
     "settlement": "結賬",
     "salesRecords": "銷售單據記録查詢",
     "inventory": "庫存查詢",
-    "manuscriptReceiving": "接收稿件"
+    "manuscriptReceiving": "接收稿件",
+    "reports": "報表功能",
+    "cashBoxReport": "銀錢箱報表",
+    "employeeSalesReport": "員工銷售金額報表"
   }
 }

@@ -186,5 +186,61 @@
       "pleaseInputReceiverName": "請輸入接收人名稱",
       "pleaseInputUploader": "請輸入上傳人"
     }
+  },
+  "reports": {
+    "title": "報表功能",
+    "cashBoxReport": {
+      "title": "銀錢箱報表",
+      "date": "日期",
+      "location": "銷售點",
+      "search": "查詢",
+      "export": "導出",
+      "reset": "重置",
+      "orderNumber": "訂單編號",
+      "income": "金額收入",
+      "change": "現金找零值",
+      "total": "總計",
+      "totalIncome": "總收入",
+      "totalChange": "總找零",
+      "netIncome": "淨收入",
+      "noData": "暫無數據",
+      "filters": {
+        "date": "選擇日期",
+        "location": "選擇銷售點"
+      },
+      "locationOptions": {
+        "store1": "實體店1",
+        "store2": "實體店2",
+        "store3": "實體店3"
+      }
+    },
+    "employeeSalesReport": {
+      "title": "員工銷售金額報表",
+      "startDate": "開始日期",
+      "endDate": "結束日期",
+      "employee": "員工",
+      "search": "查詢",
+      "export": "導出",
+      "reset": "重置",
+      "employeeId": "員工編號",
+      "employeeName": "員工姓名",
+      "salesAmount": "銷售金額",
+      "orderCount": "訂單數量",
+      "avgOrderAmount": "平均訂單金額",
+      "total": "總計",
+      "totalSales": "總銷售額",
+      "totalOrders": "總訂單數",
+      "noData": "暫無數據",
+      "filters": {
+        "dateRange": "選擇日期範圍",
+        "employee": "選擇員工"
+      },
+      "employeeOptions": {
+        "emp001": "張三",
+        "emp002": "李四",
+        "emp003": "王五",
+        "emp004": "趙六"
+      }
+    }
   }
 }

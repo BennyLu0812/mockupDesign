@@ -186,5 +186,61 @@
       "pleaseInputReceiverName": "Please input receiver name",
       "pleaseInputUploader": "Please input uploader"
     }
+  },
+  "reports": {
+    "title": "Reports",
+    "cashBoxReport": {
+      "title": "Cash Box Report",
+      "date": "Date",
+      "location": "Sales Point",
+      "search": "Search",
+      "export": "Export",
+      "reset": "Reset",
+      "orderNumber": "Order Number",
+      "income": "Income Amount",
+      "change": "Cash Change",
+      "total": "Total",
+      "totalIncome": "Total Income",
+      "totalChange": "Total Change",
+      "netIncome": "Net Income",
+      "noData": "No Data",
+      "filters": {
+        "date": "Select Date",
+        "location": "Select Sales Point"
+      },
+      "locationOptions": {
+        "store1": "Store 1",
+        "store2": "Store 2",
+        "store3": "Store 3"
+      }
+    },
+    "employeeSalesReport": {
+      "title": "Employee Sales Report",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "employee": "Employee",
+      "search": "Search",
+      "export": "Export",
+      "reset": "Reset",
+      "employeeId": "Employee ID",
+      "employeeName": "Employee Name",
+      "salesAmount": "Sales Amount",
+      "orderCount": "Order Count",
+      "avgOrderAmount": "Avg Order Amount",
+      "total": "Total",
+      "totalSales": "Total Sales",
+      "totalOrders": "Total Orders",
+      "noData": "No Data",
+      "filters": {
+        "dateRange": "Select Date Range",
+        "employee": "Select Employee"
+      },
+      "employeeOptions": {
+        "emp001": "Zhang San",
+        "emp002": "Li Si",
+        "emp003": "Wang Wu",
+        "emp004": "Zhao Liu"
+      }
+    }
   }
 }

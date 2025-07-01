@@ -48,6 +48,34 @@ const routes: RouteRecordRaw[] = [
           title: $t('page.pos.manuscriptReceiving'),
         },
       },
+      {
+        name: 'Reports',
+        path: '/reports',
+        meta: {
+          icon: 'lucide:bar-chart-3',
+          title: $t('page.pos.reports'),
+        },
+        children: [
+          {
+            name: 'CashBoxReport',
+            path: '/cash-box-report',
+            component: () => import('#/views/pos/reports/cash-box-report/index.vue'),
+            meta: {
+              icon: 'lucide:banknote',
+              title: $t('page.pos.cashBoxReport'),
+            },
+          },
+          {
+            name: 'EmployeeSalesReport',
+            path: '/employee-sales-report',
+            component: () => import('#/views/pos/reports/employee-sales-report/index.vue'),
+            meta: {
+              icon: 'lucide:users',
+              title: $t('page.pos.employeeSalesReport'),
+            },
+          },
+        ],
+      },
     ],
   },
 ];

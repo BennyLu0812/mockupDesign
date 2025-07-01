@@ -16,6 +16,9 @@
     "settlement": "Settlement",
     "salesRecords": "Sales Records Query",
     "inventory": "Inventory Query",
-    "manuscriptReceiving": "Manuscript Receiving"
+    "manuscriptReceiving": "Manuscript Receiving",
+    "reports": "Reports",
+    "cashBoxReport": "Cash Box Report",
+    "employeeSalesReport": "Employee Sales Report"
   }
 }
