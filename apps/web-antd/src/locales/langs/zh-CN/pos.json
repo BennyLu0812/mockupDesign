@@ -76,10 +76,11 @@
     "tempReceipt": "開臨時收據",
     "deliveryNote": "開送貨單",
     "quotation": "開報價單",
+    "refund": "退款",
+    "settle": "結算",
     "statusOptions": {
       "pending": "掛單",
       "settled": "已結算",
-      "settling": "結算中",
       "refunded": "已退款"
     },
     "paymentTypeOptions": {

@@ -76,10 +76,11 @@
     "tempReceipt": "Issue Temp Receipt",
     "deliveryNote": "Issue Delivery Note",
     "quotation": "Issue Quotation",
+    "refund": "Refund",
+    "settle": "Settle",
     "statusOptions": {
       "pending": "Pending",
       "settled": "Settled",
-      "settling": "Settling",
       "refunded": "Refunded"
     },
     "paymentTypeOptions": {

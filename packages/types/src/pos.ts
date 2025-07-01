@@ -116,7 +116,7 @@ export interface PageResult<T> {
 }
 
 /** 銷售狀態 */
-export type SalesStatus = 'pending' | 'settled' | 'settling' | 'refunded';
+export type SalesStatus = 'pending' | 'settled' | 'refunded';
 
 /** 結算類型 */
 export type SettlementType = 'cash' | 'electronic';

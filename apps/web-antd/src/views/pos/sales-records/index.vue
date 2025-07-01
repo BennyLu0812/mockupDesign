@@ -33,7 +33,6 @@
           >
             <SelectOption value="pending">{{ $t('pos.salesRecords.statusOptions.pending') }}</SelectOption>
             <SelectOption value="settled">{{ $t('pos.salesRecords.statusOptions.settled') }}</SelectOption>
-            <SelectOption value="settling">{{ $t('pos.salesRecords.statusOptions.settling') }}</SelectOption>
             <SelectOption value="refunded">{{ $t('pos.salesRecords.statusOptions.refunded') }}</SelectOption>
           </Select>
         </FormItem>
@@ -113,6 +112,31 @@
                   <span class="icon-[lucide--eye] size-4" />
                 </template>
                 {{ $t('pos.salesRecords.detail') }}
+              </Button>
+              
+              <!-- 根據狀態顯示結算或退款按鈕 -->
+              <Button 
+                v-if="record.status === 'pending'" 
+                type="primary" 
+                size="small" 
+                @click="handleSettle(record)"
+              >
+                <template #icon>
+                  <span class="icon-[lucide--credit-card] size-4" />
+                </template>
+                {{ $t('pos.salesRecords.settle') }}
+              </Button>
+              
+              <Button 
+                v-if="record.status === 'settled'" 
+                type="default" 
+                size="small" 
+                @click="handleRefund(record)"
+              >
+                <template #icon>
+                  <span class="icon-[lucide--undo-2] size-4" />
+                </template>
+                {{ $t('pos.salesRecords.refund') }}
               </Button>
               
               <Dropdown>
@@ -239,6 +263,29 @@
         
         <div class="mt-6 text-center">
           <Space>
+            <!-- 根據狀態顯示結算或退款按鈕 -->
+            <Button 
+              v-if="selectedRecord.status === 'pending'" 
+              type="primary" 
+              @click="handleSettle(selectedRecord)"
+            >
+              <template #icon>
+                <span class="icon-[lucide--credit-card] size-4" />
+              </template>
+              {{ $t('pos.salesRecords.settle') }}
+            </Button>
+            
+            <Button 
+              v-if="selectedRecord.status === 'settled'" 
+              type="default" 
+              @click="handleRefund(selectedRecord)"
+            >
+              <template #icon>
+                <span class="icon-[lucide--undo-2] size-4" />
+              </template>
+              {{ $t('pos.salesRecords.refund') }}
+            </Button>
+            
             <Button type="primary" @click="handleInvoice(selectedRecord)">
               <template #icon>
                 <span class="icon-[lucide--file-text] size-4" />
@@ -367,7 +414,7 @@ const salesRecords = ref<SalesRecord[]>([
     quantity: 3,
     unitPrice: 45.00,
     totalAmount: 135.00,
-    status: 'settling',
+    status: 'settled',
     paymentType: 'electronic',
   },
   {
@@ -479,7 +526,7 @@ const columns: TableColumnsType<SalesRecord> = [
   {
     title: '操作',
     key: 'actions',
-    width: 150,
+    width: 200,
     fixed: 'right',
   },
 ];
@@ -497,7 +544,6 @@ const getStatusColor = (status: SalesStatus): string => {
   const colorMap = {
     pending: 'orange',
     settled: 'green',
-    settling: 'blue',
     refunded: 'red',
   };
   return colorMap[status];
@@ -579,6 +625,20 @@ const handleDeliveryNote = (record: SalesRecord) => {
 
 const handleQuotation = (record: SalesRecord) => {
   message.success(`正在為單據 ${record.documentNumber} 開報價單`);
+};
+
+// 處理結算
+const handleSettle = (record: SalesRecord) => {
+  message.success(`正在為單據 ${record.documentNumber} 進行結算`);
+  // 這裡可以跳轉到結算頁面或打開結算模態框
+  // 例如：router.push(`/pos/settlement/${record.id}`);
+};
+
+// 處理退款
+const handleRefund = (record: SalesRecord) => {
+  message.success(`正在為單據 ${record.documentNumber} 進行退款`);
+  // 這裡可以打開退款確認模態框或跳轉到退款頁面
+  // 例如：showRefundModal(record);
 };
 
 // 生命週期
