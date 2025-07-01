@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
-import { Form, FormItem, Input, Button, Select, Modal, InputNumber, message } from 'ant-design-vue';
+import { Form, FormItem, Input, Button, message } from 'ant-design-vue';
 import { $t } from '@vben/locales';
 
 defineOptions({ name: 'PosLogin' });
@@ -14,31 +14,8 @@ const loginForm = reactive({
   password: ''
 });
 
-// 銀錢箱設置表單數據
-const cashBoxForm = reactive({
-  salesLocation: '',
-  cashBox: '',
-  cashAmount: 0
-});
-
 // 控制狀態
 const loginLoading = ref(false);
-const showCashBoxModal = ref(false);
-const cashBoxLoading = ref(false);
-
-// 銷售地選項
-const salesLocationOptions = [
-  { value: 'store1', label: $t('pos.login.cashBoxSetup.salesLocationOptions.store1') },
-  { value: 'store2', label: $t('pos.login.cashBoxSetup.salesLocationOptions.store2') },
-  { value: 'store3', label: $t('pos.login.cashBoxSetup.salesLocationOptions.store3') }
-];
-
-// 銀錢箱選項（根據銷售地動態變化）
-const cashBoxOptions = ref([
-  { value: 'box1', label: $t('pos.login.cashBoxSetup.cashBoxOptions.box1') },
-  { value: 'box2', label: $t('pos.login.cashBoxSetup.cashBoxOptions.box2') },
-  { value: 'box3', label: $t('pos.login.cashBoxSetup.cashBoxOptions.box3') }
-]);
 
 // 登陸處理
 const handleLogin = async () => {
@@ -53,8 +30,10 @@ const handleLogin = async () => {
     // 模擬登陸API調用
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // 登陸成功，顯示銀錢箱設置彈框
-    showCashBoxModal.value = true;
+    message.success('登陸成功');
+    
+    // 登陸成功，跳轉到銀錢箱設置頁面
+    window.location.href = 'http://localhost:5666/cash-box-setup';
   } catch (error) {
     message.error('登陸失敗，請檢查用戶名和密碼');
   } finally {
@@ -62,49 +41,7 @@ const handleLogin = async () => {
   }
 };
 
-// 銀錢箱設置確認
-const handleCashBoxConfirm = async () => {
-  if (!cashBoxForm.salesLocation || !cashBoxForm.cashBox || !cashBoxForm.cashAmount) {
-    message.error('請完整填寫銀錢箱信息');
-    return;
-  }
 
-  try {
-    cashBoxLoading.value = true;
-    
-    // 模擬保存銀錢箱設置
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    // 保存到本地存儲
-    localStorage.setItem('pos_cash_box_setup', JSON.stringify(cashBoxForm));
-    
-    message.success('銀錢箱設置成功');
-    showCashBoxModal.value = false;
-    
-    // 跳轉到結賬頁面
-    router.push('/pos/settlement');
-  } catch (error) {
-    message.error('銀錢箱設置失敗');
-  } finally {
-    cashBoxLoading.value = false;
-  }
-};
-
-// 取消銀錢箱設置
-const handleCashBoxCancel = () => {
-  showCashBoxModal.value = false;
-  // 重置表單
-  Object.assign(cashBoxForm, {
-    salesLocation: '',
-    cashBox: '',
-    cashAmount: 0
-  });
-};
-
-// 銷售地變化時重置銀錢箱選擇
-const handleSalesLocationChange = () => {
-  cashBoxForm.cashBox = '';
-};
 </script>
 
 <template>
@@ -167,80 +104,6 @@ const handleSalesLocationChange = () => {
         </FormItem>
       </Form>
     </div>
-    
-    <!-- 銀錢箱設置彈框 -->
-    <Modal
-      v-model:open="showCashBoxModal"
-      :title="$t('pos.login.cashBoxSetup.title')"
-      :closable="false"
-      :mask-closable="false"
-      width="500px"
-    >
-      <Form 
-        :model="cashBoxForm" 
-        layout="vertical" 
-        class="cash-box-form"
-      >
-        <FormItem 
-          :label="$t('pos.login.cashBoxSetup.salesLocation')"
-          name="salesLocation"
-          :rules="[{ required: true, message: $t('pos.login.cashBoxSetup.salesLocationPlaceholder') }]"
-        >
-          <Select 
-            v-model:value="cashBoxForm.salesLocation"
-            :placeholder="$t('pos.login.cashBoxSetup.salesLocationPlaceholder')"
-            :options="salesLocationOptions"
-            size="large"
-            @change="handleSalesLocationChange"
-          />
-        </FormItem>
-        
-        <FormItem 
-          :label="$t('pos.login.cashBoxSetup.cashBox')"
-          name="cashBox"
-          :rules="[{ required: true, message: $t('pos.login.cashBoxSetup.cashBoxPlaceholder') }]"
-        >
-          <Select 
-            v-model:value="cashBoxForm.cashBox"
-            :placeholder="$t('pos.login.cashBoxSetup.cashBoxPlaceholder')"
-            :options="cashBoxOptions"
-            size="large"
-            :disabled="!cashBoxForm.salesLocation"
-          />
-        </FormItem>
-        
-        <FormItem 
-          :label="$t('pos.login.cashBoxSetup.cashAmount')"
-          name="cashAmount"
-          :rules="[{ required: true, message: $t('pos.login.cashBoxSetup.cashAmountPlaceholder') }]"
-        >
-          <InputNumber 
-            v-model:value="cashBoxForm.cashAmount"
-            :placeholder="$t('pos.login.cashBoxSetup.cashAmountPlaceholder')"
-            :min="0"
-            :precision="2"
-            size="large"
-            style="width: 100%"
-            addon-after="MOP"
-          />
-        </FormItem>
-      </Form>
-      
-      <template #footer>
-        <div class="flex justify-end space-x-2">
-          <Button @click="handleCashBoxCancel">
-            {{ $t('pos.login.cashBoxSetup.cancel') }}
-          </Button>
-          <Button 
-            type="primary" 
-            :loading="cashBoxLoading"
-            @click="handleCashBoxConfirm"
-          >
-            {{ $t('pos.login.cashBoxSetup.confirm') }}
-          </Button>
-        </div>
-      </template>
-    </Modal>
   </div>
 </template>
 
@@ -290,10 +153,6 @@ const handleSalesLocationChange = () => {
   font-size: 16px;
   font-weight: 500;
   margin-top: 8px;
-}
-
-.cash-box-form {
-  margin-top: 16px;
 }
 
 :deep(.ant-input-affix-wrapper) {

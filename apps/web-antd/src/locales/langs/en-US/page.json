@@ -14,6 +14,7 @@
   "pos": {
     "title": "Point of Sale (POS)",
     "login": "Login Interface",
+    "cashBoxSetup": "Cash Box Setup",
     "settlement": "Settlement",
     "salesRecords": "Sales Records Query",
     "inventory": "Inventory Query",

@@ -14,6 +14,7 @@
   "pos": {
     "title": "前台銷售(POS)",
     "login": "登陸界面",
+    "cashBoxSetup": "銀錢箱設置",
     "settlement": "結賬",
     "salesRecords": "銷售單據記録查詢",
     "inventory": "庫存查詢",

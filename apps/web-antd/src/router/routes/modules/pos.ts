@@ -22,6 +22,15 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        name: 'PosCashBoxSetup',
+        path: '/cash-box-setup',
+        component: () => import('#/views/pos/cash-box-setup/index.vue'),
+        meta: {
+          icon: 'lucide:settings',
+          title: $t('page.pos.cashBoxSetup'),
+        },
+      },
+      {
         name: 'Settlement',
         path: '/settlement',
         component: () => import('#/views/pos/settlement/index.vue'),
