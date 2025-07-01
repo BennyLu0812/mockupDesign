@@ -114,18 +114,7 @@
                 {{ $t('pos.salesRecords.detail') }}
               </Button>
               
-              <!-- 根據狀態顯示結算或退款按鈕 -->
-              <Button 
-                v-if="record.status === 'pending'" 
-                type="primary" 
-                size="small" 
-                @click="handleSettle(record)"
-              >
-                <template #icon>
-                  <span class="icon-[lucide--credit-card] size-4" />
-                </template>
-                {{ $t('pos.salesRecords.settle') }}
-              </Button>
+              <!-- 根據狀態顯示退款按鈕 -->
               
               <Button 
                 v-if="record.status === 'settled'" 
@@ -263,17 +252,7 @@
         
         <div class="mt-6 text-center">
           <Space>
-            <!-- 根據狀態顯示結算或退款按鈕 -->
-            <Button 
-              v-if="selectedRecord.status === 'pending'" 
-              type="primary" 
-              @click="handleSettle(selectedRecord)"
-            >
-              <template #icon>
-                <span class="icon-[lucide--credit-card] size-4" />
-              </template>
-              {{ $t('pos.salesRecords.settle') }}
-            </Button>
+            <!-- 根據狀態顯示退款按鈕 -->
             
             <Button 
               v-if="selectedRecord.status === 'settled'" 
@@ -627,12 +606,7 @@ const handleQuotation = (record: SalesRecord) => {
   message.success(`正在為單據 ${record.documentNumber} 開報價單`);
 };
 
-// 處理結算
-const handleSettle = (record: SalesRecord) => {
-  message.success(`正在為單據 ${record.documentNumber} 進行結算`);
-  // 這裡可以跳轉到結算頁面或打開結算模態框
-  // 例如：router.push(`/pos/settlement/${record.id}`);
-};
+
 
 // 處理退款
 const handleRefund = (record: SalesRecord) => {
