@@ -32,6 +32,7 @@
                 :placeholder="$t('pos.reports.cashBoxReport.filters.location')"
                 style="width: 100%"
                 allow-clear
+                @change="handleLocationChange"
               >
                 <SelectOption value="store1">
                   {{ $t('pos.reports.cashBoxReport.locationOptions.store1') }}
@@ -45,7 +46,29 @@
               </Select>
             </div>
           </Col>
-          <Col :span="12">
+          <Col :span="6">
+            <div class="mb-2">
+              <label class="block text-sm font-medium mb-1">
+                {{ $t('pos.reports.cashBoxReport.cashBox') }}
+              </label>
+              <Select
+                v-model:value="filters.cashBox"
+                :placeholder="$t('pos.reports.cashBoxReport.filters.cashBox')"
+                style="width: 100%"
+                allow-clear
+                :disabled="!filters.location"
+              >
+                <SelectOption
+                  v-for="cashBox in availableCashBoxes"
+                  :key="cashBox.value"
+                  :value="cashBox.value"
+                >
+                  {{ cashBox.label }}
+                </SelectOption>
+              </Select>
+            </div>
+          </Col>
+          <Col :span="6">
             <div class="mb-2">
               <label class="block text-sm font-medium mb-1">&nbsp;</label>
               <Space>
@@ -162,12 +185,14 @@ import dayjs from 'dayjs';
 interface ReportFilters {
   date: any;
   location: string;
+  cashBox: string;
 }
 
 // 篩選條件
 const filters = reactive<ReportFilters>({
   date: dayjs(),
-  location: ''
+  location: '',
+  cashBox: ''
 });
 
 // 載入狀態
@@ -175,6 +200,37 @@ const loading = ref(false);
 
 // 報表數據
 const reportData = ref<CashBoxReportItem[]>([]);
+
+// 銀錢箱選項映射
+const cashBoxOptions = {
+  store1: [
+    { value: 'cashbox1', label: '銀錢箱1' },
+    { value: 'cashbox2', label: '銀錢箱2' },
+    { value: 'cashbox3', label: '銀錢箱3' }
+  ],
+  store2: [
+    { value: 'cashbox1', label: '銀錢箱1' },
+    { value: 'cashbox2', label: '銀錢箱2' }
+  ],
+  store3: [
+    { value: 'cashbox1', label: '銀錢箱1' },
+    { value: 'cashbox3', label: '銀錢箱3' }
+  ]
+};
+
+// 可用的銀錢箱選項
+const availableCashBoxes = computed(() => {
+  if (!filters.location) {
+    return [];
+  }
+  return cashBoxOptions[filters.location as keyof typeof cashBoxOptions] || [];
+});
+
+// 處理銷售點變更
+const handleLocationChange = () => {
+  // 清空銀錢箱選擇
+  filters.cashBox = '';
+};
 
 // 分頁配置
 const pagination = reactive({
@@ -324,6 +380,7 @@ const handleSearch = () => {
 const handleReset = () => {
   filters.date = dayjs();
   filters.location = '';
+  filters.cashBox = '';
   pagination.current = 1;
   fetchReportData();
 };
