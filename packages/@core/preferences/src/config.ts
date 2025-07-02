@@ -63,7 +63,7 @@ const defaultPreferences: Preferences = {
   logo: {
     enable: true,
     fit: 'contain',
-    source: '/docs/image/favicon.ico',
+    source: '/favicon.ico',
   },
   navigation: {
     accordion: true,

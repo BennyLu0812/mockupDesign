@@ -64,7 +64,7 @@ withDefaults(defineProps<Props>(), {
       <template v-if="!collapsed">
         <slot name="text">
           <span class="text-foreground truncate text-nowrap font-semibold">
-            {{ text }}
+            前台銷售(POS)
           </span>
         </slot>
       </template>
