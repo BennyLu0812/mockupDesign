@@ -35,61 +35,25 @@
           
           <div class="detail-grid">
             <Row :gutter="[24, 16]">
-              <Col :span="8">
+              <Col :span="6">
                 <div class="detail-item">
                   <span class="detail-label">訂單日期</span>
                   <span class="detail-value">{{ record.saleDate }}</span>
                 </div>
               </Col>
-              <Col :span="8">
+              <Col :span="6">
                 <div class="detail-item">
                   <span class="detail-label">單據編號</span>
                   <span class="detail-value">{{ record.documentNumber }}</span>
                 </div>
               </Col>
-              <Col :span="8">
+              <Col :span="6">
                 <div class="detail-item">
                   <span class="detail-label">所屬門店</span>
                   <span class="detail-value">{{ getLocationText(record.location) }}</span>
                 </div>
               </Col>
-            </Row>
-            
-            <Row :gutter="[24, 16]">
-              <Col :span="8">
-                <div class="detail-item">
-                  <span class="detail-label">會員卡號</span>
-                  <span class="detail-value">{{ record.memberCardNo || '-' }}</span>
-                </div>
-              </Col>
-              <Col :span="8">
-                <div class="detail-item">
-                  <span class="detail-label">會員姓名（客戶）</span>
-                  <span class="detail-value">{{ record.memberName || '散客' }}</span>
-                </div>
-              </Col>
-              <Col :span="8">
-                <div class="detail-item">
-                  <span class="detail-label">會員等級</span>
-                  <span class="detail-value">{{ record.memberLevel || '散客' }}</span>
-                </div>
-              </Col>
-            </Row>
-            
-            <Row :gutter="[24, 16]">
-              <Col :span="8">
-                <div class="detail-item">
-                  <span class="detail-label">獲得積分</span>
-                  <span class="detail-value">{{ record.earnedPoints || 0 }}</span>
-                </div>
-              </Col>
-              <Col :span="8">
-                <div class="detail-item">
-                  <span class="detail-label">消費模式</span>
-                  <span class="detail-value">{{ record.consumptionMode || '商品收銀' }}</span>
-                </div>
-              </Col>
-              <Col :span="8">
+              <Col :span="6">
                 <div class="detail-item">
                   <span class="detail-label">訂單備註</span>
                   <span class="detail-value">{{ record.orderNote || '-' }}</span>
@@ -98,23 +62,26 @@
             </Row>
             
             <Row :gutter="[24, 16]" v-if="record.status === 'refunded'">
-              <Col :span="8">
+              <Col :span="6">
                 <div class="detail-item">
                   <span class="detail-label">撤單人</span>
                   <span class="detail-value">{{ record.cancelledBy || '-' }}</span>
                 </div>
               </Col>
-              <Col :span="8">
+              <Col :span="6">
                 <div class="detail-item">
                   <span class="detail-label">撤單時間</span>
                   <span class="detail-value">{{ record.cancelledAt || '-' }}</span>
                 </div>
               </Col>
-              <Col :span="8">
+              <Col :span="6">
                 <div class="detail-item">
                   <span class="detail-label">撤單備註</span>
                   <span class="detail-value">{{ record.cancelNote || '-' }}</span>
                 </div>
+              </Col>
+              <Col :span="6">
+                <!-- 空白列，保持對齊 -->
               </Col>
             </Row>
           </div>
