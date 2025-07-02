@@ -53,7 +53,7 @@ function getResponse() {
         @click="
           downloadFileFromImageUrl({
             source:
-              'https://unpkg.com/@vbenjs/static-source@0.1.7/source/logo-v1.webp',
+              '/docs/image/favicon.ico',
             fileName: 'vben-logo.png',
           })
         "
