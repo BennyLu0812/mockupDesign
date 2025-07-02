@@ -291,80 +291,66 @@ const columns: TableColumnsType = [
   }
 ];
 
-// 統計數據
+// 統計數據計算
 const totalStats = computed(() => {
   const totalSales = reportData.value.reduce((sum, item) => sum + item.salesAmount, 0);
   const totalOrders = reportData.value.reduce((sum, item) => sum + item.orderCount, 0);
-  const avgOrderAmount = totalOrders > 0 ? totalSales / totalOrders : 0;
   
   return {
     totalSales,
-    totalOrders,
-    avgOrderAmount
+    totalOrders
   };
 });
 
 // 模擬數據
-const mockReportData: (EmployeeSalesReportItem & { paymentType: string })[] = [
+const mockReportData = [
   {
-    id: '1',
     employeeId: 'EMP001',
-    employeeName: '張三',
-    paymentType: 'cash',
-    salesAmount: 15680.50,
+    employeeName: '張小明',
+    salesAmount: 15000.00,
     orderCount: 45,
-    avgOrderAmount: 348.46,
-    dateRange: '2024-01-01 ~ 2024-01-31'
+    dateRange: '2024-01-01 ~ 2024-01-31',
+    paymentType: 'cash'
   },
   {
-    id: '2',
     employeeId: 'EMP002',
-    employeeName: '李四',
-    paymentType: 'electronic',
-    salesAmount: 12450.00,
-    orderCount: 38,
-    avgOrderAmount: 327.63,
-    dateRange: '2024-01-01 ~ 2024-01-31'
+    employeeName: '李美華',
+    salesAmount: 22000.00,
+    orderCount: 60,
+    dateRange: '2024-01-01 ~ 2024-01-31',
+    paymentType: 'electronic'
   },
   {
-    id: '3',
     employeeId: 'EMP003',
-    employeeName: '王五',
-    paymentType: 'government',
-    salesAmount: 18920.75,
+    employeeName: '王大偉',
+    salesAmount: 18500.00,
     orderCount: 52,
-    avgOrderAmount: 363.86,
-    dateRange: '2024-01-01 ~ 2024-01-31'
+    dateRange: '2024-01-01 ~ 2024-01-31',
+    paymentType: 'government'
   },
   {
-    id: '4',
     employeeId: 'EMP004',
-    employeeName: '趙六',
-    paymentType: 'bank',
-    salesAmount: 9875.25,
-    orderCount: 28,
-    avgOrderAmount: 352.69,
-    dateRange: '2024-01-01 ~ 2024-01-31'
+    employeeName: '陳小芳',
+    salesAmount: 12800.00,
+    orderCount: 38,
+    dateRange: '2024-01-01 ~ 2024-01-31',
+    paymentType: 'bank'
   },
   {
-    id: '5',
-    employeeId: 'EMP001',
-    employeeName: '張三',
-    paymentType: 'credit',
-    salesAmount: 8520.30,
-    orderCount: 22,
-    avgOrderAmount: 387.29,
-    dateRange: '2024-01-01 ~ 2024-01-31'
+    employeeId: 'EMP005',
+    employeeName: '林志強',
+    salesAmount: 25600.00,
+    orderCount: 72,
+    dateRange: '2024-01-01 ~ 2024-01-31',
+    paymentType: 'credit'
   },
   {
-    id: '6',
-    employeeId: 'EMP002',
-    employeeName: '李四',
-    paymentType: 'other',
-    salesAmount: 6780.00,
-    orderCount: 18,
-    avgOrderAmount: 376.67,
-    dateRange: '2024-01-01 ~ 2024-01-31'
+    employeeId: 'EMP006',
+    employeeName: '黃淑雯',
+    salesAmount: 19200.00,
+    orderCount: 55,
+    dateRange: '2024-01-01 ~ 2024-01-31',
+    paymentType: 'other'
   }
 ];
 
@@ -456,7 +442,6 @@ const generateCSV = () => {
     $t('pos.reports.employeeSalesReport.paymentType'),
     $t('pos.reports.employeeSalesReport.salesAmount'),
     $t('pos.reports.employeeSalesReport.orderCount'),
-    $t('pos.reports.employeeSalesReport.avgOrderAmount'),
     '統計期間'
   ];
   
@@ -466,7 +451,6 @@ const generateCSV = () => {
     $t(`pos.reports.employeeSalesReport.paymentTypeOptions.${item.paymentType}`),
     `MOP ${item.salesAmount.toFixed(2)}`,
     item.orderCount.toString(),
-    `MOP ${item.avgOrderAmount.toFixed(2)}`,
     item.dateRange
   ]);
   
@@ -477,7 +461,6 @@ const generateCSV = () => {
     '',
     `MOP ${totalStats.value.totalSales.toFixed(2)}`,
     totalStats.value.totalOrders.toString(),
-    `MOP ${totalStats.value.avgOrderAmount.toFixed(2)}`,
     ''
   ]);
   

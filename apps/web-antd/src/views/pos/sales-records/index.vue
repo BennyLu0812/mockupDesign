@@ -165,146 +165,15 @@
       </Table>
     </Card>
 
-    <!-- 詳情模態框 -->
-    <Modal
-      v-model:open="detailVisible"
-      :title="$t('pos.salesRecords.detailModal.title')"
-      width="800px"
-      :footer="null"
-    >
-      <div v-if="selectedRecord" class="space-y-4">
-        <Row :gutter="16">
-          <Col :span="12">
-            <div class="detail-item">
-              <span class="detail-label">{{ $t('pos.salesRecords.location') }}:</span>
-              <span class="detail-value">{{ getLocationText(selectedRecord.location) }}</span>
-            </div>
-          </Col>
-          <Col :span="12">
-            <div class="detail-item">
-              <span class="detail-label">{{ $t('pos.salesRecords.documentNumber') }}:</span>
-              <span class="detail-value">{{ selectedRecord.documentNumber }}</span>
-            </div>
-          </Col>
-        </Row>
-        
-        <Row :gutter="16">
-          <Col :span="12">
-            <div class="detail-item">
-              <span class="detail-label">{{ $t('pos.salesRecords.saleDate') }}:</span>
-              <span class="detail-value">{{ selectedRecord.saleDate }}</span>
-            </div>
-          </Col>
-          <Col :span="12">
-            <div class="detail-item">
-              <span class="detail-label">{{ $t('pos.salesRecords.salesPersonId') }}:</span>
-              <span class="detail-value">{{ selectedRecord.salesPersonId }}</span>
-            </div>
-          </Col>
-        </Row>
-        
-        <Row :gutter="16">
-          <Col :span="24">
-            <div class="detail-item">
-              <span class="detail-label">{{ $t('pos.salesRecords.productName') }}:</span>
-              <span class="detail-value">{{ selectedRecord.productName }}</span>
-            </div>
-          </Col>
-        </Row>
-        
-        <Row :gutter="16">
-          <Col :span="8">
-            <div class="detail-item">
-              <span class="detail-label">{{ $t('pos.salesRecords.quantity') }}:</span>
-              <span class="detail-value">{{ selectedRecord.quantity }}</span>
-            </div>
-          </Col>
-          <Col :span="8">
-            <div class="detail-item">
-              <span class="detail-label">{{ $t('pos.salesRecords.unitPrice') }}:</span>
-              <span class="detail-value">{{ formatCurrency(selectedRecord.unitPrice) }}</span>
-            </div>
-          </Col>
-          <Col :span="8">
-            <div class="detail-item">
-              <span class="detail-label">{{ $t('pos.salesRecords.totalAmount') }}:</span>
-              <span class="detail-value">{{ formatCurrency(selectedRecord.totalAmount) }}</span>
-            </div>
-          </Col>
-        </Row>
-        
-        <Row :gutter="16">
-          <Col :span="12">
-            <div class="detail-item">
-              <span class="detail-label">{{ $t('pos.salesRecords.status') }}:</span>
-              <Tag :color="getStatusColor(selectedRecord.status)">
-                {{ getStatusText(selectedRecord.status) }}
-              </Tag>
-            </div>
-          </Col>
-          <Col :span="12">
-            <div class="detail-item">
-              <span class="detail-label">{{ $t('pos.salesRecords.paymentType') }}:</span>
-              <span class="detail-value">{{ getPaymentTypeText(selectedRecord.paymentType) }}</span>
-            </div>
-          </Col>
-        </Row>
-        
-        <div class="mt-6 text-center">
-          <Space>
-            <!-- 根據狀態顯示退款按鈕 -->
-            
-            <Button 
-              v-if="selectedRecord.status === 'settled'" 
-              type="default" 
-              @click="handleRefund(selectedRecord)"
-            >
-              <template #icon>
-                <span class="icon-[lucide--undo-2] size-4" />
-              </template>
-              {{ $t('pos.salesRecords.refund') }}
-            </Button>
-            
-            <Button type="primary" @click="handleInvoice(selectedRecord)">
-              <template #icon>
-                <span class="icon-[lucide--file-text] size-4" />
-              </template>
-              {{ $t('pos.salesRecords.invoice') }}
-            </Button>
-            <Button @click="handleReceipt(selectedRecord)">
-              <template #icon>
-                <span class="icon-[lucide--receipt] size-4" />
-              </template>
-              {{ $t('pos.salesRecords.receipt') }}
-            </Button>
-            <Button @click="handleTempReceipt(selectedRecord)">
-              <template #icon>
-                <span class="icon-[lucide--file-plus] size-4" />
-              </template>
-              {{ $t('pos.salesRecords.tempReceipt') }}
-            </Button>
-            <Button @click="handleDeliveryNote(selectedRecord)">
-              <template #icon>
-                <span class="icon-[lucide--truck] size-4" />
-              </template>
-              {{ $t('pos.salesRecords.deliveryNote') }}
-            </Button>
-            <Button @click="handleQuotation(selectedRecord)">
-              <template #icon>
-                <span class="icon-[lucide--calculator] size-4" />
-              </template>
-              {{ $t('pos.salesRecords.quotation') }}
-            </Button>
-          </Space>
-        </div>
-      </div>
-      
-      <template #footer>
-        <Button @click="detailVisible = false">
-          {{ $t('pos.salesRecords.detailModal.close') }}
-        </Button>
-      </template>
-    </Modal>
+    <!-- 詳情滑動頁面 -->
+    <SalesRecordDetail
+      :visible="detailVisible"
+      :record="selectedRecord"
+      @close="detailVisible = false"
+      @refund="handleRefund"
+      @invoice="handleInvoice"
+      @receipt="handleReceipt"
+    />
   </div>
 </template>
 
@@ -322,7 +191,6 @@ import {
   Input,
   Menu,
   MenuItem,
-  Modal,
   Row,
   Select,
   SelectOption,
@@ -331,6 +199,7 @@ import {
   Tag,
   message,
 } from 'ant-design-vue';
+import SalesRecordDetail from './detail.vue';
 import type { SalesRecord, SalesRecordSearchParams, SalesStatus, SalesLocation, SettlementType } from '@vben/types';
 import type { TableColumnsType, TableProps } from 'ant-design-vue';
 import type { Dayjs } from 'dayjs';
@@ -369,6 +238,19 @@ const salesRecords = ref<SalesRecord[]>([
     totalAmount: 50.00,
     status: 'settled',
     paymentType: 'cash',
+    memberCardNo: 'VIP001',
+    memberName: '張三',
+    memberLevel: 'VIP',
+    earnedPoints: 50,
+    consumptionMode: '商品收銀',
+    orderNote: '客戶要求加急處理',
+    cancelledBy: '',
+    cancelledAt: '',
+    cancelNote: '',
+    printType: '名片',
+    printNumber: 'BC001',
+    printSpec: '90x54mm',
+    discountedPrice: 0.8
   },
   {
     id: '2',
@@ -382,6 +264,19 @@ const salesRecords = ref<SalesRecord[]>([
     totalAmount: 35.00,
     status: 'pending',
     paymentType: 'electronic',
+    memberCardNo: '',
+    memberName: '王五',
+    memberLevel: '散客',
+    earnedPoints: 0,
+    consumptionMode: '商品收銀',
+    orderNote: '無特殊要求',
+    cancelledBy: '',
+    cancelledAt: '',
+    cancelNote: '',
+    printType: '海報',
+    printNumber: 'PS001',
+    printSpec: 'A3',
+    discountedPrice: 4.5
   },
   {
     id: '3',
@@ -395,6 +290,19 @@ const salesRecords = ref<SalesRecord[]>([
     totalAmount: 135.00,
     status: 'settled',
     paymentType: 'electronic',
+    memberCardNo: 'REG002',
+    memberName: '李四',
+    memberLevel: '普通會員',
+    earnedPoints: 3,
+    consumptionMode: '商品收銀',
+    orderNote: '',
+    cancelledBy: '',
+    cancelledAt: '',
+    cancelNote: '',
+    printType: '宣傳單',
+    printNumber: 'FL001',
+    printSpec: 'A4',
+    discountedPrice: 0.15
   },
   {
     id: '4',
@@ -408,6 +316,19 @@ const salesRecords = ref<SalesRecord[]>([
     totalAmount: 28.00,
     status: 'refunded',
     paymentType: 'cash',
+    memberCardNo: '',
+    memberName: '錢七',
+    memberLevel: '散客',
+    earnedPoints: 0,
+    consumptionMode: '商品收銀',
+    orderNote: '',
+    cancelledBy: '',
+    cancelledAt: '',
+    cancelNote: '',
+    printType: '標籤',
+    printNumber: 'LB001',
+    printSpec: '50x30mm',
+    discountedPrice: 0.05
   },
   {
     id: '5',
@@ -421,6 +342,19 @@ const salesRecords = ref<SalesRecord[]>([
     totalAmount: 64.00,
     status: 'settled',
     paymentType: 'electronic',
+    memberCardNo: 'VIP003',
+    memberName: '趙六',
+    memberLevel: 'VIP',
+    earnedPoints: 10,
+    consumptionMode: '商品收銀',
+    orderNote: '客戶指定紙質',
+    cancelledBy: '',
+    cancelledAt: '',
+    cancelNote: '',
+    printType: '手冊',
+    printNumber: 'BK001',
+    printSpec: 'A5',
+    discountedPrice: 9.0
   },
 ]);
 

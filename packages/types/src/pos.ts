@@ -148,6 +148,32 @@ export interface SalesRecord {
   status: SalesStatus;
   /** 結算類型 */
   paymentType: SettlementType;
+  /** 會員卡號 */
+  memberCardNo?: string;
+  /** 會員姓名 */
+  memberName?: string;
+  /** 會員等級 */
+  memberLevel?: string;
+  /** 獲得積分 */
+  earnedPoints?: number;
+  /** 消費模式 */
+  consumptionMode?: string;
+  /** 訂單備註 */
+  orderNote?: string;
+  /** 撤單人 */
+  cancelledBy?: string;
+  /** 撤單時間 */
+  cancelledAt?: string;
+  /** 撤單備註 */
+  cancelNote?: string;
+  /** 印刷品類型 */
+  printType?: string;
+  /** 印刷品編號 */
+  printNumber?: string;
+  /** 印刷品規格 */
+  printSpec?: string;
+  /** 折後單價 */
+  discountedPrice?: number;
 }
 
 /** 銷售記録搜索條件 */
