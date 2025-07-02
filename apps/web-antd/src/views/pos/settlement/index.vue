@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, reactive, onMounted } from 'vue';
+import { computed, ref, reactive, onMounted, watch } from 'vue';
 import { Page } from '@vben/common-ui';
 import { $t } from '#/locales';
 import { 
@@ -14,6 +14,7 @@ import {
   InputNumber,
   Modal,
   Radio,
+  Divider,
   message
 } from 'ant-design-vue';
 import type { 
@@ -33,7 +34,7 @@ const mockProducts: Product[] = [
     chineseName: '澳門基本法',
     portugueseName: 'Lei Básica de Macau',
     publisher: '澳門特別行政區政府',
-    coverUrl: '/api/placeholder/150/200',
+    coverUrl: '/image/default-cover.jpg',
     publishDate: '2023-01-15',
     language: 'zh-CN',
     price: 25.00,
@@ -46,7 +47,7 @@ const mockProducts: Product[] = [
     chineseName: '公共行政概論',
     portugueseName: 'Introdução à Administração Pública',
     publisher: '澳門大學出版社',
-    coverUrl: '/api/placeholder/150/200',
+    coverUrl: '/image/default-cover.jpg',
     publishDate: '2023-02-20',
     language: 'zh-CN',
     price: 45.00,
@@ -59,7 +60,7 @@ const mockProducts: Product[] = [
     chineseName: '澳門經濟發展報告',
     portugueseName: 'Relatório de Desenvolvimento Económico de Macau',
     publisher: '澳門經濟學會',
-    coverUrl: '/api/placeholder/150/200',
+    coverUrl: '/image/default-cover.jpg',
     publishDate: '2023-03-10',
     language: 'zh-CN',
     price: 35.00,
@@ -72,7 +73,7 @@ const mockProducts: Product[] = [
     chineseName: '澳門教育史',
     portugueseName: 'História da Educação em Macau',
     publisher: '澳門教育出版社',
-    coverUrl: '/api/placeholder/150/200',
+    coverUrl: '/image/default-cover.jpg',
     publishDate: '2023-04-05',
     language: 'zh-CN',
     price: 55.00,
@@ -85,7 +86,7 @@ const mockProducts: Product[] = [
     chineseName: '澳門歷史文化遺產',
     portugueseName: 'Património Histórico e Cultural de Macau',
     publisher: '澳門文化局',
-    coverUrl: '/api/placeholder/150/200',
+    coverUrl: '/image/default-cover.jpg',
     publishDate: '2023-05-12',
     language: 'zh-CN',
     price: 65.00,
@@ -98,7 +99,7 @@ const mockProducts: Product[] = [
     chineseName: '澳門文學選集',
     portugueseName: 'Antologia Literária de Macau',
     publisher: '澳門作家協會',
-    coverUrl: '/api/placeholder/150/200',
+    coverUrl: '/image/default-cover.jpg',
     publishDate: '2023-06-18',
     language: 'zh-CN',
     price: 40.00,
@@ -121,6 +122,14 @@ const paymentInfo = reactive<PaymentInfo>({
   amount: 0,
   received: 0,
   change: 0
+});
+
+// 優惠折扣相關數據
+const discountInfo = reactive({
+  type: 'none', // none, percentage, fixed
+  value: 0,
+  originalAmount: 0,
+  discountAmount: 0
 });
 
 // 掛單相關數據
@@ -255,6 +264,17 @@ const paymentMethods = [
   { label: $t('pos.payment.other'), value: 'other' }
 ];
 
+// 優惠折扣選項
+const discountOptions = [
+  { label: '無折扣', value: 'none', discount: 0 },
+  { label: '會員折扣 (9折)', value: 'member', discount: 0.1 },
+  { label: '學生折扣 (8.5折)', value: 'student', discount: 0.15 },
+  { label: '員工折扣 (8折)', value: 'employee', discount: 0.2 },
+  { label: '批發折扣 (7.5折)', value: 'wholesale', discount: 0.25 },
+  { label: '促銷折扣 (7折)', value: 'promotion', discount: 0.3 },
+  { label: '清倉折扣 (5折)', value: 'clearance', discount: 0.5 }
+];
+
 // 方法
 function addToCart(product: Product) {
   const existingItem = cartItems.value.find(item => item.product.id === product.id);
@@ -298,6 +318,12 @@ function openPaymentModal() {
     return;
   }
   
+  // 初始化折扣信息
+  discountInfo.type = 'none';
+  discountInfo.value = 0;
+  discountInfo.originalAmount = totalAmount.value;
+  discountInfo.discountAmount = 0;
+  
   paymentInfo.amount = totalAmount.value;
   paymentInfo.received = totalAmount.value;
   paymentInfo.change = 0;
@@ -310,6 +336,31 @@ function calculateChange() {
   } else {
     paymentInfo.change = 0;
   }
+}
+
+// 計算折扣
+function calculateDiscount() {
+  const selectedDiscount = discountOptions.find(option => option.value === discountInfo.type);
+  if (selectedDiscount && selectedDiscount.discount > 0) {
+    discountInfo.originalAmount = totalAmount.value;
+    discountInfo.discountAmount = totalAmount.value * selectedDiscount.discount;
+    paymentInfo.amount = totalAmount.value - discountInfo.discountAmount;
+  } else {
+    discountInfo.originalAmount = totalAmount.value;
+    discountInfo.discountAmount = 0;
+    paymentInfo.amount = totalAmount.value;
+  }
+  
+  // 重新計算找零
+  if (paymentInfo.method === 'cash') {
+    paymentInfo.received = paymentInfo.amount;
+    calculateChange();
+  }
+}
+
+// 處理折扣變更
+function handleDiscountChange() {
+  calculateDiscount();
 }
 
 function confirmPayment() {
@@ -356,21 +407,24 @@ function loadHeldOrders() {
   }, 500);
 }
 
-function handleHeldOrderSettle(record: any) {
+function handleHeldOrderRetrieve(record: any) {
+  console.log('取回掛單:', record);
+  // 這裡可以添加取回邏輯，例如將掛單商品重新加載到購物車
+  heldOrdersModalVisible.value = false;
+}
+
+function handleHeldOrderDelete(record: any) {
   Modal.confirm({
-    title: '確認結算',
-    content: `確定要結算單據 ${record.documentNumber} 嗎？`,
+    title: '確認刪除',
+    content: `確定要刪除單據 ${record.documentNumber} 嗎？`,
     onOk() {
-      // 打開支付界面
-      paymentInfo.amount = record.totalAmount;
-      paymentInfo.received = record.totalAmount;
-      paymentInfo.change = 0;
-      paymentModalVisible.value = true;
-      
-      // 關閉掛單模態框
-      heldOrdersModalVisible.value = false;
-      
-      message.success(`正在為單據 ${record.documentNumber} 進行結算`);
+      // 從掛單列表中移除該記錄
+      const index = heldOrders.value.findIndex(item => item.id === record.id);
+      if (index > -1) {
+        heldOrders.value.splice(index, 1);
+        heldOrdersPagination.total--;
+        message.success(`單據 ${record.documentNumber} 已刪除`);
+      }
     }
   });
 }
@@ -404,77 +458,46 @@ const heldOrdersColumns = [
     title: $t('pos.heldOrders.location'),
     dataIndex: 'location',
     key: 'location',
-    width: 120,
+    width: 150,
     customRender: ({ text }: { text: string }) => getLocationText(text)
   },
   {
     title: $t('pos.heldOrders.documentNumber'),
     dataIndex: 'documentNumber',
     key: 'documentNumber',
-    width: 150
-  },
-  {
-    title: $t('pos.heldOrders.productName'),
-    dataIndex: 'productName',
-    key: 'productName',
     width: 200
   },
   {
     title: $t('pos.heldOrders.saleDate'),
     dataIndex: 'saleDate',
     key: 'saleDate',
-    width: 120
-  },
-  {
-    title: $t('pos.heldOrders.salesPersonId'),
-    dataIndex: 'salesPersonId',
-    key: 'salesPersonId',
-    width: 120
-  },
-  {
-    title: $t('pos.heldOrders.quantity'),
-    dataIndex: 'quantity',
-    key: 'quantity',
-    width: 80,
-    align: 'center'
-  },
-  {
-    title: $t('pos.heldOrders.unitPrice'),
-    dataIndex: 'unitPrice',
-    key: 'unitPrice',
-    width: 100,
-    align: 'right',
-    customRender: ({ text }: { text: number }) => `$${text.toFixed(2)}`
-  },
-  {
-    title: $t('pos.heldOrders.totalAmount'),
-    dataIndex: 'totalAmount',
-    key: 'totalAmount',
-    width: 120,
-    align: 'right',
-    customRender: ({ text }: { text: number }) => `$${text.toFixed(2)}`
-  },
-  {
-    title: $t('pos.heldOrders.status'),
-    dataIndex: 'status',
-    key: 'status',
-    width: 100,
-    customRender: ({ text }: { text: string }) => $t(`pos.salesRecords.statusOptions.${text}`)
-  },
-  {
-    title: $t('pos.heldOrders.paymentType'),
-    dataIndex: 'paymentType',
-    key: 'paymentType',
-    width: 120,
-    customRender: ({ text }: { text: string }) => getPaymentTypeText(text)
+    width: 150
   },
   {
     title: $t('pos.heldOrders.operation'),
     key: 'operation',
-    width: 100,
+    width: 200,
     align: 'center'
   }
 ];
+
+// 監聽支付模態框狀態，防止頁面滾動
+watch(paymentModalVisible, (newValue) => {
+  if (newValue) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
+  }
+});
+
+// 監聽掛單模態框狀態，防止頁面滾動
+watch(heldOrdersModalVisible, (newValue) => {
+  if (newValue) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
+  }
+});
 
 onMounted(() => {
   // 組件掛載時的初始化邏輯
@@ -679,122 +702,223 @@ onMounted(() => {
       </Row>
     </div>
     
-    <!-- 支付模態框 -->
-    <Modal
-      v-model:open="paymentModalVisible"
-      :title="$t('pos.payment.title')"
-      width="500px"
-      :footer="null"
-    >
-      <div class="payment-content">
-        <div class="payment-amount mb-4">
-          <div class="text-lg font-bold text-center">
-            {{ $t('pos.payment.amount') }}: 
-            <span class="text-red-600">${{ paymentInfo.amount.toFixed(2) }}</span>
+    <!-- 支付滑動面板 -->
+    <div class="payment-panel-container">
+      <!-- 遮罩層 -->
+      <div 
+        v-if="paymentModalVisible" 
+        class="payment-overlay"
+        @click="paymentModalVisible = false"
+      ></div>
+      
+      <!-- 滑動面板 -->
+      <div 
+        class="payment-panel" 
+        :class="{ 'panel-open': paymentModalVisible }"
+      >
+        <!-- 頭部 -->
+        <div class="payment-header">
+          <div class="header-content">
+            <Button 
+              type="text" 
+              size="large" 
+              @click="paymentModalVisible = false"
+              class="close-btn"
+            >
+              <template #icon>
+                <span class="icon-[lucide--x] size-5" />
+              </template>
+            </Button>
+            <h2 class="header-title">{{ $t('pos.payment.title') }}</h2>
           </div>
         </div>
-        
-        <div class="payment-method mb-4">
-          <div class="mb-2 font-medium">{{ $t('pos.payment.title') }}:</div>
-          <Radio.Group v-model:value="paymentInfo.method" class="w-full">
-            <Space direction="vertical" class="w-full">
-              <Radio 
-                v-for="method in paymentMethods" 
-                :key="method.value" 
-                :value="method.value"
-              >
-                {{ method.label }}
-              </Radio>
-            </Space>
-          </Radio.Group>
-        </div>
-        
-        <div v-if="paymentInfo.method === 'cash'" class="cash-payment mb-4">
-          <div class="mb-2">
-            <label class="block mb-1 font-medium">{{ $t('pos.payment.received') }}:</label>
-            <InputNumber
-              v-model:value="paymentInfo.received"
-              :min="paymentInfo.amount"
-              :precision="2"
-              class="w-full"
-              @change="calculateChange"
-            />
+
+        <!-- 內容區域 -->
+        <div class="payment-content">
+          <div class="payment-amount mb-6">
+            <div class="text-center">
+              <div v-if="discountInfo.discountAmount > 0" class="mb-2">
+                <div class="text-lg text-gray-500 line-through">
+                  原價: ${{ discountInfo.originalAmount.toFixed(2) }}
+                </div>
+                <div class="text-sm text-green-600 font-medium">
+                  已優惠: ${{ discountInfo.discountAmount.toFixed(2) }}
+                </div>
+              </div>
+              <div class="text-2xl font-bold">
+                {{ $t('pos.payment.amount') }}: 
+                <span class="text-red-600">${{ paymentInfo.amount.toFixed(2) }}</span>
+              </div>
+            </div>
           </div>
           
-          <div class="change-amount">
-            <div class="flex justify-between items-center text-lg">
-              <span>{{ $t('pos.payment.change') }}:</span>
-              <span class="font-bold text-green-600">${{ paymentInfo.change.toFixed(2) }}</span>
+          <!-- 優惠折扣選項 -->
+          <div class="discount-section mb-6">
+            <div class="mb-3 text-lg font-medium">優惠折扣:</div>
+            <Select
+              v-model:value="discountInfo.type"
+              :options="discountOptions"
+              class="w-full"
+              size="large"
+              @change="handleDiscountChange"
+            />
+            
+            <!-- 折扣詳情 -->
+            <div v-if="discountInfo.discountAmount > 0" class="discount-details mt-3 p-3 bg-green-50 rounded">
+              <div class="flex justify-between text-sm">
+                <span>原價:</span>
+                <span>${{ discountInfo.originalAmount.toFixed(2) }}</span>
+              </div>
+              <div class="flex justify-between text-sm text-green-600">
+                <span>折扣:</span>
+                <span>-${{ discountInfo.discountAmount.toFixed(2) }}</span>
+              </div>
+              <Divider class="my-2" />
+              <div class="flex justify-between font-medium">
+                <span>實付金額:</span>
+                <span class="text-red-600">${{ paymentInfo.amount.toFixed(2) }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="payment-method mb-6">
+            <div class="mb-3 text-lg font-medium">{{ $t('pos.payment.title') }}:</div>
+            <Radio.Group v-model:value="paymentInfo.method" class="w-full">
+              <Space direction="vertical" class="w-full" size="large">
+                <Radio 
+                  v-for="method in paymentMethods" 
+                  :key="method.value" 
+                  :value="method.value"
+                  class="payment-radio"
+                >
+                  {{ method.label }}
+                </Radio>
+              </Space>
+            </Radio.Group>
+          </div>
+          
+          <div v-if="paymentInfo.method === 'cash'" class="cash-payment mb-6">
+            <div class="mb-4">
+              <label class="block mb-2 text-lg font-medium">{{ $t('pos.payment.received') }}:</label>
+              <InputNumber
+                v-model:value="paymentInfo.received"
+                :min="paymentInfo.amount"
+                :precision="2"
+                class="w-full"
+                size="large"
+                @change="calculateChange"
+              />
+            </div>
+            
+            <div class="change-amount">
+              <div class="flex justify-between items-center text-xl">
+                <span>{{ $t('pos.payment.change') }}:</span>
+                <span class="font-bold text-green-600">${{ paymentInfo.change.toFixed(2) }}</span>
+              </div>
             </div>
           </div>
         </div>
         
-        <div class="payment-actions">
+        <!-- 底部操作區 -->
+        <div class="payment-footer">
           <Row :gutter="16">
             <Col :span="12">
-              <Button block @click="paymentModalVisible = false">
+              <Button block size="large" @click="paymentModalVisible = false">
                 {{ $t('pos.actions.cancel') }}
               </Button>
             </Col>
             <Col :span="12">
-              <Button type="primary" block @click="confirmPayment">
+              <Button type="primary" block size="large" @click="confirmPayment">
                 {{ $t('pos.actions.confirm') }}
               </Button>
             </Col>
           </Row>
         </div>
       </div>
-    </Modal>
+    </div>
 
-    <!-- 掛單列表模態框 -->
-    <Modal
-      v-model:open="heldOrdersModalVisible"
-      :title="$t('pos.heldOrders.title')"
-      width="1200px"
-      :footer="null"
-      :destroyOnClose="true"
-    >
-      <div class="held-orders-content">
-        <Table
-          :columns="heldOrdersColumns"
-          :dataSource="heldOrders"
-          :loading="heldOrdersLoading"
-          :pagination="{
-            current: heldOrdersPagination.current,
-            pageSize: heldOrdersPagination.pageSize,
-            total: heldOrdersPagination.total,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total, range) => `第 ${range[0]}-${range[1]} 條，共 ${total} 條記錄`
-          }"
-          :scroll="{ x: 1000 }"
-          rowKey="id"
-          @change="handleHeldOrdersTableChange"
-        >
-          <template #bodyCell="{ column, record }">
-            <template v-if="column.key === 'operation'">
-              <Space>
-                <Button 
-                  type="primary" 
-                  size="small" 
-                  @click="handleHeldOrderSettle(record)"
-                >
-                  {{ $t('pos.heldOrders.settle') }}
-                </Button>
-              </Space>
-            </template>
-          </template>
-        </Table>
-      </div>
+    <!-- 掛單列表滑動面板 -->
+    <div class="held-orders-panel-container">
+      <!-- 遮罩層 -->
+      <div 
+        v-if="heldOrdersModalVisible" 
+        class="held-orders-overlay"
+        @click="heldOrdersModalVisible = false"
+      ></div>
       
-      <template #footer>
-        <div class="flex justify-end">
-          <Button @click="heldOrdersModalVisible = false">
-            {{ $t('pos.heldOrders.close') }}
-          </Button>
+      <!-- 滑動面板 -->
+      <div 
+        class="held-orders-panel" 
+        :class="{ 'panel-open': heldOrdersModalVisible }"
+      >
+        <!-- 頭部 -->
+        <div class="held-orders-header">
+          <div class="header-content">
+            <Button 
+              type="text" 
+              size="large" 
+              @click="heldOrdersModalVisible = false"
+              class="close-btn"
+            >
+              <template #icon>
+                <span class="icon-[lucide--x] size-5" />
+              </template>
+            </Button>
+            <h2 class="header-title">{{ $t('pos.heldOrders.title') }}</h2>
+          </div>
         </div>
-      </template>
-    </Modal>
+
+        <!-- 內容區域 -->
+        <div class="held-orders-content">
+          <Table
+            :columns="heldOrdersColumns"
+            :dataSource="heldOrders"
+            :loading="heldOrdersLoading"
+            :pagination="{
+              current: heldOrdersPagination.current,
+              pageSize: heldOrdersPagination.pageSize,
+              total: heldOrdersPagination.total,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              showTotal: (total, range) => `第 ${range[0]}-${range[1]} 條，共 ${total} 條記錄`
+            }"
+            :scroll="{ x: 700 }"
+            rowKey="id"
+            @change="handleHeldOrdersTableChange"
+          >
+            <template #bodyCell="{ column, record }">
+              <template v-if="column.key === 'operation'">
+                <Space>
+                  <Button 
+                    type="primary" 
+                    size="small" 
+                    @click="handleHeldOrderRetrieve(record)"
+                  >
+                    取回
+                  </Button>
+                  <Button 
+                    danger 
+                    size="small" 
+                    @click="handleHeldOrderDelete(record)"
+                  >
+                    刪除
+                  </Button>
+                </Space>
+              </template>
+            </template>
+          </Table>
+        </div>
+        
+        <!-- 底部操作區 -->
+        <div class="held-orders-footer">
+          <div class="flex justify-end">
+            <Button size="large" @click="heldOrdersModalVisible = false">
+              {{ $t('pos.heldOrders.close') }}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
   </Page>
 </template>
 
@@ -884,6 +1008,207 @@ onMounted(() => {
   padding: 16px 0;
 }
 
+/* 支付滑動面板樣式 */
+.payment-panel-container {
+  position: relative;
+  z-index: 1000;
+}
+
+.payment-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.payment-panel {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 500px;
+  max-width: 90vw;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-panel.panel-open {
+  right: 0;
+}
+
+.payment-header {
+  flex-shrink: 0;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafafa;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.header-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.payment-content {
+  flex: 1;
+  padding: 32px 24px;
+  overflow-y: auto;
+}
+
+.payment-radio {
+  padding: 12px 16px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  transition: all 0.2s;
+  width: 100%;
+  margin: 0;
+}
+
+.payment-radio:hover {
+  border-color: #1890ff;
+  background-color: #f6ffed;
+}
+
+.payment-radio.ant-radio-wrapper-checked {
+  border-color: #1890ff;
+  background-color: #e6f7ff;
+}
+
+.payment-footer {
+  flex-shrink: 0;
+  padding: 20px 24px;
+  border-top: 1px solid #f0f0f0;
+  background: #fafafa;
+}
+
+/* 掛單滑動面板樣式 */
+.held-orders-panel-container {
+  position: relative;
+  z-index: 1000;
+}
+
+.held-orders-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.held-orders-panel {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 800px;
+  max-width: 90vw;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+}
+
+.held-orders-panel.panel-open {
+  right: 0;
+}
+
+.held-orders-header {
+  flex-shrink: 0;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafafa;
+}
+
+.held-orders-content {
+  flex: 1;
+  padding: 32px 24px;
+  overflow-y: auto;
+}
+
+.held-orders-footer {
+  flex-shrink: 0;
+  padding: 20px 24px;
+  border-top: 1px solid #f0f0f0;
+  background: #fafafa;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 折扣相關樣式 */
+.discount-section {
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  padding: 16px;
+  background: #fafafa;
+}
+
+.discount-details {
+  border: 1px solid #d9f7be;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #f6ffed 0%, #f0f9ff 100%);
+}
+
+.payment-radio {
+  padding: 12px 16px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: all 0.3s;
+  background: white;
+}
+
+.payment-radio:hover {
+  border-color: #1890ff;
+  box-shadow: 0 2px 4px rgba(24, 144, 255, 0.1);
+}
+
+.payment-radio.ant-radio-wrapper-checked {
+  border-color: #1890ff;
+  background: #f0f9ff;
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.15);
+}
+
 /* 響應式設計 */
 @media (max-width: 1200px) {
   .products-grid .ant-col {
@@ -906,6 +1231,34 @@ onMounted(() => {
   .products-grid .ant-col {
     flex: 0 0 50%;
     max-width: 50%;
+  }
+  
+  .payment-panel {
+    width: 100%;
+  }
+  
+  .payment-content {
+    padding: 24px 16px;
+  }
+  
+  .payment-footer {
+    padding: 16px;
+  }
+  
+  .held-orders-panel {
+    width: 100%;
+  }
+  
+  .held-orders-content {
+    padding: 24px 16px;
+  }
+  
+  .held-orders-footer {
+    padding: 16px;
+  }
+  
+  .discount-section {
+    padding: 12px;
   }
 }
 </style>
