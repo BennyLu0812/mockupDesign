@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, h } from 'vue';
+import { ref, reactive, onMounted, watch, h } from 'vue';
 import { $t } from '#/locales';
 import {
   Button,
@@ -108,6 +108,11 @@ const columns: TableColumnsType<ManuscriptRecord> = [
     title: t('pos.manuscriptReceiving.list.amount'),
     dataIndex: 'amount',
     key: 'amount',
+    width: 120,
+  },
+  {
+    title: t('pos.manuscriptReceiving.list.status'),
+    key: 'status',
     width: 120,
   },
   {
@@ -352,6 +357,24 @@ const handleModeChange = (mode: 'auto' | 'manual') => {
   }
 };
 
+// 監聽接收稿件模態框狀態，防止頁面滾動
+watch(receiveModalVisible, (visible) => {
+  if (visible) {
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.overflow = ''
+  }
+})
+
+// 監聽編輯模態框狀態，防止頁面滾動
+watch(editModalVisible, (visible) => {
+  if (visible) {
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.overflow = ''
+  }
+})
+
 onMounted(() => {
   fetchData();
 });
@@ -447,18 +470,55 @@ onMounted(() => {
           <template v-else-if="column.key === 'amount'">
             {{ record.amount }} MOP
           </template>
+          <template v-else-if="column.key === 'status'">
+            <span :class="{
+              'text-green-600': record.amountType === 'pricing',
+              'text-orange-600': record.amountType === 'deposit'
+            }">
+              {{ record.amountType === 'pricing' 
+                ? $t('pos.manuscriptReceiving.statusTypes.completed') 
+                : $t('pos.manuscriptReceiving.statusTypes.pendingPayment') 
+              }}
+            </span>
+          </template>
         </template>
       </Table>
     </div>
 
-    <!-- 編輯模態框 -->
-    <Modal
-      v-model:open="editModalVisible"
-      :title="$t('pos.manuscriptReceiving.editModal.title')"
-      @ok="handleEditSave"
-      @cancel="editModalVisible = false"
-    >
-      <Form layout="vertical">
+    <!-- 編輯滑動面板 -->
+    <div class="edit-panel-container" :class="{ 'container-open': editModalVisible }">
+      <!-- 遮罩層 -->
+      <div 
+        v-if="editModalVisible" 
+        class="edit-overlay"
+        @click="editModalVisible = false"
+      ></div>
+      
+      <!-- 滑動面板 -->
+      <div 
+        class="edit-panel" 
+        :class="{ 'panel-open': editModalVisible }"
+      >
+        <!-- 頭部 -->
+        <div class="edit-header">
+          <div class="header-content">
+            <Button 
+              type="text" 
+              size="large" 
+              @click="editModalVisible = false"
+              class="close-btn"
+            >
+              <template #icon>
+                <span class="icon-[lucide--x] size-5" />
+              </template>
+            </Button>
+            <h2 class="header-title">{{ $t('pos.manuscriptReceiving.editModal.title') }}</h2>
+          </div>
+        </div>
+
+        <!-- 內容區域 -->
+        <div class="edit-content">
+          <Form layout="vertical">
         <FormItem :label="$t('pos.manuscriptReceiving.list.number')">
           <Input v-model:value="editForm.number" disabled />
         </FormItem>
@@ -488,36 +548,59 @@ onMounted(() => {
           <Input v-model:value="editForm.amount" type="number" />
         </FormItem>
       </Form>
-    </Modal>
+        </div>
+        
+        <!-- 底部操作區 -->
+        <div class="edit-footer">
+          <Space>
+            <Button size="large" @click="editModalVisible = false">
+              {{ $t('pos.manuscriptReceiving.editModal.cancel') }}
+            </Button>
+            <Button
+              type="primary"
+              size="large"
+              @click="handleEditSave"
+            >
+              {{ $t('pos.manuscriptReceiving.editModal.save') }}
+            </Button>
+          </Space>
+        </div>
+      </div>
+    </div>
 
-    <!-- 接收稿件模態框 -->
-    <Modal
-      v-model:open="receiveModalVisible"
-      :title="$t('pos.manuscriptReceiving.receiveModal.title')"
-      width="600px"
-      @cancel="receiveModalVisible = false"
-    >
-      <template #footer>
-        <Space>
-          <Button @click="receiveModalVisible = false">
-            {{ $t('pos.manuscriptReceiving.receiveModal.cancel') }}
-          </Button>
-          <Button
-            v-if="receiveForm.amountType === 'pricing'"
-            type="primary"
-            @click="handleReceiveSave"
-          >
-            {{ $t('pos.manuscriptReceiving.receiveModal.generateReceipt') }}
-          </Button>
-          <Button
-            v-if="receiveForm.amountType === 'deposit'"
-            type="primary"
-            @click="handleReceiveSave"
-          >
-            {{ $t('pos.manuscriptReceiving.receiveModal.temporaryReceipt') }}
-          </Button>
-        </Space>
-      </template>
+    <!-- 接收稿件滑動面板 -->
+     <div class="receive-panel-container" :class="{ 'container-open': receiveModalVisible }">
+       <!-- 遮罩層 -->
+       <div 
+         v-if="receiveModalVisible" 
+         class="receive-overlay"
+         @click="receiveModalVisible = false"
+       ></div>
+       
+       <!-- 滑動面板 -->
+       <div 
+         class="receive-panel" 
+         :class="{ 'panel-open': receiveModalVisible }"
+       >
+        <!-- 頭部 -->
+        <div class="receive-header">
+          <div class="header-content">
+            <Button 
+              type="text" 
+              size="large" 
+              @click="receiveModalVisible = false"
+              class="close-btn"
+            >
+              <template #icon>
+                <span class="icon-[lucide--x] size-5" />
+              </template>
+            </Button>
+            <h2 class="header-title">{{ $t('pos.manuscriptReceiving.receiveModal.title') }}</h2>
+          </div>
+        </div>
+
+        <!-- 內容區域 -->
+        <div class="receive-content">
       
       <Form layout="vertical">
         <!-- 文件上傳 -->
@@ -587,7 +670,34 @@ onMounted(() => {
           />
         </FormItem>
       </Form>
-    </Modal>
+        </div>
+        
+        <!-- 底部操作區 -->
+        <div class="receive-footer">
+          <Space>
+            <Button size="large" @click="receiveModalVisible = false">
+              {{ $t('pos.manuscriptReceiving.receiveModal.cancel') }}
+            </Button>
+            <Button
+              v-if="receiveForm.amountType === 'pricing'"
+              type="primary"
+              size="large"
+              @click="handleReceiveSave"
+            >
+              {{ $t('pos.manuscriptReceiving.receiveModal.generateReceipt') }}
+            </Button>
+            <Button
+              v-if="receiveForm.amountType === 'deposit'"
+              type="primary"
+              size="large"
+              @click="handleReceiveSave"
+            >
+              {{ $t('pos.manuscriptReceiving.receiveModal.temporaryReceipt') }}
+            </Button>
+          </Space>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -612,5 +722,178 @@ onMounted(() => {
 :deep(.ant-table-thead > tr > th) {
   background: #f5f5f5;
   font-weight: 600;
+}
+
+/* 接收稿件滑動面板樣式 */
+.receive-panel-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.receive-panel-container.container-open {
+  pointer-events: auto;
+}
+
+.receive-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+.receive-panel {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 600px;
+  height: 100%;
+  background: white;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  z-index: 1001;
+  pointer-events: auto;
+}
+
+.receive-panel.panel-open {
+  right: 0;
+}
+
+.receive-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafafa;
+  flex-shrink: 0;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.close-btn {
+  padding: 4px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.close-btn:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.header-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.receive-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.receive-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #f0f0f0;
+  background: #fafafa;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .receive-panel {
+    width: 100%;
+    right: -100%;
+  }
+}
+
+/* 編輯滑動面板樣式 */
+.edit-panel-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.edit-panel-container.container-open {
+  pointer-events: auto;
+}
+
+.edit-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+.edit-panel {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 600px;
+  height: 100%;
+  background: white;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  z-index: 1001;
+  pointer-events: auto;
+}
+
+.edit-panel.panel-open {
+  right: 0;
+}
+
+.edit-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafafa;
+  flex-shrink: 0;
+}
+
+.edit-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.edit-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #f0f0f0;
+  background: #fafafa;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 編輯面板響應式設計 */
+@media (max-width: 768px) {
+  .edit-panel {
+    width: 100%;
+    right: -100%;
+  }
 }
 </style>

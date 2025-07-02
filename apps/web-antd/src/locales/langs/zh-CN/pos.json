@@ -180,10 +180,11 @@
       "number": "編號",
       "receiveTime": "接收時間",
       "receiverName": "接收人名稱",
-      "uploader": "上傳人",
+      "uploader": "投稿人",
       "manuscriptName": "稿件名稱",
       "amountType": "金額類型",
       "amount": "金額",
+      "status": "狀態",
       "operation": "操作",
       "download": "下載",
       "edit": "編輯",
@@ -195,6 +196,10 @@
     "amountTypes": {
       "pricing": "計價",
       "deposit": "按金"
+    },
+    "statusTypes": {
+      "completed": "已完成",
+      "pendingPayment": "待補差額"
     },
     "filters": {
       "manuscriptName": "稿件名稱",
@@ -220,7 +225,7 @@
       "temporaryReceipt": "臨時收據",
       "cancel": "取消",
       "receiverName": "接收人名稱",
-      "uploader": "上傳人",
+      "uploader": "投稿人",
       "manuscriptName": "稿件名稱"
     },
     "messages": {
@@ -232,7 +237,7 @@
       "pleaseUploadFile": "請先上傳文件",
       "pleaseInputAmount": "請輸入金額",
       "pleaseInputReceiverName": "請輸入接收人名稱",
-      "pleaseInputUploader": "請輸入上傳人"
+      "pleaseInputUploader": "請輸入投稿人"
     }
   },
   "reports": {
