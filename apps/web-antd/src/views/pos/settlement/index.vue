@@ -31,78 +31,78 @@ const mockProducts: Product[] = [
   {
     id: '1',
     code: 'LAW001',
-    chineseName: '澳門基本法',
-    portugueseName: 'Lei Básica de Macau',
-    publisher: '澳門特別行政區政府',
-    coverUrl: '/image/default-cover.jpg',
-    publishDate: '2023-01-15',
+    chineseName: '行政程序法典',
+    portugueseName: 'Código do Procedimento Administrativo',
+    publisher: '印務局',
+    coverUrl: '/image/法律1.jpg',
+    publishDate: '2025/07',
     language: 'zh-CN',
-    price: 25.00,
+    price: 40.00,
     category: 'law',
     stock: 100
   },
   {
     id: '2',
     code: 'POL001',
-    chineseName: '公共行政概論',
-    portugueseName: 'Introdução à Administração Pública',
-    publisher: '澳門大學出版社',
-    coverUrl: '/image/default-cover.jpg',
-    publishDate: '2023-02-20',
+    chineseName: '一國兩制”研究 2025年 第1期(總第53期)',
+    portugueseName: 'Revista de Estudos de Um País Dois Sistemas, 2025 No. 1',
+    publisher: '澳門理工大學 - 一國兩制研究中心',
+    coverUrl: '/image/政治行政1.jpg',
+    publishDate: '2025/04',
     language: 'zh-CN',
-    price: 45.00,
+    price: 50.00,
     category: 'politics',
     stock: 50
   },
   {
     id: '3',
     code: 'ECO001',
-    chineseName: '澳門經濟發展報告',
-    portugueseName: 'Relatório de Desenvolvimento Económico de Macau',
-    publisher: '澳門經濟學會',
-    coverUrl: '/image/default-cover.jpg',
-    publishDate: '2023-03-10',
+    chineseName: '澳門藍皮書 -- 澳門經濟社會發展報告(2021-2022)',
+    portugueseName: 'Blue Book of Macau - Annual Report on Economy and Society of Macau (2021-2022)',
+    publisher: '澳門基金會',
+    coverUrl: '/image/經濟1.jpg',
+    publishDate: '2025/04',
     language: 'zh-CN',
-    price: 35.00,
+    price: 200.00,
     category: 'economy',
     stock: 75
   },
   {
     id: '4',
     code: 'EDU001',
-    chineseName: '澳門教育史',
-    portugueseName: 'História da Educação em Macau',
-    publisher: '澳門教育出版社',
-    coverUrl: '/image/default-cover.jpg',
-    publishDate: '2023-04-05',
+    chineseName: '中葡會展口譯',
+    portugueseName: 'Interpretação de Convenções e Exposições Chinês-Português',
+    publisher: '澳門理工大學',
+    coverUrl: '/image/教育1.jpg',
+    publishDate: '2023/08',
     language: 'zh-CN',
-    price: 55.00,
+    price: 120.00,
     category: 'education',
     stock: 30
   },
   {
     id: '5',
     code: 'HIS001',
-    chineseName: '澳門歷史文化遺產',
-    portugueseName: 'Património Histórico e Cultural de Macau',
-    publisher: '澳門文化局',
-    coverUrl: '/image/default-cover.jpg',
-    publishDate: '2023-05-12',
+    chineseName: 'Review of Culture - International Edition 77',
+    portugueseName: 'Review of Culture - International Edition 77',
+    publisher: '澳門特別行政區政府文化局',
+    coverUrl: '/image/歷史.jpg',
+    publishDate: '2025',
     language: 'zh-CN',
-    price: 65.00,
+    price: 150.00,
     category: 'history',
     stock: 40
   },
   {
     id: '6',
     code: 'LIT001',
-    chineseName: '澳門文學選集',
-    portugueseName: 'Antologia Literária de Macau',
-    publisher: '澳門作家協會',
-    coverUrl: '/image/default-cover.jpg',
-    publishDate: '2023-06-18',
+    chineseName: 'Cross and Dragon',
+    portugueseName: 'Cross and Dragon',
+    publisher: '澳門基金會',
+    coverUrl: '/image/文學.jpg',
+    publishDate: '2025',
     language: 'zh-CN',
-    price: 40.00,
+    price: 200.00,
     category: 'literature',
     stock: 60
   }
@@ -135,6 +135,11 @@ const discountInfo = reactive({
 // 掛單相關數據
 const heldOrdersModalVisible = ref(false);
 const heldOrdersLoading = ref(false);
+
+// 圖片預覽相關數據
+const imagePreviewVisible = ref(false);
+const previewImageUrl = ref('');
+const previewImageName = ref('');
 const heldOrdersPagination = reactive({
   current: 1,
   pageSize: 10,
@@ -226,7 +231,7 @@ const cartColumns = [
     dataIndex: 'price',
     key: 'price',
     width: '20%',
-    customRender: ({ record }: { record: CartItem }) => `$${record.product.price.toFixed(2)}`
+    customRender: ({ record }: { record: CartItem }) => `MOP ${record.product.price.toFixed(2)}`
   },
   {
     title: $t('pos.cart.quantity'),
@@ -239,7 +244,7 @@ const cartColumns = [
     dataIndex: 'subtotal',
     key: 'subtotal',
     width: '20%',
-    customRender: ({ record }: { record: CartItem }) => `$${record.subtotal.toFixed(2)}`
+    customRender: ({ record }: { record: CartItem }) => `MOP ${record.subtotal.toFixed(2)}`
   }
 ];
 
@@ -446,6 +451,13 @@ function getPaymentTypeText(paymentType: string) {
   return paymentTypeMap[paymentType] || paymentType;
 }
 
+// 圖片預覽方法
+function showImagePreview(imageUrl: string, imageName: string = '') {
+  previewImageUrl.value = imageUrl;
+  previewImageName.value = imageName;
+  imagePreviewVisible.value = true;
+}
+
 function handleHeldOrdersTableChange(pagination: any) {
   heldOrdersPagination.current = pagination.current;
   heldOrdersPagination.pageSize = pagination.pageSize;
@@ -542,7 +554,7 @@ onMounted(() => {
                   </div>
                   
                   <div class="flex justify-between items-center">
-                    <div class="text-sm">${{ item.product.price.toFixed(2) }}</div>
+                    <div class="text-sm">MOP {{ item.product.price.toFixed(2) }}</div>
                     <InputNumber 
                       v-model:value="item.quantity"
                       :min="1"
@@ -551,14 +563,14 @@ onMounted(() => {
                       class="w-16"
                       @change="(value) => updateQuantity(index, value || 1)"
                     />
-                    <div class="font-medium">${{ item.subtotal.toFixed(2) }}</div>
+                    <div class="font-medium">MOP {{ item.subtotal.toFixed(2) }}</div>
                   </div>
                 </div>
                 
                 <div class="cart-total mt-4 pt-4 border-t">
                   <div class="flex justify-between items-center text-lg font-bold">
                     <span>{{ $t('pos.cart.totalAmount') }}:</span>
-                    <span class="text-red-600">${{ totalAmount.toFixed(2) }}</span>
+              <span class="text-red-600">MOP {{ totalAmount.toFixed(2) }}</span>
                   </div>
                 </div>
               </div>
@@ -656,11 +668,11 @@ onMounted(() => {
                   >
                     <div class="product-content">
                       <!-- 封面圖片 -->
-                      <div class="product-cover mb-2">
+                      <div class="product-cover mb-2 cursor-pointer" @click="showImagePreview(product.coverUrl, product.chineseName)">
                         <img 
                           :src="product.coverUrl" 
                           :alt="product.chineseName"
-                          class="w-full h-32 object-cover rounded"
+                          class="w-full h-32 object-contain rounded hover:opacity-80 transition-opacity"
                         />
                       </div>
                       
@@ -679,7 +691,7 @@ onMounted(() => {
                         
                         <div class="product-footer flex justify-between items-center">
                           <div class="product-price text-lg font-bold text-red-600">
-                            ${{ product.price.toFixed(2) }}
+                            MOP {{ product.price.toFixed(2) }}
                           </div>
                           <Button 
                             type="primary" 
@@ -739,15 +751,15 @@ onMounted(() => {
             <div class="text-center">
               <div v-if="discountInfo.discountAmount > 0" class="mb-2">
                 <div class="text-lg text-gray-500 line-through">
-                  原價: ${{ discountInfo.originalAmount.toFixed(2) }}
+                  原價: MOP {{ discountInfo.originalAmount.toFixed(2) }}
                 </div>
                 <div class="text-sm text-green-600 font-medium">
-                  已優惠: ${{ discountInfo.discountAmount.toFixed(2) }}
+                  已優惠: MOP {{ discountInfo.discountAmount.toFixed(2) }}
                 </div>
               </div>
               <div class="text-2xl font-bold">
                 {{ $t('pos.payment.amount') }}: 
-                <span class="text-red-600">${{ paymentInfo.amount.toFixed(2) }}</span>
+                <span class="text-red-600">MOP {{ paymentInfo.amount.toFixed(2) }}</span>
               </div>
             </div>
           </div>
@@ -767,16 +779,16 @@ onMounted(() => {
             <div v-if="discountInfo.discountAmount > 0" class="discount-details mt-3 p-3 bg-green-50 rounded">
               <div class="flex justify-between text-sm">
                 <span>原價:</span>
-                <span>${{ discountInfo.originalAmount.toFixed(2) }}</span>
+                <span>MOP {{ discountInfo.originalAmount.toFixed(2) }}</span>
               </div>
               <div class="flex justify-between text-sm text-green-600">
                 <span>折扣:</span>
-                <span>-${{ discountInfo.discountAmount.toFixed(2) }}</span>
+                <span>-MOP {{ discountInfo.discountAmount.toFixed(2) }}</span>
               </div>
               <Divider class="my-2" />
               <div class="flex justify-between font-medium">
                 <span>實付金額:</span>
-                <span class="text-red-600">${{ paymentInfo.amount.toFixed(2) }}</span>
+                <span class="text-red-600">MOP {{ paymentInfo.amount.toFixed(2) }}</span>
               </div>
             </div>
           </div>
@@ -813,7 +825,7 @@ onMounted(() => {
             <div class="change-amount">
               <div class="flex justify-between items-center text-xl">
                 <span>{{ $t('pos.payment.change') }}:</span>
-                <span class="font-bold text-green-600">${{ paymentInfo.change.toFixed(2) }}</span>
+                <span class="font-bold text-green-600">MOP {{ paymentInfo.change.toFixed(2) }}</span>
               </div>
             </div>
           </div>
@@ -919,6 +931,50 @@ onMounted(() => {
         </div>
       </div>
     </div>
+
+    <!-- 圖片預覽滑動面板 -->
+     <div class="image-preview-panel-container">
+       <!-- 遮罩層 -->
+       <div 
+         v-if="imagePreviewVisible" 
+         class="image-preview-overlay"
+         @click="imagePreviewVisible = false"
+       ></div>
+       
+       <!-- 滑動面板 -->
+       <div 
+         class="image-preview-panel" 
+         :class="{ 'panel-open': imagePreviewVisible }"
+       >
+         <!-- 頭部 -->
+         <div class="image-preview-header">
+           <div class="header-content">
+             <Button 
+               type="text" 
+               size="large" 
+               @click="imagePreviewVisible = false"
+               class="close-btn"
+             >
+               <template #icon>
+                 <span class="icon-[lucide--x] size-5" />
+               </template>
+             </Button>
+             <h2 class="header-title">{{ previewImageName || '圖片預覽' }}</h2>
+           </div>
+         </div>
+
+         <!-- 內容區域 -->
+         <div class="image-preview-content">
+           <div class="image-container">
+             <img 
+               :src="previewImageUrl" 
+               :alt="previewImageName"
+               class="preview-image"
+             />
+           </div>
+         </div>
+       </div>
+     </div>
   </Page>
 </template>
 
@@ -1175,6 +1231,74 @@ onMounted(() => {
   }
 }
 
+/* 圖片預覽滑動面板樣式 */
+.image-preview-panel-container {
+  position: relative;
+  z-index: 1000;
+}
+
+.image-preview-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.image-preview-panel {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 800px;
+  max-width: 90vw;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-preview-panel.panel-open {
+  right: 0;
+}
+
+.image-preview-header {
+  flex-shrink: 0;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafafa;
+}
+
+.image-preview-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
 /* 折扣相關樣式 */
 .discount-section {
   border: 1px solid #f0f0f0;
@@ -1259,6 +1383,14 @@ onMounted(() => {
   
   .discount-section {
     padding: 12px;
+  }
+  
+  .image-preview-panel {
+    width: 100%;
+  }
+  
+  .image-preview-content {
+    padding: 16px;
   }
 }
 </style>
