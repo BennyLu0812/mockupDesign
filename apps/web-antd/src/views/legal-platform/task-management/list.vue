@@ -405,7 +405,7 @@ onMounted(() => {
       <Card class="mb-4">
         <Form layout="inline" :model="searchForm">
           <Row :gutter="16" class="w-full">
-            <Col :span="6">
+            <Col :span="8">
               <FormItem :label="$t('page.legalPlatform.projectName')">
                 <Input
                   v-model:value="searchForm.projectName"
@@ -413,7 +413,7 @@ onMounted(() => {
                 />
               </FormItem>
             </Col>
-            <Col :span="6">
+            <Col :span="8">
               <FormItem :label="$t('page.legalPlatform.projectStatus')">
                 <Select
                   v-model:value="searchForm.projectStatus"
@@ -430,7 +430,7 @@ onMounted(() => {
                 </Select>
               </FormItem>
             </Col>
-            <Col :span="6">
+            <Col :span="8">
               <FormItem :label="$t('page.legalPlatform.projectNumber')">
                 <Input
                   v-model:value="searchForm.projectNumber"
@@ -438,7 +438,9 @@ onMounted(() => {
                 />
               </FormItem>
             </Col>
-            <Col :span="6">
+          </Row>
+          <Row :gutter="16" class="w-full mt-4">
+            <Col :span="8">
               <FormItem :label="$t('page.legalPlatform.startDate')">
                 <DatePicker
                   v-model:value="searchForm.startDate"
@@ -448,9 +450,7 @@ onMounted(() => {
                 />
               </FormItem>
             </Col>
-          </Row>
-          <Row :gutter="16" class="w-full mt-4">
-            <Col :span="6">
+            <Col :span="8">
               <FormItem :label="$t('page.legalPlatform.endDate')">
                 <DatePicker
                   v-model:value="searchForm.endDate"
@@ -460,7 +460,12 @@ onMounted(() => {
                 />
               </FormItem>
             </Col>
-            <Col :span="18" class="text-right">
+            <Col :span="8">
+              <!-- 留空位置 -->
+            </Col>
+          </Row>
+          <Row :gutter="16" class="w-full mt-4">
+            <Col :span="24" class="text-right">
               <Space>
                 <Button @click="handleReset">
                   {{ $t('page.legalPlatform.reset') }}
