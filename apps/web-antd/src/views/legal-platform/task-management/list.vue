@@ -26,9 +26,9 @@ import {
 
 // 搜索表單
 const searchForm = reactive({
-  projectName: '',
-  projectStatus: undefined,
-  projectNumber: '',
+  taskName: '',
+  taskStatus: undefined,
+  taskNumber: '',
   startDate: undefined,
   endDate: undefined,
 });
@@ -48,14 +48,14 @@ const pagination = reactive({
 const tableData = ref([
   {
     id: 1,
-    title: '法律條文審查項目',
+    title: '法律條文審查任務',
     status: 'inProgress',
     assignee: '陳大文',
     creator: '張三',
     createTime: '2024-01-15 10:30:00',
-    projectType: 'bill',
+    taskType: 'bill',
     priority: 'high',
-    projectNumber: 'LP-2024-001',
+    taskNumber: 'LP-2024-001',
     isReferenced: false,
   },
   {
@@ -65,9 +65,9 @@ const tableData = ref([
     assignee: '李四',
     creator: '陳大文',
     createTime: '2024-01-14 14:20:00',
-    projectType: 'general',
+    taskType: 'general',
     priority: 'medium',
-    projectNumber: 'LP-2024-002',
+    taskNumber: 'LP-2024-002',
     isReferenced: false,
   },
   {
@@ -77,9 +77,9 @@ const tableData = ref([
     assignee: '張三',
     creator: '李四',
     createTime: '2024-01-13 09:15:00',
-    projectType: 'other',
+    taskType: 'other',
     priority: 'low',
-    projectNumber: 'LP-2024-003',
+    taskNumber: 'LP-2024-003',
     isReferenced: true,
   },
 ]);
@@ -117,9 +117,9 @@ const columns = [
     width: 160,
   },
   {
-    title: $t('page.legalPlatform.projectType'),
-    dataIndex: 'projectType',
-    key: 'projectType',
+    title: $t('page.legalPlatform.taskType'),
+    dataIndex: 'taskType',
+    key: 'taskType',
     width: 120,
   },
   {
@@ -144,11 +144,11 @@ const statusOptions = [
   { value: 'cancelled', label: $t('page.legalPlatform.cancelled') },
 ];
 
-// 項目類型選項
-const projectTypeOptions = [
-  { value: 'general', label: $t('page.legalPlatform.generalProject') },
-  { value: 'bill', label: $t('page.legalPlatform.billProject') },
-  { value: 'other', label: $t('page.legalPlatform.otherProject') },
+// 任務類型選項
+const taskTypeOptions = [
+  { value: 'general', label: $t('page.legalPlatform.generalTask') },
+  { value: 'bill', label: $t('page.legalPlatform.billTask') },
+  { value: 'other', label: $t('page.legalPlatform.otherTask') },
 ];
 
 // 優先級選項
@@ -165,21 +165,21 @@ const selectedTask = ref<any>(null);
 
 // 新增任務表單數據
 const createFormData = reactive({
-  projectName: '',
-  projectDescription: '',
-  projectType: 'general',
-  projectStatus: 'preparing',
-  projectStartTime: undefined,
-  projectEndTime: undefined,
-  projectParticipants: [],
-  projectRemarks: '',
-  projectDueTime: undefined,
+  taskName: '',
+  taskDescription: '',
+  taskType: 'general',
+  taskStatus: 'preparing',
+  taskStartTime: undefined,
+  taskEndTime: undefined,
+  taskParticipants: [],
+  taskRemarks: '',
+  taskDueTime: undefined,
   estimatedHours: 0,
   attachments: [] as any[],
 });
 
-// 項目參與人員選項
-const participantOptions = [
+// 任務參與人員選項
+const taskParticipantOptions = [
   { value: 'chen', label: '陳大文' },
   { value: 'zhang', label: '張三' },
   { value: 'li', label: '李四' },
@@ -210,12 +210,12 @@ const getStatusText = (status: string) => {
   return statusMap[status] || status;
 };
 
-// 獲取項目類型文本
-const getProjectTypeText = (type: string) => {
+// 獲取任務類型文本
+const getTaskTypeText = (type: string) => {
   const typeMap: Record<string, string> = {
-    general: $t('page.legalPlatform.generalProject'),
-    bill: $t('page.legalPlatform.billProject'),
-    other: $t('page.legalPlatform.otherProject'),
+    general: $t('page.legalPlatform.generalTask'),
+    bill: $t('page.legalPlatform.billTask'),
+    other: $t('page.legalPlatform.otherTask'),
   };
   return typeMap[type] || type;
 };
@@ -240,9 +240,9 @@ const handleSearch = () => {
 // 重置搜索
 const handleReset = () => {
   Object.assign(searchForm, {
-    projectName: '',
-    projectStatus: undefined,
-    projectNumber: '',
+    taskName: '',
+    taskStatus: undefined,
+    taskNumber: '',
     startDate: undefined,
     endDate: undefined,
   });
@@ -297,15 +297,15 @@ const closeCreateDrawer = () => {
   createDrawerVisible.value = false;
   // 重置表單
   Object.assign(createFormData, {
-    projectName: '',
-    projectDescription: '',
-    projectType: 'general',
-    projectStatus: 'preparing',
-    projectStartTime: undefined,
-    projectEndTime: undefined,
-    projectParticipants: [],
-    projectRemarks: '',
-    projectDueTime: undefined,
+    taskName: '',
+    taskDescription: '',
+    taskType: 'general',
+    taskStatus: 'preparing',
+    taskStartTime: undefined,
+    taskEndTime: undefined,
+    taskParticipants: [],
+    taskRemarks: '',
+    taskDueTime: undefined,
     estimatedHours: 0,
     attachments: [],
   });
@@ -313,22 +313,22 @@ const closeCreateDrawer = () => {
 
 // 保存新增任務
 const handleSaveTask = () => {
-  if (!createFormData.projectName) {
-    message.error('請輸入項目名稱');
+  if (!createFormData.taskName) {
+    message.error('請輸入任務名稱');
     return;
   }
   
   // 模擬保存
   const newTask = {
     id: Date.now(),
-    title: createFormData.projectName,
-    status: createFormData.projectStatus,
+    title: createFormData.taskName,
+    status: createFormData.taskStatus,
     assignee: '當前用戶',
     creator: '當前用戶',
     createTime: new Date().toLocaleString('zh-CN'),
-    projectType: createFormData.projectType,
+    taskType: createFormData.taskType,
     priority: 'medium',
-    projectNumber: `LP-${new Date().getFullYear()}-${String(Date.now()).slice(-3)}`,
+    taskNumber: `LP-${new Date().getFullYear()}-${String(Date.now()).slice(-3)}`,
     isReferenced: false,
   };
   
@@ -406,18 +406,18 @@ onMounted(() => {
         <Form layout="inline" :model="searchForm">
           <Row :gutter="16" class="w-full">
             <Col :span="8">
-              <FormItem :label="$t('page.legalPlatform.projectName')">
+              <FormItem :label="$t('page.legalPlatform.taskName')">
                 <Input
-                  v-model:value="searchForm.projectName"
-                  :placeholder="$t('page.legalPlatform.projectName')"
+                  v-model:value="searchForm.taskName"
+                  :placeholder="$t('page.legalPlatform.taskName')"
                 />
               </FormItem>
             </Col>
             <Col :span="8">
-              <FormItem :label="$t('page.legalPlatform.projectStatus')">
+              <FormItem :label="$t('page.legalPlatform.taskStatus')">
                 <Select
-                  v-model:value="searchForm.projectStatus"
-                  :placeholder="$t('page.legalPlatform.projectStatus')"
+                  v-model:value="searchForm.taskStatus"
+                  :placeholder="$t('page.legalPlatform.taskStatus')"
                   allow-clear
                 >
                   <SelectOption
@@ -431,10 +431,10 @@ onMounted(() => {
               </FormItem>
             </Col>
             <Col :span="8">
-              <FormItem :label="$t('page.legalPlatform.projectNumber')">
+              <FormItem :label="$t('page.legalPlatform.taskNumber')">
                 <Input
-                  v-model:value="searchForm.projectNumber"
-                  :placeholder="$t('page.legalPlatform.projectNumber')"
+                  v-model:value="searchForm.taskNumber"
+                  :placeholder="$t('page.legalPlatform.taskNumber')"
                 />
               </FormItem>
             </Col>
@@ -498,8 +498,8 @@ onMounted(() => {
                 {{ getStatusText(record.status) }}
               </Tag>
             </template>
-            <template v-else-if="column.key === 'projectType'">
-              {{ getProjectTypeText(record.projectType) }}
+            <template v-else-if="column.key === 'taskType'">
+              {{ getTaskTypeText(record.taskType) }}
             </template>
             <template v-else-if="column.key === 'priority'">
               <Tag :color="getPriorityConfig(record.priority).color">
@@ -538,13 +538,13 @@ onMounted(() => {
         <div class="grid grid-cols-12 gap-4">
           <!-- 左側主要內容區域 -->
           <div class="col-span-7">
-            <Card class="mb-4" :title="$t('page.legalPlatform.projectName')">
+            <Card class="mb-4" :title="$t('page.legalPlatform.taskName')">
               <div class="text-lg font-medium">{{ selectedTask.title }}</div>
             </Card>
 
-            <Card :title="$t('page.legalPlatform.projectDescription')">
+            <Card :title="$t('page.legalPlatform.taskDescription')">
               <div class="min-h-[300px] p-4 bg-gray-50 rounded">
-                這裡是項目描述內容...
+                這裡是任務描述內容...
               </div>
             </Card>
 
@@ -566,11 +566,11 @@ onMounted(() => {
             <Card class="mb-1" title="基礎字段">
               <div class="space-y-3">
                 <div class="flex justify-between">
-                  <span class="text-gray-600">{{ $t('page.legalPlatform.projectType') }}:</span>
-                  <span>{{ getProjectTypeText(selectedTask.projectType) }}</span>
+                  <span class="text-gray-600">{{ $t('page.legalPlatform.taskType') }}:</span>
+                  <span>{{ getTaskTypeText(selectedTask.taskType) }}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span class="text-gray-600">{{ $t('page.legalPlatform.projectStatus') }}:</span>
+                  <span class="text-gray-600">{{ $t('page.legalPlatform.taskStatus') }}:</span>
                   <Tag :color="getStatusColor(selectedTask.status)">
                     {{ getStatusText(selectedTask.status) }}
                   </Tag>
@@ -612,15 +612,15 @@ onMounted(() => {
         <div class="grid grid-cols-12 gap-4">
           <!-- 左側主要內容區域 -->
           <div class="col-span-7">
-            <Card class="mb-4" :title="$t('page.legalPlatform.projectName')">
+            <Card class="mb-4" :title="$t('page.legalPlatform.taskName')">
               <Input
-                v-model:value="createFormData.projectName"
-                :placeholder="$t('page.legalPlatform.projectName')"
+                v-model:value="createFormData.taskName"
+                :placeholder="$t('page.legalPlatform.taskName')"
                 size="large"
               />
             </Card>
 
-            <Card :title="$t('page.legalPlatform.projectDescription')">
+            <Card :title="$t('page.legalPlatform.taskDescription')">
               <div class="editor-toolbar mb-2">
                 <Space>
                   <Button size="small" type="text">
@@ -641,8 +641,8 @@ onMounted(() => {
                 </Space>
               </div>
               <Input.TextArea
-                v-model:value="createFormData.projectDescription"
-                :placeholder="$t('page.legalPlatform.projectDescription')"
+                v-model:value="createFormData.taskDescription"
+                :placeholder="$t('page.legalPlatform.taskDescription')"
                 :rows="10"
                 class="min-h-[300px]"
               />
@@ -669,10 +669,10 @@ onMounted(() => {
           <div class="col-span-5">
             <Card class="mb-1" title="基礎字段">
               <Form layout="horizontal" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
-                <FormItem :label="$t('page.legalPlatform.projectType')">
-                  <Select v-model:value="createFormData.projectType">
+                <FormItem :label="$t('page.legalPlatform.taskType')">
+                  <Select v-model:value="createFormData.taskType">
                     <SelectOption
-                      v-for="option in projectTypeOptions"
+                      v-for="option in taskTypeOptions"
                       :key="option.value"
                       :value="option.value"
                     >
@@ -681,8 +681,8 @@ onMounted(() => {
                   </Select>
                 </FormItem>
 
-                <FormItem :label="$t('page.legalPlatform.projectStatus')">
-                  <Select v-model:value="createFormData.projectStatus">
+                <FormItem :label="$t('page.legalPlatform.taskStatus')">
+                  <Select v-model:value="createFormData.taskStatus">
                     <SelectOption
                       v-for="option in statusOptions"
                       :key="option.value"
@@ -693,30 +693,30 @@ onMounted(() => {
                   </Select>
                 </FormItem>
 
-                <FormItem :label="$t('page.legalPlatform.projectStartTime')">
+                <FormItem :label="$t('page.legalPlatform.taskStartTime')">
                   <DatePicker
-                    v-model:value="createFormData.projectStartTime"
+                    v-model:value="createFormData.taskStartTime"
                     class="w-full"
                     format="YYYY-MM-DD"
                   />
                 </FormItem>
 
-                <FormItem :label="$t('page.legalPlatform.projectEndTime')">
+                <FormItem :label="$t('page.legalPlatform.taskEndTime')">
                   <DatePicker
-                    v-model:value="createFormData.projectEndTime"
+                    v-model:value="createFormData.taskEndTime"
                     class="w-full"
                     format="YYYY-MM-DD"
                   />
                 </FormItem>
 
-                <FormItem :label="$t('page.legalPlatform.projectParticipants')">
+                <FormItem :label="$t('page.legalPlatform.taskParticipants')">
                   <Select
-                    v-model:value="createFormData.projectParticipants"
+                    v-model:value="createFormData.taskParticipants"
                     mode="multiple"
-                    :placeholder="$t('page.legalPlatform.projectParticipants')"
+                    :placeholder="$t('page.legalPlatform.taskParticipants')"
                   >
                     <SelectOption
-                      v-for="option in participantOptions"
+                      v-for="option in taskParticipantOptions"
                       :key="option.value"
                       :value="option.value"
                     >
@@ -725,17 +725,17 @@ onMounted(() => {
                   </Select>
                 </FormItem>
 
-                <FormItem :label="$t('page.legalPlatform.projectRemarks')">
+                <FormItem :label="$t('page.legalPlatform.taskRemarks')">
                   <Input.TextArea
-                    v-model:value="createFormData.projectRemarks"
-                    :placeholder="$t('page.legalPlatform.projectRemarks')"
+                    v-model:value="createFormData.taskRemarks"
+                    :placeholder="$t('page.legalPlatform.taskRemarks')"
                     :rows="3"
                   />
                 </FormItem>
 
-                <FormItem :label="$t('page.legalPlatform.projectDueTime')">
+                <FormItem :label="$t('page.legalPlatform.taskDueTime')">
                   <DatePicker
-                    v-model:value="createFormData.projectDueTime"
+                    v-model:value="createFormData.taskDueTime"
                     class="w-full"
                     format="YYYY-MM-DD HH:mm"
                     show-time

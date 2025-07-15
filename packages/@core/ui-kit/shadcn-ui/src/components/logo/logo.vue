@@ -64,7 +64,7 @@ withDefaults(defineProps<Props>(), {
       <template v-if="!collapsed">
         <slot name="text">
           <span class="text-foreground truncate text-nowrap font-semibold">
-            {{ text }}
+            法律統一平台
           </span>
         </slot>
       </template>
