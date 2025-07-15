@@ -51,9 +51,6 @@ catalogs:
     '@manypkg/get-packages':
       specifier: ^3.0.0
       version: 3.0.0
-    '@nolebase/vitepress-plugin-git-changelog':
-      specifier: ^2.17.0
-      version: 2.17.0
     '@playwright/test':
       specifier: ^1.52.0
       version: 1.52.0
@@ -129,9 +126,6 @@ catalogs:
     '@vee-validate/zod':
       specifier: ^4.15.0
       version: 4.15.0
-    '@vite-pwa/vitepress':
-      specifier: ^1.0.0
-      version: 1.0.0
     '@vitejs/plugin-vue':
       specifier: ^5.2.3
       version: 5.2.3
@@ -219,9 +213,6 @@ catalogs:
     echarts:
       specifier: ^5.6.0
       version: 5.6.0
-    element-plus:
-      specifier: ^2.9.9
-      version: 2.9.9
     eslint:
       specifier: ^9.26.0
       version: 9.26.0
@@ -321,12 +312,6 @@ catalogs:
     lucide-vue-next:
       specifier: ^0.507.0
       version: 0.507.0
-    medium-zoom:
-      specifier: ^1.1.0
-      version: 1.1.0
-    naive-ui:
-      specifier: ^2.41.0
-      version: 2.41.0
     nitropack:
       specifier: ^2.11.11
       version: 2.11.11
@@ -453,9 +438,6 @@ catalogs:
     unbuild:
       specifier: ^3.5.0
       version: 3.5.0
-    unplugin-element-plus:
-      specifier: ^0.10.0
-      version: 0.10.0
     vee-validate:
       specifier: ^4.15.0
       version: 4.15.0
@@ -480,12 +462,6 @@ catalogs:
     vite-plugin-vue-devtools:
       specifier: ^7.7.6
       version: 7.7.6
-    vitepress:
-      specifier: ^1.6.3
-      version: 1.6.3
-    vitepress-plugin-group-icons:
-      specifier: ^1.5.2
-      version: 1.5.2
     vitest:
       specifier: ^3.1.2
       version: 3.1.2
@@ -707,12 +683,19 @@ importers:
       pinia:
         specifier: ^3.0.2
         version: 3.0.2(typescript@5.8.3)(vue@3.5.13(typescript@5.8.3))
+      sortablejs:
+        specifier: 'catalog:'
+        version: 1.15.6
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.8.3)
       vue-router:
         specifier: 'catalog:'
         version: 4.5.1(vue@3.5.13(typescript@5.8.3))
+    devDependencies:
+      '@types/sortablejs':
+        specifier: 'catalog:'
+        version: 1.15.8
 
   apps/web-ele:
     dependencies:

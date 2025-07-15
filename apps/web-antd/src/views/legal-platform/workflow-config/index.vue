@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { Page } from '@vben/common-ui';
 import { $t } from '#/locales';
 import {
@@ -20,6 +20,7 @@ import {
   Tooltip,
   message,
 } from 'ant-design-vue';
+import Sortable from 'sortablejs';
 
 // 工作流狀態列表
 const workflowStates = ref([
@@ -166,6 +167,48 @@ const toggleTransition = (from: string, to: string) => {
     transitionMatrix.value[from][to] = !transitionMatrix.value[from][to];
   }
 };
+
+// 根據狀態名稱獲取狀態對象
+const getStatusByName = (statusName: string) => {
+  return workflowStates.value.find(state => state.name === statusName);
+};
+
+// 拖拽排序功能
+const initSortable = () => {
+  const statusListElement = document.querySelector('.status-list');
+  if (statusListElement) {
+    Sortable.create(statusListElement, {
+      animation: 150,
+      ghostClass: 'sortable-ghost',
+      chosenClass: 'sortable-chosen',
+      dragClass: 'sortable-drag',
+      onEnd: (evt) => {
+        const { oldIndex, newIndex } = evt;
+        if (oldIndex !== undefined && newIndex !== undefined && oldIndex !== newIndex) {
+          // 重新排序狀態數組
+          const movedItem = workflowStates.value.splice(oldIndex, 1)[0];
+          workflowStates.value.splice(newIndex, 0, movedItem);
+          
+          // 重新構建轉換矩陣以保持順序一致
+          const newMatrix: Record<string, Record<string, boolean>> = {};
+          workflowStates.value.forEach(fromState => {
+            newMatrix[fromState.name] = {};
+            workflowStates.value.forEach(toState => {
+              newMatrix[fromState.name][toState.name] = 
+                transitionMatrix.value[fromState.name]?.[toState.name] || false;
+            });
+          });
+          transitionMatrix.value = newMatrix;
+        }
+      }
+    });
+  }
+};
+
+// 組件掛載後初始化拖拽
+onMounted(() => {
+  initSortable();
+});
 </script>
 
 <template>
@@ -178,15 +221,16 @@ const toggleTransition = (from: string, to: string) => {
         </Button>
       </div>
 
-      <div class="grid grid-cols-12 gap-6">
+      <div class="grid grid-cols-12 gap-2">
         <!-- 左側狀態列表 -->
         <div class="col-span-3">
           <Card title="工作流狀態" class="h-full">
-            <div class="space-y-3">
+            <div class="space-y-1 status-list">
               <div
                 v-for="state in workflowStates"
                 :key="state.id"
-                class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 group"
+                class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 group cursor-move mb-1"
+                data-v-0641961b
               >
                 <div class="flex items-center space-x-3">
                   <span class="icon-[lucide--grip-vertical] size-4 text-gray-400 cursor-move" />
@@ -216,7 +260,7 @@ const toggleTransition = (from: string, to: string) => {
         </div>
 
         <!-- 右側狀態轉換矩陣 -->
-        <div class="col-span-9">
+        <div class="col-span-9 pl-1">
           <Card title="狀態轉換矩陣" class="mb-6">
             <div class="overflow-x-auto">
               <table class="w-full border-collapse">
@@ -364,17 +408,17 @@ const toggleTransition = (from: string, to: string) => {
       <div class="space-y-4">
         <div class="flex items-center space-x-2">
           <span
-            :class="getStatusColorClass('green')"
+            :class="getStatusColorClass(getStatusByName(createRuleForm.fromStatus)?.color || 'gray')"
             class="px-2 py-1 rounded text-sm font-medium"
           >
-            {{ $t('page.legalPlatform.processing') }}
+            {{ getStatusByName(createRuleForm.fromStatus)?.label || createRuleForm.fromStatus }}
           </span>
           <span class="icon-[lucide--arrow-right] size-4" />
           <span
-            :class="getStatusColorClass('blue')"
+            :class="getStatusColorClass(getStatusByName(createRuleForm.toStatus)?.color || 'gray')"
             class="px-2 py-1 rounded text-sm font-medium"
           >
-            {{ $t('page.legalPlatform.pending') }}
+            {{ getStatusByName(createRuleForm.toStatus)?.label || createRuleForm.toStatus }}
           </span>
         </div>
         
@@ -479,5 +523,32 @@ table {
 table th,
 table td {
   border: 1px solid #d1d5db;
+}
+
+/* 拖拽樣式 */
+.sortable-ghost {
+  opacity: 0.4;
+}
+
+.sortable-chosen {
+  background-color: #f0f9ff;
+}
+
+.sortable-drag {
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* data-v-0641961b 間隔調整 */
+[data-v-0641961b] {
+  margin-bottom: 5px;
+}
+
+[data-v-0641961b]:last-child {
+  margin-bottom: 0;
+}
+
+.status-list {
+  min-height: 200px;
 }
 </style>

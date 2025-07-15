@@ -21,6 +21,15 @@ const routes: RouteRecordRaw[] = [
         },
         children: [
           {
+            name: 'TaskList',
+            path: '/list',
+            component: () => import('#/views/legal-platform/task-management/list.vue'),
+            meta: {
+              icon: 'lucide:list',
+              title: $t('page.legalPlatform.taskList'),
+            },
+          },
+          {
             name: 'TaskCreate',
             path: '/create',
             component: () => import('#/views/legal-platform/task-management/create.vue'),
