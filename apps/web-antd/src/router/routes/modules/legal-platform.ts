@@ -31,6 +31,15 @@ const routes: RouteRecordRaw[] = [
           },
         ],
       },
+      {
+        name: 'WorkflowConfig',
+        path: '/workflow-config',
+        component: () => import('#/views/legal-platform/workflow-config/index.vue'),
+        meta: {
+          icon: 'lucide:settings',
+          title: $t('page.legalPlatform.workflowConfig'),
+        },
+      },
     ],
   },
 ];
