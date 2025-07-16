@@ -9,9 +9,14 @@ import {
   Col,
   Row,
   Space,
+  Drawer,
 } from 'ant-design-vue';
+import TemplateManagement from '../template-management/index.vue';
 
 const router = useRouter();
+
+// 抽屜狀態
+const templateManagementVisible = ref(false);
 
 // 項目模板數據
 const projectTemplates = ref([
@@ -51,8 +56,46 @@ const handleSelectTemplate = (template: any) => {
 
 // 處理模板管理
 const handleTemplateManagement = () => {
-  // 這裡可以跳轉到模板管理頁面
-  console.log('模板管理功能待實現');
+  templateManagementVisible.value = true;
+};
+
+// 關閉模板管理抽屜
+const handleCloseTemplateManagement = () => {
+  templateManagementVisible.value = false;
+};
+
+// 處理模版新增事件
+const handleTemplateAdded = (template: any) => {
+  // 將新增的模版添加到項目模板列表中
+  projectTemplates.value.push({
+    id: template.id,
+    name: template.name,
+    description: template.description,
+    icon: template.icon || 'lucide--file-text',
+    type: template.type || 'custom',
+  });
+};
+
+// 處理模版更新事件
+const handleTemplateUpdated = (template: any) => {
+  const index = projectTemplates.value.findIndex(t => t.id === template.id);
+  if (index !== -1) {
+    projectTemplates.value[index] = {
+      id: template.id,
+      name: template.name,
+      description: template.description,
+      icon: template.icon || 'lucide--file-text',
+      type: template.type || 'custom',
+    };
+  }
+};
+
+// 處理模版刪除事件
+const handleTemplateDeleted = (templateId: string) => {
+  const index = projectTemplates.value.findIndex(t => t.id === templateId);
+  if (index !== -1) {
+    projectTemplates.value.splice(index, 1);
+  }
 };
 
 // 獲取模板圖標類名
@@ -124,6 +167,22 @@ const getTemplateIconClass = (iconName: string) => {
         </Col>
       </Row>
     </div>
+
+    <!-- 模版管理抽屜 -->
+    <Drawer
+      v-model:open="templateManagementVisible"
+      :title="$t('page.legalPlatform.templateManagement')"
+      width="80%"
+      :closable="true"
+      placement="right"
+      @close="handleCloseTemplateManagement"
+    >
+      <TemplateManagement 
+        @template-added="handleTemplateAdded"
+        @template-updated="handleTemplateUpdated"
+        @template-deleted="handleTemplateDeleted"
+      />
+    </Drawer>
   </Page>
 </template>
 

@@ -22,6 +22,15 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        name: 'TemplateManagement',
+        path: 'template-management',
+        component: () => import('#/views/legal-platform/template-management/index.vue'),
+        meta: {
+          icon: 'lucide:settings',
+          title: $t('page.legalPlatform.templateManagementPage'),
+        },
+      },
+      {
         name: 'ProjectManagement',
         path: 'project-management',
         meta: {
