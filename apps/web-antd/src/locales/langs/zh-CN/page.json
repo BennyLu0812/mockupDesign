@@ -20,6 +20,9 @@
     "workflowConfig": "工作流配置",
     "projectName": "項目名稱",
     "projectType": "項目類型",
+    "project": {
+      "type": "項目類型"
+    },
     "projectStatus": "項目狀態",
     "projectStartTime": "項目開始時間",
     "projectEndTime": "項目結束時間",
@@ -114,6 +117,13 @@
     "billProjectDesc": "適用於法案相關的項目管理",
     "otherProjectDesc": "適用於其他類型的項目",
     "useThisTemplate": "用此模板新建項目",
-    "projectTemplates": "項目模板"
+    "projectTemplates": "項目模板",
+    "projectManagement": "項目",
+    "projectCreate": "新增項目",
+    "projectList": "項目列表",
+    "fillProjectInfo": "填寫項目信息",
+    "projectCover": "項目封面",
+    "clickToModify": "點擊修改",
+    "uploadCover": "上傳封面"
   }
 }

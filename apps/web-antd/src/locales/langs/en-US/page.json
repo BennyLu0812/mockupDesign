@@ -19,6 +19,9 @@
     "workflowConfig": "Workflow Configuration",
     "projectName": "Project Name",
     "projectType": "Project Type",
+    "project": {
+      "type": "Project Type"
+    },
     "projectStatus": "Project Status",
     "projectStartTime": "Project Start Time",
     "projectEndTime": "Project End Time",
@@ -113,6 +116,13 @@
     "billProjectDesc": "Suitable for bill-related project management",
     "otherProjectDesc": "Suitable for other types of projects",
     "useThisTemplate": "Create Project with This Template",
-    "projectTemplates": "Project Templates"
+    "projectTemplates": "Project Templates",
+    "projectManagement": "Projects",
+    "projectCreate": "Create Project",
+    "projectList": "Project List",
+    "fillProjectInfo": "Fill Project Information",
+    "projectCover": "Project Cover",
+    "clickToModify": "Click to Modify",
+    "uploadCover": "Upload Cover"
   }
 }

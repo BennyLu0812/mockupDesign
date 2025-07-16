@@ -22,6 +22,25 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        name: 'ProjectManagement',
+        path: 'project-management',
+        meta: {
+          icon: 'lucide:folder',
+          title: $t('page.legalPlatform.projectManagement'),
+        },
+        children: [
+          {
+            name: 'ProjectCreate',
+            path: 'create',
+            component: () => import('#/views/legal-platform/project-management/create.vue'),
+            meta: {
+              icon: 'lucide:plus',
+              title: $t('page.legalPlatform.projectCreate'),
+            },
+          },
+        ],
+      },
+      {
         name: 'TaskManagement',
         path: 'task-management',
         meta: {

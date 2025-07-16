@@ -40,9 +40,9 @@ const projectTemplates = ref([
 
 // 處理模板選擇
 const handleSelectTemplate = (template: any) => {
-  // 跳轉到新增任務頁面，並傳遞模板類型
+  // 跳轉到新增項目頁面，並傳遞模板類型
   router.push({
-    path: '/legal-platform/task-management/create',
+    path: '/legal-platform/project-management/create',
     query: {
       templateType: template.type,
     },
