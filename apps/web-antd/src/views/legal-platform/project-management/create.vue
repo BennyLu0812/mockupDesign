@@ -96,17 +96,25 @@ const handleSubmit = async () => {
   try {
     // 這裡應該調用API保存項目數據
     console.log('提交的項目數據:', formData);
+    console.log('編輯模式:', isEditMode.value);
+    console.log('項目ID:', projectId.value);
     
     // 模擬API調用
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    message.success('項目創建成功!');
-    
-    // 跳轉到項目列表或其他頁面
-    router.push('/legal-platform/project-template-selection');
+    if (isEditMode.value) {
+      message.success('項目更新成功!');
+      // 跳轉到項目詳情頁面
+      router.push(`/legal-platform/project-management/detail/${projectId.value}`);
+    } else {
+      message.success('項目創建成功!');
+      // 跳轉到項目列表頁面
+      router.push('/legal-platform/project-management/list');
+    }
   } catch (error) {
-    message.error('項目創建失敗，請重試');
-    console.error('創建項目失敗:', error);
+    const errorMsg = isEditMode.value ? '項目更新失敗，請重試' : '項目創建失敗，請重試';
+    message.error(errorMsg);
+    console.error('保存項目失敗:', error);
   }
 };
 
@@ -120,23 +128,65 @@ const disabledDate = (current: any) => {
   return current && current < new Date().setHours(0, 0, 0, 0);
 };
 
+// 判斷是否為編輯模式
+const isEditMode = ref(false);
+const projectId = ref('');
+
+// 模擬項目數據（實際應從API獲取）
+const mockProjectData = {
+  1: {
+    projectCover: '/api/placeholder/300/200',
+    projectName: '法律條文審查項目',
+    projectType: '法案項目',
+    projectStartTime: '2024-01-15',
+    projectEndTime: '2024-03-15',
+    projectDueTime: '2024-03-10',
+    projectParticipants: ['chen-da-wen', 'zhang-san'],
+    projectRemarks: '本項目旨在對新修訂的法律條文進行全面審查，確保條文的合法性、合理性和可操作性。',
+  },
+};
+
+// 加載項目數據（編輯模式）
+const loadProjectData = async (id: string) => {
+  try {
+    // 實際應該調用API獲取項目數據
+    const projectData = mockProjectData[id as keyof typeof mockProjectData];
+    if (projectData) {
+      Object.assign(formData, projectData);
+    }
+  } catch (error) {
+    message.error('加載項目數據失敗');
+    console.error('加載項目數據失敗:', error);
+  }
+};
+
 // 初始化表單數據
 onMounted(() => {
-  // 根據路由參數設置項目類型
-  const templateType = route.query.templateType as string;
-  if (templateType) {
-    switch (templateType) {
-      case 'general':
-        formData.projectType = '一般項目';
-        break;
-      case 'bill':
-        formData.projectType = '法案項目';
-        break;
-      case 'other':
-        formData.projectType = '其他項目';
-        break;
-      default:
-        formData.projectType = '一般項目';
+  // 檢查是否為編輯模式
+  const id = route.query.id as string;
+  const mode = route.query.mode as string;
+  
+  if (id && mode === 'edit') {
+    isEditMode.value = true;
+    projectId.value = id;
+    loadProjectData(id);
+  } else {
+    // 根據路由參數設置項目類型（新建模式）
+    const templateType = route.query.templateType as string;
+    if (templateType) {
+      switch (templateType) {
+        case 'general':
+          formData.projectType = '一般項目';
+          break;
+        case 'bill':
+          formData.projectType = '法案項目';
+          break;
+        case 'other':
+          formData.projectType = '其他項目';
+          break;
+        default:
+          formData.projectType = '一般項目';
+      }
     }
   }
 });
@@ -144,7 +194,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Page :title="$t('page.legalPlatform.fillProjectInfo')">
+  <Page :title="isEditMode ? '編輯項目' : $t('page.legalPlatform.fillProjectInfo')">
     <div class="project-create-container">
       <Card class="project-form-card">
         <Form

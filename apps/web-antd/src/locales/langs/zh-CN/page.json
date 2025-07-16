@@ -23,6 +23,10 @@
     "project": {
       "type": "項目類型"
     },
+    "projectManagement": "項目",
+    "projectCreate": "新增項目",
+    "projectDetail": "項目詳情",
+    "projectList": "項目列表",
     "projectStatus": "項目狀態",
     "projectStartTime": "項目開始時間",
     "projectEndTime": "項目結束時間",
@@ -120,6 +124,7 @@
     "projectTemplates": "項目模板",
     "projectManagement": "項目",
     "projectCreate": "新增項目",
+    "projectDetail": "項目詳情",
     "projectList": "項目列表",
     "fillProjectInfo": "填寫項目信息",
     "projectCover": "項目封面",

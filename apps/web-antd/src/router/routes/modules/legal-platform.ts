@@ -30,12 +30,31 @@ const routes: RouteRecordRaw[] = [
         },
         children: [
           {
+            name: 'ProjectList',
+            path: 'list',
+            component: () => import('#/views/legal-platform/project-management/list.vue'),
+            meta: {
+              icon: 'lucide:list',
+              title: $t('page.legalPlatform.projectList'),
+            },
+          },
+          {
             name: 'ProjectCreate',
             path: 'create',
             component: () => import('#/views/legal-platform/project-management/create.vue'),
             meta: {
               icon: 'lucide:plus',
               title: $t('page.legalPlatform.projectCreate'),
+            },
+          },
+          {
+            name: 'ProjectDetail',
+            path: 'detail/:id',
+            component: () => import('#/views/legal-platform/project-management/detail.vue'),
+            meta: {
+              icon: 'lucide:eye',
+              title: $t('page.legalPlatform.projectDetail'),
+              hideInMenu: true,
             },
           },
         ],
