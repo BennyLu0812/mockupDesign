@@ -104,6 +104,16 @@
     "deleteSuccess": "刪除成功",
     "cannotDeleteInProgress": "進行中的項目不允許刪除，只能走流程取消或完結",
     "cannotDeleteReferenced": "被關聯或引用的項目不允許刪除",
-    "preparingStatus": "預備中"
+    "preparingStatus": "預備中",
+    "projectTemplateSelection": "選擇項目模板",
+    "templateManagement": "模板管理",
+    "generalProjectTemplate": "一般項目",
+    "billProjectTemplate": "法案項目",
+    "otherProjectTemplate": "其他",
+    "generalProjectDesc": "適用於一般性的法律事務處理",
+    "billProjectDesc": "適用於法案相關的項目管理",
+    "otherProjectDesc": "適用於其他類型的項目",
+    "useThisTemplate": "用此模板新建項目",
+    "projectTemplates": "項目模板"
   }
 }

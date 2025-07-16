@@ -13,8 +13,17 @@ const routes: RouteRecordRaw[] = [
     path: '/legal-platform',
     children: [
       {
+        name: 'ProjectTemplateSelection',
+        path: 'project-template-selection',
+        component: () => import('#/views/legal-platform/project-template-selection/index.vue'),
+        meta: {
+          icon: 'lucide:layout-template',
+          title: $t('page.legalPlatform.projectTemplateSelection'),
+        },
+      },
+      {
         name: 'TaskManagement',
-        path: '/task-management',
+        path: 'task-management',
         meta: {
           icon: 'lucide:clipboard-list',
           title: $t('page.legalPlatform.taskManagement'),
@@ -22,7 +31,7 @@ const routes: RouteRecordRaw[] = [
         children: [
           {
             name: 'TaskList',
-            path: '/list',
+            path: 'list',
             component: () => import('#/views/legal-platform/task-management/list.vue'),
             meta: {
               icon: 'lucide:list',
@@ -31,7 +40,7 @@ const routes: RouteRecordRaw[] = [
           },
           {
             name: 'TaskCreate',
-            path: '/create',
+            path: 'create',
             component: () => import('#/views/legal-platform/task-management/create.vue'),
             meta: {
               icon: 'lucide:plus',
@@ -42,7 +51,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         name: 'WorkflowConfig',
-        path: '/workflow-config',
+        path: 'workflow-config',
         component: () => import('#/views/legal-platform/workflow-config/index.vue'),
         meta: {
           icon: 'lucide:settings',

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { ref, reactive } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, reactive, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { Page } from '@vben/common-ui';
 import { $t } from '#/locales';
 import {
@@ -22,6 +22,7 @@ import {
 // 移除@ant-design/icons-vue導入，使用Tailwind CSS圖標
 
 const router = useRouter();
+const route = useRoute();
 
 // 表單數據
 const formData = reactive({
@@ -36,6 +37,35 @@ const formData = reactive({
   taskDueTime: undefined,
   estimatedHours: 0,
   attachments: [] as any[],
+});
+
+// 初始化表單數據
+const initFormData = () => {
+  const templateType = route.query.templateType as string;
+  if (templateType) {
+    formData.taskType = templateType;
+    
+    // 根據模板類型設置預設值
+    switch (templateType) {
+      case 'general':
+        formData.taskName = '一般法律事務任務';
+        formData.taskDescription = '這是一個一般性的法律事務處理任務...';
+        break;
+      case 'bill':
+        formData.taskName = '法案相關任務';
+        formData.taskDescription = '這是一個法案相關的項目管理任務...';
+        break;
+      case 'other':
+        formData.taskName = '其他類型任務';
+        formData.taskDescription = '這是一個其他類型的項目任務...';
+        break;
+    }
+  }
+};
+
+// 組件掛載時初始化
+onMounted(() => {
+  initFormData();
 });
 
 // 任務類型選項
