@@ -186,6 +186,11 @@ const handleEdit = (record: any) => {
   });
 };
 
+// 角色管理
+const handleRoleManagement = (record: any) => {
+  router.push(`/legal-platform/project-management/role-management/${record.id}`);
+};
+
 // 刪除項目
 const handleDelete = (record: any) => {
   console.log('刪除項目:', record);
@@ -337,6 +342,14 @@ onMounted(() => {
                 >
                   <span class="icon-[lucide--edit] size-4 mr-1" />
                   編輯
+                </Button>
+                <Button
+                  type="link"
+                  size="small"
+                  @click="handleRoleManagement(record)"
+                >
+                  <span class="icon-[lucide--users] size-4 mr-1" />
+                  角色管理
                 </Button>
                 <Button
                   type="link"

@@ -54,6 +54,11 @@ const handleTemplateManagement = () => {
   // 這裡可以跳轉到模板管理頁面
   console.log('模板管理功能待實現');
 };
+
+// 獲取模板圖標類名
+const getTemplateIconClass = (iconName: string) => {
+  return ['icon-[' + iconName + ']', 'size-12', 'text-blue-500'];
+};
 </script>
 
 <template>
@@ -88,7 +93,7 @@ const handleTemplateManagement = () => {
           >
             <!-- 圖標區域 -->
             <div class="template-icon-area bg-blue-50 rounded-lg p-6 mb-4 text-center">
-              <span :class="`icon-[${template.icon}] size-12 text-blue-500`" />
+              <span :class="getTemplateIconClass(template.icon)" />
             </div>
 
             <!-- 模板信息 -->

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { Page } from '@vben/common-ui';
 import { $t } from '#/locales';
 import {
@@ -21,6 +21,7 @@ import {
 
 const { Title, Text, Paragraph } = Typography;
 const route = useRoute();
+const router = useRouter();
 
 // 項目基本信息
 const projectInfo = reactive({
@@ -185,6 +186,14 @@ const handleViewAllMilestones = () => {
   console.log('查看所有里程碑功能待實現');
 };
 
+// 處理角色管理
+const handleRoleManagement = () => {
+  router.push({
+    path: '/legal-platform/project-management/role-management',
+    query: { projectId: projectInfo.id }
+  });
+};
+
 // 獲取狀態標籤顏色
 const getStatusColor = (status: string) => {
   const colorMap: Record<string, string> = {
@@ -210,12 +219,18 @@ const getStatusText = (status: string) => {
 // 獲取活動圖標
 const getActivityIcon = (type: string) => {
   const iconMap: Record<string, string> = {
-    task_created: 'lucide:plus-circle',
-    status_changed: 'lucide:edit',
-    member_joined: 'lucide:user-plus',
-    project_created: 'lucide:folder-plus',
+    task_created: 'lucide--plus-circle',
+    status_changed: 'lucide--edit',
+    member_joined: 'lucide--user-plus',
+    project_created: 'lucide--folder-plus',
   };
-  return iconMap[type] || 'lucide:circle';
+  return iconMap[type] || 'lucide--circle';
+};
+
+// 獲取活動圖標類名
+const getActivityIconClass = (type: string) => {
+  const iconName = getActivityIcon(type);
+  return 'icon-[' + iconName + '] size-4 text-gray-400 mt-1';
 };
 
 onMounted(() => {
@@ -243,10 +258,16 @@ onMounted(() => {
               </Tag>
             </Space>
           </div>
-          <Button type="primary">
-            <span class="icon-[lucide--eye] size-4 mr-1" />
-            概覽
-          </Button>
+          <Space>
+            <Button @click="handleRoleManagement">
+              <span class="icon-[lucide--users] size-4 mr-1" />
+              角色管理
+            </Button>
+            <Button type="primary">
+              <span class="icon-[lucide--eye] size-4 mr-1" />
+              概覽
+            </Button>
+          </Space>
         </div>
       </div>
 
@@ -449,7 +470,7 @@ onMounted(() => {
                   </div>
                   <Text type="secondary" class="text-xs">{{ activity.time }}</Text>
                 </div>
-                <span :class="`icon-[${getActivityIcon(activity.type)}] size-4 text-gray-400 mt-1`" />
+                <span :class="getActivityIconClass(activity.type)" />
               </div>
             </div>
           </Card>

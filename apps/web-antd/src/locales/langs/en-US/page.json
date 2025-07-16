@@ -28,6 +28,7 @@
     "creator": "Creator",
     "createTime": "Create Time",
     "operation": "Operation",
+    "projectRoleManagement": "Project Role Management",
     "project": {
       "type": "Project Type"
     },

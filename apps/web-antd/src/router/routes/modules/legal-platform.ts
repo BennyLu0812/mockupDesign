@@ -57,6 +57,15 @@ const routes: RouteRecordRaw[] = [
               hideInMenu: true,
             },
           },
+          {
+            name: 'ProjectRoleManagement',
+            path: 'role-management',
+            component: () => import('#/views/legal-platform/project-management/role-management.vue'),
+            meta: {
+              icon: 'lucide:users',
+              title: $t('page.legalPlatform.projectRoleManagement'),
+            },
+          },
         ],
       },
       {
