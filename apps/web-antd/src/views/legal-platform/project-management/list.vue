@@ -276,6 +276,10 @@ onMounted(() => {
                     <span class="icon-[lucide--refresh-cw] size-4 mr-1" />
                     重置
                   </Button>
+                  <Button type="primary" @click="handleCreate">
+                    <span class="icon-[lucide--plus] size-4 mr-1" />
+                    新增項目
+                  </Button>
                 </Space>
               </FormItem>
             </Col>
@@ -283,18 +287,7 @@ onMounted(() => {
         </Form>
       </Card>
 
-      <!-- 操作區域 -->
-      <Card class="mb-4">
-        <div class="flex justify-between items-center">
-          <div class="text-lg font-semibold">
-            項目列表
-          </div>
-          <Button type="primary" @click="handleCreate">
-            <span class="icon-[lucide--plus] size-4 mr-1" />
-            新增項目
-          </Button>
-        </div>
-      </Card>
+
 
       <!-- 表格區域 -->
       <Card>
