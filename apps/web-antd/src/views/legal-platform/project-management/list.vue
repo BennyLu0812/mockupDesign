@@ -104,7 +104,7 @@ const columns = [
     width: 120,
   },
   {
-    title: $t('page.legalPlatform.status'),
+    title: $t('page.legalPlatform.projectStatus'),
     dataIndex: 'status',
     key: 'status',
     width: 100,
@@ -120,12 +120,6 @@ const columns = [
     dataIndex: 'createTime',
     key: 'createTime',
     width: 160,
-  },
-  {
-    title: '成員數量',
-    dataIndex: 'memberCount',
-    key: 'memberCount',
-    width: 80,
   },
   {
     title: $t('page.legalPlatform.operation'),
@@ -184,11 +178,6 @@ const handleEdit = (record: any) => {
     path: '/legal-platform/project-management/create',
     query: { id: record.id, mode: 'edit' },
   });
-};
-
-// 角色管理
-const handleRoleManagement = (record: any) => {
-  router.push(`/legal-platform/project-management/role-management/${record.id}`);
 };
 
 // 刪除項目
@@ -342,14 +331,6 @@ onMounted(() => {
                 >
                   <span class="icon-[lucide--edit] size-4 mr-1" />
                   編輯
-                </Button>
-                <Button
-                  type="link"
-                  size="small"
-                  @click="handleRoleManagement(record)"
-                >
-                  <span class="icon-[lucide--users] size-4 mr-1" />
-                  角色管理
                 </Button>
                 <Button
                   type="link"

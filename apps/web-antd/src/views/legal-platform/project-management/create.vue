@@ -24,14 +24,15 @@ const route = useRoute();
 
 // 表單數據
 const formData = reactive({
-  projectCover: '',
   projectName: '',
   projectType: '一般項目',
+  projectStatus: '進行中',
   projectStartTime: undefined as string | undefined,
   projectEndTime: undefined as string | undefined,
   projectDueTime: undefined as string | undefined,
   projectParticipants: [] as string[],
   projectRemarks: '',
+  attachments: [] as any[],
 });
 
 // 表單驗證規則
@@ -42,6 +43,9 @@ const rules: Record<string, Rule[]> = {
   ],
   projectType: [
     { required: true, message: '請選擇項目類型', trigger: 'change' },
+  ],
+  projectStatus: [
+    { required: true, message: '請選擇項目狀態', trigger: 'change' },
   ],
   projectStartTime: [
     { required: true, message: '請選擇項目開始時間', trigger: 'change' },
@@ -61,32 +65,53 @@ const participantOptions = [
   { value: 'li-si', label: '李四' },
 ];
 
-// 封面上傳配置
+// 項目狀態選項
+const projectStatusOptions = [
+  { value: '進行中', label: '進行中' },
+  { value: '已完成', label: '已完成' },
+  { value: '已取消', label: '已取消' },
+  { value: '暫停', label: '暫停' },
+  { value: '預備中', label: '預備中' },
+];
+
+// 附件上傳配置
 const uploadProps = {
   name: 'file',
-  action: '/api/upload', // 這裡是mock的上傳地址
-  headers: {
-    authorization: 'authorization-text',
-  },
+  multiple: true,
   beforeUpload: (file: File) => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-    if (!isJpgOrPng) {
-      message.error('只能上傳 JPG/PNG 格式的圖片!');
+    const isValidType = [
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/pdf',
+      'video/',
+      'audio/',
+      'image/',
+    ].some(type => file.type.startsWith(type.replace('/', '')));
+    
+    if (!isValidType) {
+      message.error('只支持上傳 Word、Excel、PDF、音視頻和圖片文件！');
       return false;
     }
-    const isLt5M = file.size / 1024 / 1024 < 5;
-    if (!isLt5M) {
-      message.error('圖片大小不能超過 5MB!');
+    
+    const isLt10M = file.size / 1024 / 1024 < 10;
+    if (!isLt10M) {
+      message.error('文件大小不能超過 10MB！');
       return false;
     }
-    return true;
+    
+    return false; // 阻止自動上傳，只做本地處理
   },
   onChange: (info: any) => {
-    if (info.file.status === 'done') {
-      message.success(`${info.file.name} 文件上傳成功`);
-      formData.projectCover = info.file.response?.url || '';
-    } else if (info.file.status === 'error') {
-      message.error(`${info.file.name} 文件上傳失敗`);
+    if (info.file.status !== 'removed') {
+      formData.attachments.push(info.file);
+    }
+  },
+  onRemove: (file: any) => {
+    const index = formData.attachments.findIndex((item: any) => item.uid === file.uid);
+    if (index > -1) {
+      formData.attachments.splice(index, 1);
     }
   },
 };
@@ -135,14 +160,15 @@ const projectId = ref('');
 // 模擬項目數據（實際應從API獲取）
 const mockProjectData = {
   1: {
-    projectCover: '/api/placeholder/300/200',
     projectName: '法律條文審查項目',
     projectType: '法案項目',
+    projectStatus: '進行中',
     projectStartTime: '2024-01-15',
     projectEndTime: '2024-03-15',
     projectDueTime: '2024-03-10',
     projectParticipants: ['chen-da-wen', 'zhang-san'],
     projectRemarks: '本項目旨在對新修訂的法律條文進行全面審查，確保條文的合法性、合理性和可操作性。',
+    attachments: [],
   },
 };
 
@@ -203,36 +229,6 @@ onMounted(() => {
           layout="horizontal"
           class="project-form"
         >
-          <!-- 項目封面上傳 -->
-          <FormItem
-            :label="$t('page.legalPlatform.projectCover')"
-            name="projectCover"
-            :label-col="{ span: 6 }"
-            :wrapper-col="{ span: 18 }"
-          >
-            <div class="cover-upload-area">
-              <Upload
-                v-bind="uploadProps"
-                :show-upload-list="false"
-                class="cover-uploader"
-              >
-                <div class="upload-content">
-                  <div v-if="formData.projectCover" class="cover-preview">
-                    <img :src="formData.projectCover" alt="項目封面" class="cover-image" />
-                    <div class="cover-overlay">
-                      <span class="icon-[lucide--upload] upload-icon" />
-                      <div class="upload-text">{{ $t('page.legalPlatform.clickToModify') }}</div>
-                    </div>
-                  </div>
-                  <div v-else class="upload-placeholder">
-                    <span class="icon-[lucide--upload] upload-icon" />
-                    <div class="upload-text">{{ $t('page.legalPlatform.uploadCover') }}</div>
-                  </div>
-                </div>
-              </Upload>
-            </div>
-          </FormItem>
-
           <!-- 項目基本信息 -->
           <FormItem
             :label="$t('page.legalPlatform.projectName')"
@@ -255,6 +251,29 @@ onMounted(() => {
             >
               <span>{{ formData.projectType }}</span>
             </FormItem>
+
+          <!-- 項目狀態 -->
+          <FormItem
+            :label="$t('page.legalPlatform.projectStatus')"
+            name="projectStatus"
+            :label-col="{ span: 6 }"
+            :wrapper-col="{ span: 18 }"
+          >
+            <Select
+              v-model:value="formData.projectStatus"
+              :placeholder="'請選擇' + $t('page.legalPlatform.projectStatus')"
+              size="large"
+              style="width: 100%"
+            >
+              <SelectOption
+                v-for="status in projectStatusOptions"
+                :key="status.value"
+                :value="status.value"
+              >
+                {{ status.label }}
+              </SelectOption>
+            </Select>
+          </FormItem>
 
           <!-- 項目時間信息 -->
           <FormItem
@@ -344,6 +363,24 @@ onMounted(() => {
             />
           </FormItem>
 
+          <!-- 附件上傳 -->
+          <FormItem
+            :label="$t('page.legalPlatform.attachments')"
+            name="attachments"
+            :label-col="{ span: 6 }"
+            :wrapper-col="{ span: 18 }"
+          >
+            <Upload v-bind="uploadProps" :file-list="formData.attachments">
+              <Button>
+                <span class="icon-[lucide--upload] size-4 mr-1" />
+                {{ $t('page.legalPlatform.addAttachment') }}
+              </Button>
+            </Upload>
+            <div class="mt-2 text-sm text-gray-500">
+              支持 Word、Excel、PDF、音視頻等多媒體文件上傳
+            </div>
+          </FormItem>
+
           <!-- 操作按鈕 -->
           <FormItem class="form-actions">
             <Space size="large">
@@ -388,82 +425,23 @@ onMounted(() => {
   padding: 24px;
 }
 
-/* 封面上傳樣式 */
-.cover-upload-area {
-  width: 200px;
-  height: 120px;
+/* 附件上傳樣式 */
+:deep(.ant-upload-list) {
+  margin-top: 8px;
 }
 
-.cover-uploader {
-  width: 100%;
-  height: 100%;
-}
-
-.upload-content {
-  width: 100%;
-  height: 100%;
-  border: 2px dashed #d9d9d9;
+:deep(.ant-upload-list-item) {
   border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
+}
+
+:deep(.ant-upload-btn) {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
   transition: border-color 0.3s;
 }
 
-.upload-content:hover {
+:deep(.ant-upload-btn:hover) {
   border-color: #2196f3;
-}
-
-.cover-preview {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-.cover-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.cover-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.3s;
-  color: white;
-}
-
-.cover-preview:hover .cover-overlay {
-  opacity: 1;
-}
-
-.upload-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: #fafafa;
-  color: #999;
-}
-
-.upload-icon {
-  font-size: 24px;
-  margin-bottom: 8px;
-}
-
-.upload-text {
-  font-size: 14px;
 }
 
 /* 表單操作按鈕 */
@@ -498,9 +476,8 @@ onMounted(() => {
     padding: 16px;
   }
   
-  .cover-upload-area {
-    width: 100%;
-    max-width: 200px;
+  .project-form {
+    padding: 16px;
   }
 }
 </style>
