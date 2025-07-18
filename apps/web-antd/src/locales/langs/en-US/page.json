@@ -134,6 +134,17 @@
     "fillProjectInfo": "Fill Project Information",
     "projectCover": "Project Cover",
     "clickToModify": "Click to Modify",
-    "uploadCover": "Upload Cover"
+    "uploadCover": "Upload Cover",
+    "myProjects": "My Projects",
+    "myProjectsList": "My Projects List",
+    "participatingProjects": "Participating Projects",
+    "myRole": "My Role",
+    "projectProgress": "Project Progress",
+    "taskProgress": "Task Progress",
+    "completionRate": "Completion Rate",
+    "memberRole": "Member Role",
+    "projectLeader": "Project Leader",
+    "projectMember": "Project Member",
+    "observer": "Observer"
   }
 }

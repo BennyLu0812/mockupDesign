@@ -155,6 +155,17 @@
     "confirmDeleteTemplate": "確定要刪除此模版嗎？",
     "defaultFields": "默認字段",
     "customFields": "自定義字段",
-    "useThisTemplate": "使用此模版"
+    "useThisTemplate": "使用此模版",
+    "myProjects": "我的項目",
+    "myProjectsList": "我的項目列表",
+    "participatingProjects": "參與的項目",
+    "myRole": "我的角色",
+    "projectProgress": "項目進度",
+    "taskProgress": "任務進度",
+    "completionRate": "完成率",
+    "memberRole": "成員角色",
+    "projectLeader": "項目負責人",
+    "projectMember": "項目成員",
+    "observer": "觀察者"
   }
 }

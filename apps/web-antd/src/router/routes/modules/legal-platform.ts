@@ -114,6 +114,15 @@ const routes: RouteRecordRaw[] = [
           title: $t('page.legalPlatform.workflowConfig'),
         },
       },
+      {
+        name: 'MyProjects',
+        path: 'my-projects',
+        component: () => import('#/views/legal-platform/my-projects/index.vue'),
+        meta: {
+          icon: 'lucide:user-check',
+          title: $t('page.legalPlatform.myProjects'),
+        },
+      },
     ],
   },
 ];
