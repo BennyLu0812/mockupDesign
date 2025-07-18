@@ -53,7 +53,6 @@ const tableData = ref([
     assignee: '陳大文',
     creator: '張三',
     createTime: '2024-01-15 10:30:00',
-    taskType: 'bill',
     priority: 'high',
     taskNumber: 'LP-2024-001',
     isReferenced: false,
@@ -65,7 +64,6 @@ const tableData = ref([
     assignee: '李四',
     creator: '陳大文',
     createTime: '2024-01-14 14:20:00',
-    taskType: 'general',
     priority: 'medium',
     taskNumber: 'LP-2024-002',
     isReferenced: false,
@@ -77,7 +75,6 @@ const tableData = ref([
     assignee: '張三',
     creator: '李四',
     createTime: '2024-01-13 09:15:00',
-    taskType: 'other',
     priority: 'low',
     taskNumber: 'LP-2024-003',
     isReferenced: true,
@@ -86,6 +83,12 @@ const tableData = ref([
 
 // 表格列配置
 const columns = [
+  {
+    title: $t('page.legalPlatform.taskNumber'),
+    dataIndex: 'taskNumber',
+    key: 'taskNumber',
+    width: 140,
+  },
   {
     title: $t('page.legalPlatform.taskTitle'),
     dataIndex: 'title',
@@ -117,12 +120,6 @@ const columns = [
     width: 160,
   },
   {
-    title: $t('page.legalPlatform.taskType'),
-    dataIndex: 'taskType',
-    key: 'taskType',
-    width: 120,
-  },
-  {
     title: $t('page.legalPlatform.priority'),
     dataIndex: 'priority',
     key: 'priority',
@@ -144,12 +141,7 @@ const statusOptions = [
   { value: 'cancelled', label: $t('page.legalPlatform.cancelled') },
 ];
 
-// 任務類型選項
-const taskTypeOptions = [
-  { value: 'general', label: $t('page.legalPlatform.generalTask') },
-  { value: 'bill', label: $t('page.legalPlatform.billTask') },
-  { value: 'other', label: $t('page.legalPlatform.otherTask') },
-];
+
 
 // 優先級選項
 const priorityOptions = [
@@ -167,7 +159,6 @@ const selectedTask = ref<any>(null);
 const createFormData = reactive({
   taskName: '',
   taskDescription: '',
-  taskType: 'general',
   taskStatus: 'preparing',
   taskStartTime: undefined,
   taskEndTime: undefined,
@@ -210,15 +201,7 @@ const getStatusText = (status: string) => {
   return statusMap[status] || status;
 };
 
-// 獲取任務類型文本
-const getTaskTypeText = (type: string) => {
-  const typeMap: Record<string, string> = {
-    general: $t('page.legalPlatform.generalTask'),
-    bill: $t('page.legalPlatform.billTask'),
-    other: $t('page.legalPlatform.otherTask'),
-  };
-  return typeMap[type] || type;
-};
+
 
 // 獲取優先級文本和顏色
 const getPriorityConfig = (priority: string) => {
@@ -299,7 +282,6 @@ const closeCreateDrawer = () => {
   Object.assign(createFormData, {
     taskName: '',
     taskDescription: '',
-    taskType: 'general',
     taskStatus: 'preparing',
     taskStartTime: undefined,
     taskEndTime: undefined,
@@ -322,11 +304,10 @@ const handleSaveTask = () => {
   const newTask = {
     id: Date.now(),
     title: createFormData.taskName,
-    status: createFormData.taskStatus,
+    status: 'preparing', // 固定為預備中狀態
     assignee: '當前用戶',
     creator: '當前用戶',
     createTime: new Date().toLocaleString('zh-CN'),
-    taskType: createFormData.taskType,
     priority: 'medium',
     taskNumber: `LP-${new Date().getFullYear()}-${String(Date.now()).slice(-3)}`,
     isReferenced: false,
@@ -498,9 +479,6 @@ onMounted(() => {
                 {{ getStatusText(record.status) }}
               </Tag>
             </template>
-            <template v-else-if="column.key === 'taskType'">
-              {{ getTaskTypeText(record.taskType) }}
-            </template>
             <template v-else-if="column.key === 'priority'">
               <Tag :color="getPriorityConfig(record.priority).color">
                 {{ getPriorityConfig(record.priority).text }}
@@ -565,10 +543,6 @@ onMounted(() => {
           <div class="col-span-5">
             <Card class="mb-1" title="基礎字段">
               <div class="space-y-3">
-                <div class="flex justify-between">
-                  <span class="text-gray-600">{{ $t('page.legalPlatform.taskType') }}:</span>
-                  <span>{{ getTaskTypeText(selectedTask.taskType) }}</span>
-                </div>
                 <div class="flex justify-between">
                   <span class="text-gray-600">{{ $t('page.legalPlatform.taskStatus') }}:</span>
                   <Tag :color="getStatusColor(selectedTask.status)">
@@ -669,28 +643,8 @@ onMounted(() => {
           <div class="col-span-5">
             <Card class="mb-1" title="基礎字段">
               <Form layout="horizontal" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
-                <FormItem :label="$t('page.legalPlatform.taskType')">
-                  <Select v-model:value="createFormData.taskType">
-                    <SelectOption
-                      v-for="option in taskTypeOptions"
-                      :key="option.value"
-                      :value="option.value"
-                    >
-                      {{ option.label }}
-                    </SelectOption>
-                  </Select>
-                </FormItem>
-
                 <FormItem :label="$t('page.legalPlatform.taskStatus')">
-                  <Select v-model:value="createFormData.taskStatus">
-                    <SelectOption
-                      v-for="option in statusOptions"
-                      :key="option.value"
-                      :value="option.value"
-                    >
-                      {{ option.label }}
-                    </SelectOption>
-                  </Select>
+                  <span class="text-gray-700 font-medium">預備中</span>
                 </FormItem>
 
                 <FormItem :label="$t('page.legalPlatform.taskStartTime')">

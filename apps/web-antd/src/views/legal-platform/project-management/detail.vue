@@ -8,14 +8,21 @@ import {
   AvatarGroup,
   Button,
   Card,
+  Checkbox,
   Col,
+  DatePicker,
   Divider,
   Empty,
+  Form,
+  FormItem,
   Input,
   Modal,
   Popconfirm,
   Row,
+  Select,
+  SelectOption,
   Space,
+  Switch,
   Tag,
   Timeline,
   TimelineItem,
@@ -43,6 +50,10 @@ const projectInfo = reactive({
   cover: '/api/placeholder/300/200',
   visibility: '公開',
 });
+
+// 關注功能相關狀態
+const isFollowing = ref(false);
+const followersCount = ref(12);
 
 // 項目成員
 const projectMembers = ref([
@@ -137,6 +148,206 @@ const attachments = ref([
 
 // 新評論輸入
 const newComment = ref<Record<string, string>>({});
+
+// 標籤管理相關數據
+const tagManagementVisible = ref(false);
+const projectTags = ref([
+  {
+    id: '1',
+    name: '標籤1',
+    color: 'blue',
+    description: '項目重要標籤',
+    createTime: '2024-01-15 10:30:00',
+    creator: '陳大文',
+  },
+  {
+    id: '2',
+    name: '標籤2',
+    color: 'green',
+    description: '項目狀態標籤',
+    createTime: '2024-01-15 11:00:00',
+    creator: '陳大文',
+  },
+]);
+
+const tagForm = reactive({
+  id: '',
+  name: '',
+  color: 'blue',
+  description: '',
+});
+
+const isEditingTag = ref(false);
+const tagColors = [
+  { value: 'blue', label: '藍色' },
+  { value: 'green', label: '綠色' },
+  { value: 'red', label: '紅色' },
+  { value: 'orange', label: '橙色' },
+  { value: 'purple', label: '紫色' },
+  { value: 'cyan', label: '青色' },
+  { value: 'magenta', label: '洋紅' },
+  { value: 'gold', label: '金色' },
+  { value: 'lime', label: '檸檬綠' },
+  { value: 'volcano', label: '火山紅' },
+];
+
+// 項目流程節點記錄
+const processNodes = ref([
+  {
+    id: '1',
+    nodeName: '項目創建',
+    status: 'completed',
+    operator: '陳大文',
+    operatorAvatar: '/api/placeholder/32/32',
+    operateTime: '2024-01-15 10:30:00',
+    description: '項目正式創建，初始化項目基本信息',
+    duration: '30分鐘',
+  },
+  {
+    id: '2',
+    nodeName: '團隊組建',
+    status: 'completed',
+    operator: '陳大文',
+    operatorAvatar: '/api/placeholder/32/32',
+    operateTime: '2024-01-15 14:20:00',
+    description: '邀請團隊成員加入項目，分配初始角色',
+    duration: '2小時',
+  },
+  {
+    id: '3',
+    nodeName: '需求分析',
+    status: 'completed',
+    operator: '張三',
+    operatorAvatar: '/api/placeholder/32/32',
+    operateTime: '2024-01-16 09:15:00',
+    description: '完成項目需求分析，確定審查範圍和標準',
+    duration: '1天',
+  },
+  {
+    id: '4',
+    nodeName: '初步審查',
+    status: 'inProgress',
+    operator: '李四',
+    operatorAvatar: '/api/placeholder/32/32',
+    operateTime: '2024-01-18 08:30:00',
+    description: '正在進行法律條文的初步審查工作',
+    duration: '進行中',
+  },
+  {
+    id: '5',
+    nodeName: '專家評審',
+    status: 'pending',
+    operator: '',
+    operatorAvatar: '',
+    operateTime: '',
+    description: '等待外部專家進行評審',
+    duration: '待定',
+  },
+  {
+    id: '6',
+    nodeName: '最終報告',
+    status: 'pending',
+    operator: '',
+    operatorAvatar: '',
+    operateTime: '',
+    description: '提交最終審查報告',
+    duration: '待定',
+  },
+]);
+
+// 流程節點彈窗顯示狀態
+const processModalVisible = ref(false);
+
+// 通知功能相關數據
+// 通知設置彈窗顯示狀態
+const notificationModalVisible = ref(false);
+
+// 通知設置
+const notificationSettings = ref({
+  emailEnabled: true,
+  smsEnabled: true,
+  projectUpdates: true,
+  milestoneChanges: true,
+  taskAssignments: true,
+  documentUploads: true,
+  comments: false,
+});
+
+// 通知歷史記錄
+const notificationHistory = ref([
+  {
+    id: '1',
+    type: 'project_update',
+    title: '項目進度更新',
+    content: '項目「法律條文審查項目」已進入初步審查階段',
+    recipients: ['陳大文', '張三', '李四'],
+    methods: ['email', 'sms'],
+    sendTime: '2024-01-18 08:35:00',
+    status: 'sent',
+  },
+  {
+    id: '2',
+    type: 'milestone_change',
+    title: '里程碑狀態變更',
+    content: '里程碑「需求分析」已完成',
+    recipients: ['陳大文', '張三'],
+    methods: ['email'],
+    sendTime: '2024-01-16 17:20:00',
+    status: 'sent',
+  },
+  {
+    id: '3',
+    type: 'document_upload',
+    title: '新文檔上傳',
+    content: '李四上傳了新文檔「參考資料匯總.docx」',
+    recipients: ['陳大文', '張三'],
+    methods: ['email'],
+    sendTime: '2024-01-18 16:50:00',
+    status: 'sent',
+  },
+]);
+
+// 可選的通知接收人（項目成員）
+const notificationRecipients = ref([
+  {
+    id: '1',
+    name: '陳大文',
+    role: '項目負責人',
+    email: 'chen@example.com',
+    phone: '+886-912-345-678',
+    avatar: '/api/placeholder/32/32',
+    selected: true,
+  },
+  {
+    id: '2',
+    name: '張三',
+    role: '法律顧問',
+    email: 'zhang@example.com',
+    phone: '+886-912-345-679',
+    avatar: '/api/placeholder/32/32',
+    selected: true,
+  },
+  {
+    id: '3',
+    name: '李四',
+    role: '研究員',
+    email: 'li@example.com',
+    phone: '+886-912-345-680',
+    avatar: '/api/placeholder/32/32',
+    selected: false,
+  },
+]);
+
+// 發送通知表單數據
+const notificationForm = reactive({
+  title: '',
+  content: '',
+  type: 'project_update',
+  methods: ['email'],
+  recipients: [],
+  scheduleTime: '',
+  isScheduled: false,
+});
 
 // 里程碑數據
 const milestones = ref([
@@ -262,6 +473,163 @@ const handleRoleManagement = () => {
     path: '/legal-platform/project-management/role-management',
     query: { projectId: projectInfo.id }
   });
+};
+
+// 處理查看項目流程節點記錄
+const handleViewProcessNodes = () => {
+  processModalVisible.value = true;
+};
+
+// 關閉流程節點彈窗
+const handleCloseProcessModal = () => {
+  processModalVisible.value = false;
+};
+
+// 獲取節點狀態圖標
+const getNodeStatusIcon = (status: string) => {
+  const iconMap: Record<string, string> = {
+    completed: 'lucide--check-circle',
+    inProgress: 'lucide--clock',
+    pending: 'lucide--circle',
+  };
+  return iconMap[status] || 'lucide--circle';
+};
+
+// 獲取節點狀態顏色
+const getNodeStatusColor = (status: string) => {
+  const colorMap: Record<string, string> = {
+    completed: 'text-green-500',
+    inProgress: 'text-blue-500',
+    pending: 'text-gray-400',
+  };
+  return colorMap[status] || 'text-gray-400';
+};
+
+// 獲取節點連接線樣式
+const getNodeLineClass = (status: string, isLast: boolean) => {
+  if (isLast) return 'hidden';
+  const colorMap: Record<string, string> = {
+    completed: 'border-green-500',
+    inProgress: 'border-blue-500',
+    pending: 'border-gray-300',
+  };
+  return `border-l-2 ${colorMap[status] || 'border-gray-300'} ml-4 h-8`;
+};
+
+// 通知功能相關處理函數
+// 打開通知設置彈窗
+const handleOpenNotificationModal = () => {
+  notificationModalVisible.value = true;
+  // 初始化表單數據
+  notificationForm.title = '';
+  notificationForm.content = '';
+  notificationForm.type = 'project_update';
+  notificationForm.methods = ['email'];
+  notificationForm.recipients = notificationRecipients.value.filter(r => r.selected).map(r => r.id);
+  notificationForm.scheduleTime = '';
+  notificationForm.isScheduled = false;
+};
+
+// 關閉通知設置彈窗
+const handleCloseNotificationModal = () => {
+  notificationModalVisible.value = false;
+};
+
+// 發送通知
+const handleSendNotification = () => {
+  if (!notificationForm.title.trim()) {
+    message.warning('請輸入通知標題');
+    return;
+  }
+  if (!notificationForm.content.trim()) {
+    message.warning('請輸入通知內容');
+    return;
+  }
+  if (notificationForm.recipients.length === 0) {
+    message.warning('請選擇通知接收人');
+    return;
+  }
+  if (notificationForm.methods.length === 0) {
+    message.warning('請選擇通知方式');
+    return;
+  }
+
+  // 模擬發送通知
+  const newNotification = {
+    id: Date.now().toString(),
+    type: notificationForm.type,
+    title: notificationForm.title,
+    content: notificationForm.content,
+    recipients: notificationForm.recipients.map(id => {
+      const recipient = notificationRecipients.value.find(r => r.id === id);
+      return recipient?.name || '';
+    }).filter(Boolean),
+    methods: notificationForm.methods,
+    sendTime: notificationForm.isScheduled ? notificationForm.scheduleTime : new Date().toLocaleString('zh-CN'),
+    status: notificationForm.isScheduled ? 'scheduled' : 'sent',
+  };
+
+  notificationHistory.value.unshift(newNotification);
+  message.success(notificationForm.isScheduled ? '通知已安排發送' : '通知發送成功');
+  handleCloseNotificationModal();
+};
+
+// 切換接收人選擇狀態
+const handleToggleRecipient = (recipientId: string) => {
+  const recipient = notificationRecipients.value.find(r => r.id === recipientId);
+  if (recipient) {
+    recipient.selected = !recipient.selected;
+    // 更新表單中的接收人列表
+    notificationForm.recipients = notificationRecipients.value.filter(r => r.selected).map(r => r.id);
+  }
+};
+
+// 保存通知設置
+const handleSaveNotificationSettings = () => {
+  message.success('通知設置已保存');
+  console.log('通知設置:', notificationSettings.value);
+};
+
+// 獲取通知類型文本
+const getNotificationTypeText = (type: string) => {
+  const typeMap: Record<string, string> = {
+    project_update: '項目更新',
+    milestone_change: '里程碑變更',
+    task_assignment: '任務分配',
+    document_upload: '文檔上傳',
+    comment: '評論回復',
+  };
+  return typeMap[type] || type;
+};
+
+// 獲取通知方式文本
+const getNotificationMethodText = (method: string) => {
+  const methodMap: Record<string, string> = {
+    email: '郵件',
+    sms: '簡訊',
+    push: '推送',
+  };
+  return methodMap[method] || method;
+};
+
+// 獲取通知狀態顏色
+const getNotificationStatusColor = (status: string) => {
+  const colorMap: Record<string, string> = {
+    sent: 'success',
+    scheduled: 'processing',
+    failed: 'error',
+  };
+  return colorMap[status] || 'default';
+};
+
+// 獲取通知狀態文本
+const getNotificationStatusText = (status: string) => {
+  const statusMap: Record<string, string> = {
+    sent: '已發送',
+    scheduled: '已安排',
+    failed: '發送失敗',
+  };
+  return statusMap[status] || status;
 };
 
 // 附件相關處理函數
@@ -409,6 +777,131 @@ const getActivityIconClass = (type: string) => {
   return 'icon-[' + iconName + '] size-4 text-gray-400 mt-1';
 };
 
+// 標籤管理相關函數
+// 打開標籤管理模態框
+const handleOpenTagManagement = () => {
+  tagManagementVisible.value = true;
+};
+
+// 關閉標籤管理模態框
+const handleCloseTagManagement = () => {
+  tagManagementVisible.value = false;
+  resetTagForm();
+};
+
+// 重置標籤表單
+const resetTagForm = () => {
+  tagForm.id = '';
+  tagForm.name = '';
+  tagForm.color = 'blue';
+  tagForm.description = '';
+  isEditingTag.value = false;
+};
+
+// 添加新標籤
+const handleAddTag = () => {
+  if (!tagForm.name.trim()) {
+    message.warning('請輸入標籤名稱');
+    return;
+  }
+  
+  // 檢查標籤名稱是否重複
+  const existingTag = projectTags.value.find(tag => tag.name === tagForm.name.trim());
+  if (existingTag && existingTag.id !== tagForm.id) {
+    message.warning('標籤名稱已存在');
+    return;
+  }
+  
+  if (isEditingTag.value) {
+    // 編輯現有標籤
+    const tagIndex = projectTags.value.findIndex(tag => tag.id === tagForm.id);
+    if (tagIndex > -1) {
+      projectTags.value[tagIndex] = {
+        ...projectTags.value[tagIndex],
+        name: tagForm.name.trim(),
+        color: tagForm.color,
+        description: tagForm.description.trim(),
+      };
+      message.success('標籤更新成功');
+    }
+  } else {
+    // 添加新標籤
+    const newTag = {
+      id: Date.now().toString(),
+      name: tagForm.name.trim(),
+      color: tagForm.color,
+      description: tagForm.description.trim(),
+      createTime: new Date().toLocaleString('zh-CN'),
+      creator: '當前用戶', // 這裡應該從用戶狀態獲取
+    };
+    projectTags.value.push(newTag);
+    message.success('標籤添加成功');
+  }
+  
+  resetTagForm();
+};
+
+// 編輯標籤
+const handleEditTag = (tag: any) => {
+  tagForm.id = tag.id;
+  tagForm.name = tag.name;
+  tagForm.color = tag.color;
+  tagForm.description = tag.description;
+  isEditingTag.value = true;
+};
+
+// 刪除標籤
+const handleDeleteTag = (tagId: string) => {
+  const tagIndex = projectTags.value.findIndex(tag => tag.id === tagId);
+  if (tagIndex > -1) {
+    projectTags.value.splice(tagIndex, 1);
+    message.success('標籤刪除成功');
+  }
+};
+
+// 獲取顏色預覽樣式
+const getColorPreviewStyle = (color: string) => {
+  return {
+    backgroundColor: getTagColor(color),
+    width: '16px',
+    height: '16px',
+    borderRadius: '2px',
+    display: 'inline-block',
+  };
+};
+
+// 獲取標籤顏色
+const getTagColor = (color: string) => {
+  const colorMap: Record<string, string> = {
+    blue: '#1890ff',
+    green: '#52c41a',
+    red: '#ff4d4f',
+    orange: '#fa8c16',
+    purple: '#722ed1',
+    cyan: '#13c2c2',
+    magenta: '#eb2f96',
+    gold: '#faad14',
+    lime: '#a0d911',
+    volcano: '#fa541c',
+  };
+  return colorMap[color] || '#1890ff';
+};
+
+// 關注功能處理函數
+const handleToggleFollow = () => {
+  if (isFollowing.value) {
+    // 取消關注
+    isFollowing.value = false;
+    followersCount.value--;
+    message.success('已取消關注此項目');
+  } else {
+    // 添加關注
+    isFollowing.value = true;
+    followersCount.value++;
+    message.success('已關注此項目，將接收項目動態通知');
+  }
+};
+
 onMounted(() => {
   // 這裡可以根據路由參數加載具體的項目數據
   console.log('項目詳情頁面加載，項目ID:', route.params.id);
@@ -426,15 +919,33 @@ onMounted(() => {
               {{ projectInfo.name }}
             </Title>
             <Space>
-              <Tag :color="getStatusColor(projectInfo.status)">
-                {{ getStatusText(projectInfo.status) }}
+              <Tag v-for="tag in projectTags" :key="tag.id" :color="tag.color">
+                {{ tag.name }}
               </Tag>
-              <Tag color="default">
-                {{ projectInfo.visibility }}
-              </Tag>
+              <Button size="small" type="dashed" @click="handleOpenTagManagement">
+                <span class="icon-[lucide--tag] size-4 mr-1" />
+                標籤管理
+              </Button>
             </Space>
           </div>
           <Space>
+            <Button 
+              :type="isFollowing ? 'default' : 'primary'"
+              :class="isFollowing ? 'text-orange-500 border-orange-500' : ''"
+              @click="handleToggleFollow"
+            >
+              <span :class="isFollowing ? 'icon-[lucide--heart] text-orange-500' : 'icon-[lucide--heart]'" class="size-4 mr-1" />
+              {{ isFollowing ? '已關注' : '關注' }}
+              <span class="ml-1 text-xs">({{ followersCount }})</span>
+            </Button>
+            <Button @click="handleOpenNotificationModal">
+              <span class="icon-[lucide--bell] size-4 mr-1" />
+              發送通知
+            </Button>
+            <Button @click="handleViewProcessNodes">
+              <span class="icon-[lucide--git-branch] size-4 mr-1" />
+              流程節點
+            </Button>
             <Button @click="handleRoleManagement">
               <span class="icon-[lucide--users] size-4 mr-1" />
               角色管理
@@ -754,7 +1265,7 @@ onMounted(() => {
           </Card>
 
           <!-- 知悉卡片 -->
-          <Card title="知悉">
+          <Card class="mb-6" title="知悉">
             <div class="acknowledgments-list space-y-3">
               <div v-for="ack in acknowledgments" :key="ack.id" class="ack-item">
                 <div class="flex items-center justify-between mb-1">
@@ -770,9 +1281,379 @@ onMounted(() => {
               </div>
             </div>
           </Card>
+
+          <!-- 通知歷史記錄卡片 -->
+          <Card title="通知記錄">
+            <div v-if="notificationHistory.length > 0" class="notification-history-list space-y-3">
+              <div v-for="notification in notificationHistory.slice(0, 5)" :key="notification.id" class="notification-item">
+                <div class="flex items-start justify-between mb-2">
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-1">
+                      <Text strong class="text-sm">{{ notification.title }}</Text>
+                      <Tag :color="getNotificationStatusColor(notification.status)" size="small">
+                        {{ getNotificationStatusText(notification.status) }}
+                      </Tag>
+                    </div>
+                    <Text type="secondary" class="text-xs block mb-1">{{ notification.content }}</Text>
+                    <div class="flex items-center space-x-2 text-xs text-gray-500">
+                      <span>接收人：{{ notification.recipients.join(', ') }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-1">
+                    <Tag v-for="method in notification.methods" :key="method" size="small" color="blue">
+                      {{ getNotificationMethodText(method) }}
+                    </Tag>
+                  </div>
+                  <Text type="secondary" class="text-xs">{{ notification.sendTime }}</Text>
+                </div>
+              </div>
+            </div>
+            <Empty v-else description="暫無通知記錄" />
+            <div v-if="notificationHistory.length > 5" class="mt-4">
+              <Button type="link" block>
+                查看更多
+              </Button>
+            </div>
+          </Card>
         </Col>
       </Row>
     </div>
+
+    <!-- 項目流程節點記錄彈窗 -->
+    <Modal
+      v-model:open="processModalVisible"
+      title="項目流程節點記錄"
+      width="800px"
+      :footer="null"
+      @cancel="handleCloseProcessModal"
+    >
+      <div class="process-nodes-container">
+        <div class="process-timeline">
+          <div v-for="(node, index) in processNodes" :key="node.id" class="process-node-item">
+            <!-- 節點內容 -->
+            <div class="flex items-start space-x-4">
+              <!-- 節點圖標 -->
+              <div class="flex flex-col items-center">
+                <div class="node-icon-wrapper">
+                  <span :class="`icon-[${getNodeStatusIcon(node.status)}] size-6 ${getNodeStatusColor(node.status)}`" />
+                </div>
+                <!-- 連接線 -->
+                <div v-if="index < processNodes.length - 1" :class="getNodeLineClass(node.status, index === processNodes.length - 1)" />
+              </div>
+              
+              <!-- 節點信息 -->
+              <div class="flex-1 pb-8">
+                <div class="node-content bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                  <!-- 節點標題和狀態 -->
+                  <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center space-x-2">
+                      <Text strong class="text-lg">{{ node.nodeName }}</Text>
+                      <Tag :color="getStatusColor(node.status)" size="small">
+                        {{ getStatusText(node.status) }}
+                      </Tag>
+                    </div>
+                    <Text type="secondary" class="text-sm">{{ node.duration }}</Text>
+                  </div>
+                  
+                  <!-- 節點描述 -->
+                  <div class="mb-3">
+                    <Text type="secondary">{{ node.description }}</Text>
+                  </div>
+                  
+                  <!-- 操作人和時間信息 -->
+                  <div v-if="node.operator" class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                      <Avatar :src="node.operatorAvatar" :size="24">
+                        {{ node.operator.charAt(0) }}
+                      </Avatar>
+                      <div>
+                        <Text strong class="text-sm">{{ node.operator }}</Text>
+                        <div class="text-xs text-gray-500">操作人</div>
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-sm text-gray-600">{{ node.operateTime }}</div>
+                      <div class="text-xs text-gray-500">操作時間</div>
+                    </div>
+                  </div>
+                  
+                  <!-- 待處理節點提示 -->
+                  <div v-else class="text-center py-2">
+                    <Text type="secondary" class="text-sm">等待處理中...</Text>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 流程統計信息 -->
+        <div class="process-summary mt-6 p-4 bg-gray-50 rounded-lg">
+          <Title :level="5" class="!mb-3">流程統計</Title>
+          <Row :gutter="16">
+            <Col :span="8">
+              <div class="text-center">
+                <div class="text-2xl font-bold text-green-500">{{ processNodes.filter(n => n.status === 'completed').length }}</div>
+                <div class="text-sm text-gray-500">已完成</div>
+              </div>
+            </Col>
+            <Col :span="8">
+              <div class="text-center">
+                <div class="text-2xl font-bold text-blue-500">{{ processNodes.filter(n => n.status === 'inProgress').length }}</div>
+                <div class="text-sm text-gray-500">進行中</div>
+              </div>
+            </Col>
+            <Col :span="8">
+              <div class="text-center">
+                <div class="text-2xl font-bold text-gray-400">{{ processNodes.filter(n => n.status === 'pending').length }}</div>
+                <div class="text-sm text-gray-500">待處理</div>
+              </div>
+            </Col>
+          </Row>
+        </div>
+      </div>
+    </Modal>
+
+    <!-- 通知功能模態框 -->
+    <Modal
+      v-model:open="notificationModalVisible"
+      title="項目通知管理"
+      width="800px"
+      :footer="null"
+      @cancel="handleCloseNotificationModal"
+    >
+      <div class="notification-modal-content">
+        <!-- 通知設置 -->
+        <Card title="通知設置" class="mb-4">
+          <Row :gutter="16">
+            <Col :span="12">
+              <div class="setting-item">
+                <Text strong>郵件通知</Text>
+                <Switch v-model:checked="notificationSettings.emailEnabled" class="ml-2" />
+              </div>
+            </Col>
+            <Col :span="12">
+              <div class="setting-item">
+                <Text strong>短信通知</Text>
+                <Switch v-model:checked="notificationSettings.smsEnabled" class="ml-2" />
+              </div>
+            </Col>
+          </Row>
+          
+          <Divider />
+          
+          <div class="notification-types">
+            <Text strong class="block mb-3">通知類型設置</Text>
+            <Row :gutter="[16, 8]">
+              <Col :span="12">
+                <Checkbox v-model:checked="notificationSettings.milestoneChanges">
+                  里程碑更新
+                </Checkbox>
+              </Col>
+              <Col :span="12">
+                <Checkbox v-model:checked="notificationSettings.taskAssignments">
+                  任務分配
+                </Checkbox>
+              </Col>
+              <Col :span="12">
+                <Checkbox v-model:checked="notificationSettings.projectUpdates">
+                  項目更新
+                </Checkbox>
+              </Col>
+              <Col :span="12">
+                <Checkbox v-model:checked="notificationSettings.documentUploads">
+                  文檔上傳
+                </Checkbox>
+              </Col>
+              <Col :span="12">
+                <Checkbox v-model:checked="notificationSettings.comments">
+                  評論回復
+                </Checkbox>
+              </Col>
+            </Row>
+          </div>
+          
+          <div class="mt-4">
+            <Button type="primary" @click="handleSaveNotificationSettings">
+              保存設置
+            </Button>
+          </div>
+        </Card>
+        
+        <!-- 發送通知 -->
+        <Card title="發送通知">
+          <Form layout="vertical">
+            <FormItem label="通知標題">
+              <Input v-model:value="notificationForm.title" placeholder="請輸入通知標題" />
+            </FormItem>
+            
+            <FormItem label="通知內容">
+              <Input.TextArea 
+                v-model:value="notificationForm.content" 
+                :rows="4" 
+                placeholder="請輸入通知內容"
+              />
+            </FormItem>
+            
+            <FormItem label="通知類型">
+              <Select v-model:value="notificationForm.type" placeholder="請選擇通知類型">
+                <SelectOption value="project_update">項目更新</SelectOption>
+                <SelectOption value="milestone_change">里程碑變更</SelectOption>
+                <SelectOption value="task_assignment">任務分配</SelectOption>
+                <SelectOption value="document_upload">文檔上傳</SelectOption>
+                <SelectOption value="comment">評論回復</SelectOption>
+              </Select>
+            </FormItem>
+            
+            <FormItem label="通知方式">
+              <Checkbox.Group v-model:value="notificationForm.methods">
+                <Checkbox value="email">郵件</Checkbox>
+                <Checkbox value="sms">短信</Checkbox>
+              </Checkbox.Group>
+            </FormItem>
+            
+            <FormItem label="接收人員">
+              <div class="recipients-list space-y-2">
+                <div v-for="recipient in notificationRecipients" :key="recipient.id" class="recipient-item">
+                  <Checkbox 
+                    :checked="notificationForm.recipients.includes(recipient.id)"
+                    @change="handleToggleRecipient(recipient.id)"
+                  >
+                    <div class="flex items-center space-x-2">
+                      <Avatar :src="recipient.avatar" size="small" />
+                      <div>
+                        <Text class="text-sm">{{ recipient.name }}</Text>
+                        <Text type="secondary" class="text-xs block">{{ recipient.role }} | {{ recipient.email }}</Text>
+                      </div>
+                    </div>
+                  </Checkbox>
+                </div>
+              </div>
+            </FormItem>
+            
+            <FormItem label="發送時間">
+              <div class="flex items-center space-x-2 mb-2">
+                <Checkbox v-model:checked="notificationForm.isScheduled">
+                  定時發送
+                </Checkbox>
+              </div>
+              <DatePicker 
+                v-if="notificationForm.isScheduled"
+                v-model:value="notificationForm.scheduleTime" 
+                show-time 
+                placeholder="選擇發送時間"
+                class="w-full"
+              />
+            </FormItem>
+            
+            <FormItem>
+              <Space>
+                <Button type="primary" @click="handleSendNotification">
+                  發送通知
+                </Button>
+                <Button @click="handleCloseNotificationModal">
+                  取消
+                </Button>
+              </Space>
+            </FormItem>
+          </Form>
+        </Card>
+      </div>
+    </Modal>
+
+    <!-- 標籤管理模態框 -->
+    <Modal
+      v-model:open="tagManagementVisible"
+      title="標籤管理"
+      width="800px"
+      :footer="null"
+      @cancel="handleCloseTagManagement"
+    >
+      <div class="tag-management-content">
+        <!-- 現有標籤列表 -->
+        <Card title="現有標籤" class="mb-4">
+          <div v-if="projectTags.length > 0" class="tags-list space-y-3">
+            <div v-for="tag in projectTags" :key="tag.id" class="tag-item">
+              <div class="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+                <div class="flex items-center space-x-3">
+                  <div :style="getColorPreviewStyle(tag.color)"></div>
+                  <div>
+                    <Text strong class="text-sm">{{ tag.name }}</Text>
+                    <Text type="secondary" class="text-xs block">{{ tag.description || '無描述' }}</Text>
+                    <Text type="secondary" class="text-xs">創建時間：{{ tag.createTime }} | 創建者：{{ tag.creator }}</Text>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <Button size="small" @click="handleEditTag(tag)">
+                    <span class="icon-[lucide--edit] size-4" />
+                  </Button>
+                  <Popconfirm
+                    title="確定要刪除這個標籤嗎？"
+                    ok-text="確定"
+                    cancel-text="取消"
+                    @confirm="handleDeleteTag(tag.id)"
+                  >
+                    <Button size="small" danger>
+                      <span class="icon-[lucide--trash-2] size-4" />
+                    </Button>
+                  </Popconfirm>
+                </div>
+              </div>
+            </div>
+          </div>
+          <Empty v-else description="暫無標籤" />
+        </Card>
+        
+        <!-- 添加/編輯標籤表單 -->
+        <Card :title="isEditingTag ? '編輯標籤' : '添加標籤'">
+          <Form layout="vertical">
+            <FormItem label="標籤名稱" required>
+              <Input 
+                v-model:value="tagForm.name" 
+                placeholder="請輸入標籤名稱"
+                :maxlength="20"
+              />
+            </FormItem>
+            
+            <FormItem label="標籤顏色" required>
+              <Select v-model:value="tagForm.color" placeholder="請選擇標籤顏色">
+                <SelectOption v-for="color in tagColors" :key="color.value" :value="color.value">
+                  <div class="flex items-center space-x-2">
+                    <div :style="getColorPreviewStyle(color.value)"></div>
+                    <span>{{ color.label }}</span>
+                  </div>
+                </SelectOption>
+              </Select>
+            </FormItem>
+            
+            <FormItem label="標籤描述">
+              <Input.TextArea 
+                v-model:value="tagForm.description" 
+                :rows="3" 
+                placeholder="請輸入標籤描述（可選）"
+                :maxlength="100"
+              />
+            </FormItem>
+            
+            <FormItem>
+              <Space>
+                <Button type="primary" @click="handleAddTag">
+                  {{ isEditingTag ? '更新標籤' : '添加標籤' }}
+                </Button>
+                <Button v-if="isEditingTag" @click="resetTagForm">
+                  取消編輯
+                </Button>
+                <Button @click="handleCloseTagManagement">
+                  關閉
+                </Button>
+              </Space>
+            </FormItem>
+          </Form>
+        </Card>
+      </div>
+    </Modal>
   </Page>
 </template>
 
@@ -867,6 +1748,100 @@ onMounted(() => {
   padding: 4px 8px;
 }
 
+/* 流程節點樣式 */
+.process-nodes-container {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.process-timeline {
+  position: relative;
+}
+
+.process-node-item {
+  position: relative;
+}
+
+.node-icon-wrapper {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 2px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.node-content {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.node-content:hover {
+  transform: translateY(-2px);
+}
+
+.process-summary {
+  border: 1px solid #e5e7eb;
+}
+
+/* 通知功能樣式 */
+.notification-history-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 6px;
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.notification-item:hover {
+  background: #f5f5f5;
+  border-color: #d9d9d9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.notification-modal-content {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.notification-types {
+  margin-top: 16px;
+}
+
+.recipients-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #f0f0f0;
+  border-radius: 6px;
+  padding: 8px;
+}
+
+.recipient-item {
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.recipient-item:hover {
+  background-color: #f5f5f5;
+}
+
 /* 響應式設計 */
 @media (max-width: 768px) {
   .project-detail {
@@ -884,6 +1859,80 @@ onMounted(() => {
   
   .attachment-item .flex > div:first-child {
     margin-bottom: 8px;
+  }
+  
+  /* 流程節點響應式 */
+  .process-nodes-container {
+    max-height: 500px;
+  }
+  
+  .node-content {
+    margin-left: -8px;
+  }
+  
+  .node-icon-wrapper {
+    width: 24px;
+    height: 24px;
+  }
+  
+  /* 通知功能響應式 */
+  .notification-item {
+    padding: 8px;
+  }
+  
+  .recipients-list {
+    max-height: 150px;
+  }
+  
+  .notification-modal-content {
+    max-height: 60vh;
+  }
+}
+
+/* 標籤管理樣式 */
+.tag-management-content {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.tags-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.tag-item {
+  transition: all 0.3s ease;
+}
+
+.tag-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tag-form-section {
+  background-color: #fafafa;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+/* 標籤管理響應式 */
+@media (max-width: 768px) {
+  .tag-management-content {
+    max-height: 60vh;
+  }
+  
+  .tags-list {
+    max-height: 200px;
+  }
+  
+  .tag-item .flex {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .tag-item .flex > div:last-child {
+    margin-top: 8px;
+    align-self: flex-end;
   }
 }
 </style>

@@ -20,6 +20,8 @@ import {
   SelectOption,
   Space,
   Table,
+  Tabs,
+  TabPane,
   Tag,
   Transfer,
   Typography,
@@ -218,6 +220,148 @@ const permissionOptions = [
   { value: '審核批准', label: '審核批准' },
 ];
 
+// 工作小組管理相關數據
+const workGroupList = ref([
+  {
+    id: '1',
+    name: '法條審查小組',
+    description: '負責法條的詳細審查和分析工作',
+    leader: {
+      id: '1',
+      name: '陳大文',
+      role: '項目負責人',
+      avatar: '/api/placeholder/40/40',
+    },
+    members: [
+      {
+        id: '2',
+        name: '張三',
+        role: '法律顧問',
+        avatar: '/api/placeholder/40/40',
+        joinTime: '2024-01-16',
+      },
+      {
+        id: '4',
+        name: '李四',
+        role: '研究員',
+        avatar: '/api/placeholder/40/40',
+        joinTime: '2024-01-17',
+      },
+    ],
+    createTime: '2024-01-15',
+    status: 'active',
+    tasks: ['法條第一章審查', '法條第二章審查'],
+  },
+  {
+    id: '2',
+    name: '資料收集小組',
+    description: '負責收集和整理相關法律資料',
+    leader: {
+      id: '3',
+      name: '王五',
+      role: '法律顧問',
+      avatar: '/api/placeholder/40/40',
+    },
+    members: [
+      {
+        id: '5',
+        name: '趙六',
+        role: '研究員',
+        avatar: '/api/placeholder/40/40',
+        joinTime: '2024-01-19',
+      },
+      {
+        id: '6',
+        name: '錢七',
+        role: '研究員',
+        avatar: '/api/placeholder/40/40',
+        joinTime: '2024-01-20',
+      },
+    ],
+    createTime: '2024-01-18',
+    status: 'active',
+    tasks: ['參考資料收集', '案例分析'],
+  },
+]);
+
+// 工作小組表格列配置
+const workGroupColumns = [
+  {
+    title: '小組名稱',
+    dataIndex: 'name',
+    key: 'name',
+    width: 150,
+  },
+  {
+    title: '描述',
+    dataIndex: 'description',
+    key: 'description',
+    width: 200,
+  },
+  {
+    title: '組長',
+    dataIndex: 'leader',
+    key: 'leader',
+    width: 120,
+  },
+  {
+    title: '成員數量',
+    key: 'memberCount',
+    width: 100,
+  },
+  {
+    title: '狀態',
+    dataIndex: 'status',
+    key: 'status',
+    width: 80,
+  },
+  {
+    title: '創建時間',
+    dataIndex: 'createTime',
+    key: 'createTime',
+    width: 120,
+  },
+  {
+    title: '操作',
+    key: 'operation',
+    width: 200,
+    fixed: 'right',
+  },
+];
+
+// 工作小組相關狀態
+const activeTab = ref('roles'); // 'roles' | 'workGroups'
+const workGroupFormVisible = ref(false);
+const workGroupMemberVisible = ref(false);
+const workGroupEditMode = ref(false);
+const currentWorkGroup = ref<any>({});
+const currentWorkGroupMembers = ref<any[]>([]);
+
+// 工作小組表單數據
+const workGroupForm = reactive({
+  name: '',
+  description: '',
+  leaderId: '',
+  memberIds: [],
+});
+
+// 獲取所有可用成員（來自所有角色）
+const getAllAvailableMembers = () => {
+  const allMembers: any[] = [];
+  roleList.value.forEach(role => {
+    role.members.forEach(member => {
+      allMembers.push({
+        ...member,
+        role: role.name,
+        key: member.id,
+        title: member.name,
+        description: `${member.email} | ${role.name}`,
+      });
+    });
+  });
+  return allMembers;
+};
+
 // 新增角色
 const handleAddRole = () => {
   editMode.value = false;
@@ -364,6 +508,139 @@ const renderTransferItem = (item: any) => {
   };
 };
 
+// 工作小組管理相關函數
+// 新增工作小組
+const handleAddWorkGroup = () => {
+  workGroupEditMode.value = false;
+  workGroupForm.name = '';
+  workGroupForm.description = '';
+  workGroupForm.leaderId = '';
+  workGroupForm.memberIds = [];
+  workGroupFormVisible.value = true;
+};
+
+// 編輯工作小組
+const handleEditWorkGroup = (record: any) => {
+  workGroupEditMode.value = true;
+  currentWorkGroup.value = record;
+  workGroupForm.name = record.name;
+  workGroupForm.description = record.description;
+  workGroupForm.leaderId = record.leader.id;
+  workGroupForm.memberIds = record.members.map((m: any) => m.id);
+  workGroupFormVisible.value = true;
+};
+
+// 刪除工作小組
+const handleDeleteWorkGroup = (record: any) => {
+  const index = workGroupList.value.findIndex(group => group.id === record.id);
+  if (index > -1) {
+    workGroupList.value.splice(index, 1);
+    message.success('工作小組刪除成功');
+  }
+};
+
+// 查看工作小組成員
+const handleViewWorkGroupMembers = (record: any) => {
+  currentWorkGroup.value = record;
+  currentWorkGroupMembers.value = [record.leader, ...record.members];
+  workGroupMemberVisible.value = true;
+};
+
+// 保存工作小組
+const handleSaveWorkGroup = () => {
+  if (!workGroupForm.name.trim()) {
+    message.error('請輸入工作小組名稱');
+    return;
+  }
+  
+  if (!workGroupForm.leaderId) {
+    message.error('請選擇組長');
+    return;
+  }
+  
+  const allMembers = getAllAvailableMembers();
+  const leader = allMembers.find(m => m.id === workGroupForm.leaderId);
+  const members = allMembers.filter(m => workGroupForm.memberIds.includes(m.id) && m.id !== workGroupForm.leaderId);
+  
+  if (workGroupEditMode.value) {
+    // 編輯模式
+    const index = workGroupList.value.findIndex(group => group.id === currentWorkGroup.value.id);
+    if (index > -1) {
+      workGroupList.value[index] = {
+        ...workGroupList.value[index],
+        name: workGroupForm.name,
+        description: workGroupForm.description,
+        leader: {
+          id: leader.id,
+          name: leader.name,
+          role: leader.role,
+          avatar: leader.avatar,
+        },
+        members: members.map(m => ({
+          id: m.id,
+          name: m.name,
+          role: m.role,
+          avatar: m.avatar,
+          joinTime: m.joinTime || new Date().toISOString().split('T')[0],
+        })),
+      };
+      message.success('工作小組更新成功');
+    }
+  } else {
+    // 新增模式
+    const newWorkGroup = {
+      id: Date.now().toString(),
+      name: workGroupForm.name,
+      description: workGroupForm.description,
+      leader: {
+        id: leader.id,
+        name: leader.name,
+        role: leader.role,
+        avatar: leader.avatar,
+      },
+      members: members.map(m => ({
+        id: m.id,
+        name: m.name,
+        role: m.role,
+        avatar: m.avatar,
+        joinTime: new Date().toISOString().split('T')[0],
+      })),
+      createTime: new Date().toISOString().split('T')[0],
+      status: 'active',
+      tasks: [],
+    };
+    workGroupList.value.push(newWorkGroup);
+    message.success('工作小組創建成功');
+  }
+  
+  workGroupFormVisible.value = false;
+};
+
+// 獲取工作小組狀態顏色
+const getWorkGroupStatusColor = (status: string) => {
+  const colorMap: Record<string, string> = {
+    active: 'success',
+    inactive: 'default',
+    completed: 'processing',
+  };
+  return colorMap[status] || 'default';
+};
+
+// 獲取工作小組狀態文本
+const getWorkGroupStatusText = (status: string) => {
+  const textMap: Record<string, string> = {
+    active: '活躍',
+    inactive: '非活躍',
+    completed: '已完成',
+  };
+  return textMap[status] || status;
+};
+
+// 切換標籤頁
+const handleTabChange = (key: string) => {
+  activeTab.value = key;
+};
+
 // 組件掛載時的初始化
 onMounted(() => {
   // 這裡可以調用API獲取角色數據
@@ -374,32 +651,53 @@ onMounted(() => {
 <template>
   <Page :title="$t('page.legalPlatform.projectRoleManagement')">
     <div class="role-management">
-      <!-- 頁面標題和操作按鈕 -->
+      <!-- 頁面標題 -->
       <Card class="mb-4">
-        <div class="flex justify-between items-center">
-          <div>
-            <Title :level="3" class="mb-2">
-              {{ $t('page.legalPlatform.projectRoleManagement') }}
-            </Title>
-            <Text type="secondary">
-              管理項目中的角色和成員，分配相應的權限
-            </Text>
-          </div>
-          <Button type="primary" @click="handleAddRole">
-            <span class="icon-[lucide--plus] size-4 mr-1" />
-            新增角色
-          </Button>
+        <div>
+          <Title :level="3" class="mb-2">
+            {{ $t('page.legalPlatform.projectRoleManagement') }}
+          </Title>
+          <Text type="secondary">
+            管理項目中的角色和成員，分配相應的權限
+          </Text>
         </div>
       </Card>
 
-      <!-- 角色列表 -->
+      <!-- 標籤頁 -->
       <Card>
-        <Table
-          :columns="roleColumns"
-          :data-source="roleList"
-          :pagination="false"
-          row-key="id"
-        >
+        <div class="tabs-container">
+          <div class="tab-buttons mb-4">
+            <Button
+              :type="activeTab === 'roles' ? 'primary' : 'default'"
+              @click="handleTabChange('roles')"
+              class="mr-2"
+            >
+              角色管理
+            </Button>
+            <Button
+              :type="activeTab === 'workGroups' ? 'primary' : 'default'"
+              @click="handleTabChange('workGroups')"
+            >
+              工作小組
+            </Button>
+          </div>
+
+          <!-- 角色管理標籤頁 -->
+          <div v-if="activeTab === 'roles'">
+            <div class="flex justify-between items-center mb-4">
+              <Title :level="4">角色列表</Title>
+              <Button type="primary" @click="handleAddRole">
+                <span class="icon-[lucide--plus] size-4 mr-1" />
+                新增角色
+              </Button>
+            </div>
+            
+            <Table
+              :columns="roleColumns"
+              :data-source="roleList"
+              :pagination="false"
+              row-key="id"
+            >
           <!-- 權限列 -->
           <template #bodyCell="{ column, record }">
             <template v-if="column.key === 'permissions'">
@@ -451,7 +749,95 @@ onMounted(() => {
               </Space>
             </template>
           </template>
-        </Table>
+            </Table>
+          </div>
+
+          <!-- 工作小組管理標籤頁 -->
+          <div v-if="activeTab === 'workGroups'">
+            <div class="flex justify-between items-center mb-4">
+              <Title :level="4">工作小組列表</Title>
+              <Button type="primary" @click="handleAddWorkGroup">
+                <span class="icon-[lucide--plus] size-4 mr-1" />
+                新增工作小組
+              </Button>
+            </div>
+            
+            <Table
+              :columns="workGroupColumns"
+              :data-source="workGroupList"
+              :pagination="false"
+              row-key="id"
+            >
+              <!-- 組長列 -->
+              <template #bodyCell="{ column, record }">
+                <template v-if="column.key === 'leader'">
+                  <div class="flex items-center">
+                    <Avatar
+                      :src="record.leader.avatar"
+                      :size="24"
+                      class="mr-2"
+                    >
+                      {{ record.leader.name.charAt(0) }}
+                    </Avatar>
+                    <div>
+                      <div class="font-medium">{{ record.leader.name }}</div>
+                      <div class="text-xs text-gray-500">{{ record.leader.role }}</div>
+                    </div>
+                  </div>
+                </template>
+                
+                <!-- 成員數量列 -->
+                <template v-else-if="column.key === 'memberCount'">
+                  {{ record.members.length + 1 }}
+                </template>
+                
+                <!-- 狀態列 -->
+                <template v-else-if="column.key === 'status'">
+                  <Tag :color="getWorkGroupStatusColor(record.status)">
+                    {{ getWorkGroupStatusText(record.status) }}
+                  </Tag>
+                </template>
+                
+                <!-- 操作列 -->
+                <template v-else-if="column.key === 'operation'">
+                  <Space>
+                    <Button
+                      type="link"
+                      size="small"
+                      @click="handleViewWorkGroupMembers(record)"
+                    >
+                      <span class="icon-[lucide--users] size-4 mr-1" />
+                      查看成員
+                    </Button>
+                    <Button
+                      type="link"
+                      size="small"
+                      @click="handleEditWorkGroup(record)"
+                    >
+                      <span class="icon-[lucide--edit] size-4 mr-1" />
+                      編輯
+                    </Button>
+                    <Popconfirm
+                      title="確定要刪除這個工作小組嗎？"
+                      ok-text="確定"
+                      cancel-text="取消"
+                      @confirm="handleDeleteWorkGroup(record)"
+                    >
+                      <Button
+                        type="link"
+                        size="small"
+                        danger
+                      >
+                        <span class="icon-[lucide--trash-2] size-4 mr-1" />
+                        刪除
+                      </Button>
+                    </Popconfirm>
+                  </Space>
+                </template>
+              </template>
+            </Table>
+          </div>
+        </div>
       </Card>
     </div>
 
@@ -651,6 +1037,163 @@ onMounted(() => {
         </div>
       </div>
     </Modal>
+
+    <!-- 新增/編輯工作小組彈窗 -->
+    <Modal
+      v-model:open="workGroupFormVisible"
+      :title="workGroupEditMode ? '編輯工作小組' : '新增工作小組'"
+      :width="700"
+      @ok="handleSaveWorkGroup"
+      @cancel="workGroupFormVisible = false"
+    >
+      <Form
+        :model="workGroupForm"
+        layout="vertical"
+      >
+        <FormItem
+          label="小組名稱"
+          name="name"
+          :rules="[{ required: true, message: '請輸入小組名稱' }]"
+        >
+          <Input
+            v-model:value="workGroupForm.name"
+            placeholder="請輸入小組名稱"
+          />
+        </FormItem>
+        
+        <FormItem
+          label="小組描述"
+          name="description"
+        >
+          <Input.TextArea
+            v-model:value="workGroupForm.description"
+            placeholder="請輸入小組描述"
+            :rows="3"
+          />
+        </FormItem>
+        
+        <FormItem
+          label="組長"
+          name="leaderId"
+          :rules="[{ required: true, message: '請選擇組長' }]"
+        >
+          <Select
+            v-model:value="workGroupForm.leaderId"
+            placeholder="請選擇組長"
+            show-search
+            :filter-option="false"
+          >
+            <SelectOption
+              v-for="member in getAllAvailableMembers()"
+              :key="member.id"
+              :value="member.id"
+            >
+              <div class="flex items-center">
+                <Avatar
+                  :src="member.avatar"
+                  :size="24"
+                  class="mr-2"
+                >
+                  {{ member.name.charAt(0) }}
+                </Avatar>
+                <div>
+                  <div>{{ member.name }}</div>
+                  <div class="text-xs text-gray-500">{{ member.role }}</div>
+                </div>
+              </div>
+            </SelectOption>
+          </Select>
+        </FormItem>
+        
+        <FormItem
+          label="小組成員"
+          name="memberIds"
+        >
+          <Select
+            v-model:value="workGroupForm.memberIds"
+            mode="multiple"
+            placeholder="請選擇小組成員"
+            show-search
+            :filter-option="false"
+          >
+            <SelectOption
+              v-for="member in getAllAvailableMembers().filter(m => m.id !== workGroupForm.leaderId)"
+              :key="member.id"
+              :value="member.id"
+            >
+              <div class="flex items-center">
+                <Avatar
+                  :src="member.avatar"
+                  :size="24"
+                  class="mr-2"
+                >
+                  {{ member.name.charAt(0) }}
+                </Avatar>
+                <div>
+                  <div>{{ member.name }}</div>
+                  <div class="text-xs text-gray-500">{{ member.role }}</div>
+                </div>
+              </div>
+            </SelectOption>
+          </Select>
+        </FormItem>
+      </Form>
+    </Modal>
+
+    <!-- 工作小組成員查看抽屜 -->
+    <Drawer
+      v-model:open="workGroupMemberVisible"
+      title="工作小組成員"
+      :width="600"
+      placement="right"
+    >
+      <div class="work-group-member-content">
+        <!-- 工作小組信息 -->
+        <Card class="mb-4">
+          <div>
+            <Title :level="4" class="mb-1">
+              {{ currentWorkGroup.name }}
+            </Title>
+            <Text type="secondary" class="block mb-2">
+              {{ currentWorkGroup.description }}
+            </Text>
+            <div class="text-sm text-gray-500">
+              創建時間：{{ currentWorkGroup.createTime }}
+            </div>
+          </div>
+        </Card>
+
+        <!-- 成員列表 -->
+        <Card>
+          <Title :level="5" class="mb-3">成員列表</Title>
+          <div class="space-y-3">
+            <div
+              v-for="member in currentWorkGroupMembers"
+              :key="member.id"
+              class="flex items-center p-3 border rounded-lg"
+            >
+              <Avatar
+                :src="member.avatar"
+                :size="40"
+                class="mr-3"
+              >
+                {{ member.name.charAt(0) }}
+              </Avatar>
+              <div class="flex-1">
+                <div class="font-medium">{{ member.name }}</div>
+                <div class="text-sm text-gray-500">{{ member.role }}</div>
+                <div v-if="member.joinTime" class="text-xs text-gray-400">
+                  加入時間：{{ member.joinTime }}
+                </div>
+              </div>
+              <div v-if="member.id === currentWorkGroup.leader?.id">
+                <Tag color="gold">組長</Tag>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </Drawer>
   </Page>
 </template>
 
@@ -691,5 +1234,18 @@ onMounted(() => {
 .ant-table-thead > tr > th {
   background-color: #fafafa;
   font-weight: 600;
+}
+
+.tabs-container {
+  padding: 0;
+}
+
+.tab-buttons {
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 16px;
+}
+
+.work-group-member-content {
+  padding: 0;
 }
 </style>
