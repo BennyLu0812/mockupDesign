@@ -12,18 +12,22 @@ import {
   Col,
   DatePicker,
   Divider,
+  Drawer,
   Empty,
   Form,
   FormItem,
   Input,
   Modal,
   Popconfirm,
+  Radio,
+  RadioGroup,
   Row,
   Select,
   SelectOption,
   Space,
   Switch,
   Tag,
+  Textarea,
   Timeline,
   TimelineItem,
   Typography,
@@ -348,6 +352,36 @@ const notificationForm = reactive({
   scheduleTime: '',
   isScheduled: false,
 });
+
+// 新增知悉功能相關狀態
+const notificationDrawerVisible = ref(false);
+const selectedAttachment = ref(null);
+const submittingNotification = ref(false);
+const notificationFormRef = ref();
+
+// 新增知悉表單數據
+const attachmentNotificationForm = reactive({
+  title: '',
+  content: '',
+  recipientType: 'all',
+  selectedRoles: [],
+  selectedUsers: [],
+  priority: 'medium',
+  sendType: 'immediate',
+  scheduledTime: null,
+});
+
+// 新增知悉表單驗證規則
+const attachmentNotificationFormRules = {
+  title: [
+    { required: true, message: '請輸入知悉標題', trigger: 'blur' },
+    { min: 2, max: 50, message: '標題長度應在2-50個字符之間', trigger: 'blur' },
+  ],
+  content: [
+    { required: true, message: '請輸入知悉內容', trigger: 'blur' },
+    { min: 10, max: 1000, message: '內容長度應在10-1000個字符之間', trigger: 'blur' },
+  ],
+};
 
 // 里程碑數據
 const milestones = ref([
@@ -760,6 +794,78 @@ const getStatusText = (status: string) => {
   return textMap[status] || status;
 };
 
+// 新增知悉功能處理函數
+// 打開新增知悉抽屜
+const handleCreateNotificationForAttachment = (attachment: any) => {
+  selectedAttachment.value = attachment;
+  attachmentNotificationForm.title = `關於附件「${attachment.name}」的知悉`;
+  attachmentNotificationForm.content = '';
+  attachmentNotificationForm.recipientType = 'all';
+  attachmentNotificationForm.selectedRoles = [];
+  attachmentNotificationForm.selectedUsers = [];
+  attachmentNotificationForm.priority = 'medium';
+  attachmentNotificationForm.sendType = 'immediate';
+  attachmentNotificationForm.scheduledTime = null;
+  notificationDrawerVisible.value = true;
+};
+
+// 關閉新增知悉抽屜
+const handleCloseNotificationDrawer = () => {
+  notificationDrawerVisible.value = false;
+  selectedAttachment.value = null;
+  // 重置表單
+  if (notificationFormRef.value) {
+    notificationFormRef.value.resetFields();
+  }
+};
+
+// 提交知悉
+const handleSubmitNotification = async () => {
+  try {
+    // 驗證表單
+    await notificationFormRef.value.validate();
+    
+    submittingNotification.value = true;
+    
+    // 模擬API調用
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // 創建知悉記錄
+    const newNotification = {
+      id: Date.now().toString(),
+      title: attachmentNotificationForm.title,
+      content: attachmentNotificationForm.content,
+      attachmentId: selectedAttachment.value?.id,
+      attachmentName: selectedAttachment.value?.name,
+      recipientType: attachmentNotificationForm.recipientType,
+      selectedRoles: attachmentNotificationForm.selectedRoles,
+      selectedUsers: attachmentNotificationForm.selectedUsers,
+      priority: attachmentNotificationForm.priority,
+      sendType: attachmentNotificationForm.sendType,
+      scheduledTime: attachmentNotificationForm.scheduledTime,
+      createTime: new Date().toLocaleString('zh-CN'),
+      creator: '當前用戶', // 這裡應該從用戶狀態獲取
+      status: attachmentNotificationForm.sendType === 'immediate' ? 'sent' : 'scheduled',
+    };
+    
+    // 添加到通知歷史記錄
+    notificationHistory.value.unshift(newNotification);
+    
+    message.success(attachmentNotificationForm.sendType === 'immediate' ? '知悉已發送' : '知悉已安排發送');
+    handleCloseNotificationDrawer();
+  } catch (error) {
+    console.error('提交知悉失敗:', error);
+    message.error('提交失敗，請重試');
+  } finally {
+    submittingNotification.value = false;
+  }
+};
+
+// 格式化文件大小
+const formatFileSize = (size: string) => {
+  return size; // 這裡可以實現更複雜的文件大小格式化邏輯
+};
+
 // 獲取活動圖標
 const getActivityIcon = (type: string) => {
   const iconMap: Record<string, string> = {
@@ -1090,6 +1196,9 @@ onMounted(() => {
                     <div class="flex items-center justify-between mb-1">
                       <Text strong class="text-sm truncate">{{ attachment.name }}</Text>
                       <div class="flex items-center space-x-1">
+                        <Button type="link" size="small" @click="handleCreateNotificationForAttachment(attachment)">
+                          <span class="icon-[lucide--bell-plus] size-4" />
+                        </Button>
                         <Button type="link" size="small" @click="handlePreviewAttachment(attachment)">
                           <span class="icon-[lucide--eye] size-4" />
                         </Button>
@@ -1654,6 +1763,112 @@ onMounted(() => {
         </Card>
       </div>
     </Modal>
+
+    <!-- 新增知悉抽屜 -->
+    <Drawer
+      v-model:open="notificationDrawerVisible"
+      title="新增知悉"
+      placement="right"
+      width="600"
+      :closable="true"
+      @close="handleCloseNotificationDrawer"
+    >
+      <div class="notification-form-container">
+        <Form
+          ref="notificationFormRef"
+          :model="attachmentNotificationForm"
+          :rules="attachmentNotificationFormRules"
+          layout="vertical"
+        >
+          <FormItem label="知悉標題" name="title">
+            <Input v-model:value="attachmentNotificationForm.title" placeholder="請輸入知悉標題" />
+          </FormItem>
+          
+          <FormItem label="知悉內容" name="content">
+            <Textarea
+              v-model:value="attachmentNotificationForm.content"
+              placeholder="請輸入知悉內容"
+              :rows="6"
+            />
+          </FormItem>
+          
+          <FormItem label="關聯附件">
+            <div class="selected-attachment" v-if="selectedAttachment">
+              <div class="flex items-center space-x-2 p-3 bg-gray-50 rounded">
+                <span class="icon-[lucide--file] size-4" />
+                <span class="font-medium">{{ selectedAttachment.name }}</span>
+                <span class="text-gray-500 text-sm">({{ formatFileSize(selectedAttachment.size) }})</span>
+              </div>
+            </div>
+          </FormItem>
+          
+          <FormItem label="收件人設置" name="recipients">
+            <RadioGroup v-model:value="attachmentNotificationForm.recipientType">
+              <Radio value="all">所有參與人</Radio>
+              <Radio value="roles">指定角色</Radio>
+              <Radio value="users">指定人員</Radio>
+            </RadioGroup>
+            
+            <div v-if="attachmentNotificationForm.recipientType === 'roles'" class="mt-3">
+              <Select
+                v-model:value="attachmentNotificationForm.selectedRoles"
+                mode="multiple"
+                placeholder="請選擇角色"
+                style="width: 100%"
+              >
+                <SelectOption value="project_manager">項目經理</SelectOption>
+                <SelectOption value="legal_advisor">法務顧問</SelectOption>
+                <SelectOption value="team_member">團隊成員</SelectOption>
+              </Select>
+            </div>
+            
+            <div v-if="attachmentNotificationForm.recipientType === 'users'" class="mt-3">
+              <Select
+                v-model:value="attachmentNotificationForm.selectedUsers"
+                mode="multiple"
+                placeholder="請選擇人員"
+                style="width: 100%"
+              >
+                <SelectOption value="user1">張三</SelectOption>
+                <SelectOption value="user2">李四</SelectOption>
+                <SelectOption value="user3">王五</SelectOption>
+              </Select>
+            </div>
+          </FormItem>
+          
+          <FormItem label="優先級" name="priority">
+            <Select v-model:value="attachmentNotificationForm.priority" placeholder="請選擇優先級">
+              <SelectOption value="high">高</SelectOption>
+              <SelectOption value="medium">中</SelectOption>
+              <SelectOption value="low">低</SelectOption>
+            </Select>
+          </FormItem>
+          
+          <FormItem label="發送時間">
+            <RadioGroup v-model:value="attachmentNotificationForm.sendType">
+              <Radio value="immediate">立即發送</Radio>
+              <Radio value="scheduled">定時發送</Radio>
+            </RadioGroup>
+            
+            <div v-if="attachmentNotificationForm.sendType === 'scheduled'" class="mt-3">
+              <DatePicker
+                v-model:value="attachmentNotificationForm.scheduledTime"
+                show-time
+                placeholder="請選擇發送時間"
+                style="width: 100%"
+              />
+            </div>
+          </FormItem>
+        </Form>
+        
+        <div class="flex justify-end space-x-2 mt-6">
+          <Button @click="handleCloseNotificationDrawer">取消</Button>
+          <Button type="primary" @click="handleSubmitNotification" :loading="submittingNotification">
+            {{ attachmentNotificationForm.sendType === 'immediate' ? '立即發送' : '設定發送' }}
+          </Button>
+        </div>
+      </div>
+    </Drawer>
   </Page>
 </template>
 
@@ -1933,6 +2148,27 @@ onMounted(() => {
   .tag-item .flex > div:last-child {
     margin-top: 8px;
     align-self: flex-end;
+  }
+}
+
+/* 新增知悉抽屜樣式 */
+.notification-form-container {
+  padding: 0;
+}
+
+.selected-attachment {
+  margin-bottom: 16px;
+}
+
+.selected-attachment .bg-gray-50 {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+/* 新增知悉抽屜響應式 */
+@media (max-width: 768px) {
+  .notification-form-container {
+    padding: 0 8px;
   }
 }
 </style>
