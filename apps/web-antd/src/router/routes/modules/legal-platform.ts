@@ -123,6 +123,45 @@ const routes: RouteRecordRaw[] = [
           title: $t('page.legalPlatform.myProjects'),
         },
       },
+      {
+        name: 'NotificationManagement',
+        path: 'notification-management',
+        meta: {
+          icon: 'lucide:bell',
+          title: $t('page.legalPlatform.notificationManagement'),
+        },
+        children: [
+          {
+            name: 'NotificationList',
+            path: 'list',
+            component: () => import('#/views/legal-platform/notification-management/list.vue'),
+            meta: {
+              icon: 'lucide:list',
+              title: $t('page.legalPlatform.notificationList'),
+            },
+          },
+          {
+            name: 'NotificationCreate',
+            path: 'create',
+            component: () => import('#/views/legal-platform/notification-management/create.vue'),
+            meta: {
+              icon: 'lucide:plus',
+              title: $t('page.legalPlatform.createNotification'),
+            },
+          },
+          {
+            name: 'NotificationDetail',
+            path: 'detail/:id',
+            component: () => import('#/views/legal-platform/notification-management/detail.vue'),
+            meta: {
+              icon: 'lucide:eye',
+              title: $t('page.legalPlatform.notificationDetail'),
+              hideInMenu: true,
+            },
+          },
+
+        ],
+      },
     ],
   },
 ];

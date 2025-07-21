@@ -10,6 +10,7 @@ import {
   $t,
   setupI18n as coreSetup,
   loadLocalesMapFromDir,
+  useI18n,
 } from '@vben/locales';
 import { preferences } from '@vben/preferences';
 
@@ -99,4 +100,4 @@ async function setupI18n(app: App, options: LocaleSetupOptions = {}) {
   });
 }
 
-export { $t, antdLocale, setupI18n };
+export { $t, antdLocale, setupI18n, useI18n };
