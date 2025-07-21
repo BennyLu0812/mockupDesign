@@ -198,6 +198,15 @@ const routes: RouteRecordRaw[] = [
           title: $t('page.legalPlatform.monthlyProgressReport'),
         },
       },
+      {
+        name: 'ProjectDeadlineManagement',
+        path: 'project-deadline-management',
+        component: () => import('#/views/legal-platform/project-deadline-management/index.vue'),
+        meta: {
+          icon: 'lucide:alarm-clock',
+          title: $t('page.legalPlatform.projectDeadlineManagement'),
+        },
+      },
     ],
   },
 ];
