@@ -162,6 +162,42 @@ const routes: RouteRecordRaw[] = [
 
         ],
       },
+      {
+        name: 'ProjectProgressStatistics',
+        path: 'project-progress-statistics',
+        component: () => import('#/views/legal-platform/project-progress-statistics/index.vue'),
+        meta: {
+          icon: 'lucide:bar-chart-3',
+          title: $t('page.legalPlatform.projectProgressStatistics'),
+        },
+      },
+      {
+        name: 'RoleWorkloadStatistics',
+        path: 'role-workload-statistics',
+        component: () => import('#/views/legal-platform/role-workload-statistics/index.vue'),
+        meta: {
+          icon: 'lucide:users-2',
+          title: $t('page.legalPlatform.roleWorkloadStatistics'),
+        },
+      },
+      {
+        name: 'CurrentRoleProjectProgress',
+        path: 'current-role-project-progress',
+        component: () => import('#/views/legal-platform/current-role-project-progress/index.vue'),
+        meta: {
+          icon: 'lucide:user-check',
+          title: $t('page.legalPlatform.currentRoleProjectProgress'),
+        },
+      },
+      {
+        name: 'MonthlyProgressReport',
+        path: 'monthly-progress-report',
+        component: () => import('#/views/legal-platform/monthly-progress-report/index.vue'),
+        meta: {
+          icon: 'lucide:calendar-days',
+          title: $t('page.legalPlatform.monthlyProgressReport'),
+        },
+      },
     ],
   },
 ];
