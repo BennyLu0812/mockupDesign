@@ -13,24 +13,6 @@ const routes: RouteRecordRaw[] = [
     path: '/legal-platform',
     children: [
       {
-        name: 'ProjectTemplateSelection',
-        path: 'project-template-selection',
-        component: () => import('#/views/legal-platform/project-template-selection/index.vue'),
-        meta: {
-          icon: 'lucide:layout-template',
-          title: $t('page.legalPlatform.projectTemplateSelection'),
-        },
-      },
-      {
-        name: 'TemplateManagement',
-        path: 'template-management',
-        component: () => import('#/views/legal-platform/template-management/index.vue'),
-        meta: {
-          icon: 'lucide:settings',
-          title: $t('page.legalPlatform.templateManagementPage'),
-        },
-      },
-      {
         name: 'ProjectManagement',
         path: 'project-management',
         meta: {
@@ -38,6 +20,24 @@ const routes: RouteRecordRaw[] = [
           title: $t('page.legalPlatform.projectManagement'),
         },
         children: [
+          {
+            name: 'ProjectTemplateSelection',
+            path: 'project-template-selection',
+            component: () => import('#/views/legal-platform/project-template-selection/index.vue'),
+            meta: {
+              icon: 'lucide:layout-template',
+              title: $t('page.legalPlatform.projectTemplateSelection'),
+            },
+          },
+          {
+            name: 'TemplateManagement',
+            path: 'template-management',
+            component: () => import('#/views/legal-platform/template-management/index.vue'),
+            meta: {
+              icon: 'lucide:settings',
+              title: $t('page.legalPlatform.templateManagementPage'),
+            },
+          },
           {
             name: 'ProjectList',
             path: 'list',
@@ -75,33 +75,33 @@ const routes: RouteRecordRaw[] = [
               title: $t('page.legalPlatform.projectRoleManagement'),
             },
           },
-        ],
-      },
-      {
-        name: 'TaskManagement',
-        path: 'task-management',
-        meta: {
-          icon: 'lucide:clipboard-list',
-          title: $t('page.legalPlatform.taskManagement'),
-        },
-        children: [
           {
-            name: 'TaskList',
-            path: 'list',
-            component: () => import('#/views/legal-platform/task-management/list.vue'),
+            name: 'TaskManagement',
+            path: 'task-management',
             meta: {
-              icon: 'lucide:list',
-              title: $t('page.legalPlatform.taskList'),
+              icon: 'lucide:clipboard-list',
+              title: $t('page.legalPlatform.taskManagement'),
             },
-          },
-          {
-            name: 'TaskCreate',
-            path: 'create',
-            component: () => import('#/views/legal-platform/task-management/create.vue'),
-            meta: {
-              icon: 'lucide:plus',
-              title: $t('page.legalPlatform.taskCreate'),
-            },
+            children: [
+              {
+                name: 'TaskList',
+                path: 'list',
+                component: () => import('#/views/legal-platform/task-management/list.vue'),
+                meta: {
+                  icon: 'lucide:list',
+                  title: $t('page.legalPlatform.taskList'),
+                },
+              },
+              {
+                name: 'TaskCreate',
+                path: 'create',
+                component: () => import('#/views/legal-platform/task-management/create.vue'),
+                meta: {
+                  icon: 'lucide:plus',
+                  title: $t('page.legalPlatform.taskCreate'),
+                },
+              },
+            ],
           },
         ],
       },

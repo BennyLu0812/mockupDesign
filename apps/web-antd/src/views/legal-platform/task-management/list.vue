@@ -49,6 +49,7 @@ const tableData = ref([
   {
     id: 1,
     title: '法律條文審查任務',
+    projectName: '法律諮詢系統開發',
     status: 'inProgress',
     assignee: '陳大文',
     creator: '張三',
@@ -60,6 +61,7 @@ const tableData = ref([
   {
     id: 2,
     title: '合同審核任務',
+    projectName: '合同管理平台',
     status: 'preparing',
     assignee: '李四',
     creator: '陳大文',
@@ -71,6 +73,7 @@ const tableData = ref([
   {
     id: 3,
     title: '法規研究分析',
+    projectName: '法規檢索系統',
     status: 'completed',
     assignee: '張三',
     creator: '李四',
@@ -94,6 +97,12 @@ const columns = [
     dataIndex: 'title',
     key: 'title',
     width: 200,
+  },
+  {
+    title: '項目名稱',
+    dataIndex: 'projectName',
+    key: 'projectName',
+    width: 150,
   },
   {
     title: $t('page.legalPlatform.status'),
@@ -162,6 +171,7 @@ const selectedTask = ref<any>(null);
 const createFormData = reactive({
   taskName: '',
   taskDescription: '',
+  projectName: '',
   taskStatus: 'preparing',
   taskStartTime: undefined,
   taskEndTime: undefined,
@@ -177,6 +187,15 @@ const taskParticipantOptions = [
   { value: 'chen', label: '陳大文' },
   { value: 'zhang', label: '張三' },
   { value: 'li', label: '李四' },
+];
+
+// 項目名稱選項
+const projectNameOptions = [
+  { value: 'project1', label: '法律諮詢系統開發' },
+  { value: 'project2', label: '合同管理平台' },
+  { value: 'project3', label: '法規檢索系統' },
+  { value: 'project4', label: '案件管理系統' },
+  { value: 'project5', label: '文件歸檔系統' },
 ];
 
 // 關聯項數量
@@ -303,6 +322,7 @@ const closeCreateDrawer = () => {
   Object.assign(createFormData, {
     taskName: '',
     taskDescription: '',
+    projectName: '',
     taskStatus: 'preparing',
     taskStartTime: undefined,
     taskEndTime: undefined,
@@ -590,6 +610,10 @@ onMounted(() => {
             <Card class="mb-1" title="基礎字段">
               <div class="space-y-3">
                 <div class="flex justify-between">
+                  <span class="text-gray-600">項目名稱:</span>
+                  <span class="font-medium">{{ selectedTask.projectName }}</span>
+                </div>
+                <div class="flex justify-between">
                   <span class="text-gray-600">{{ $t('page.legalPlatform.taskStatus') }}:</span>
                   <Tag :color="getStatusColor(selectedTask.status)">
                     {{ getStatusText(selectedTask.status) }}
@@ -689,6 +713,22 @@ onMounted(() => {
           <div class="col-span-5">
             <Card class="mb-1" title="基礎字段">
               <Form layout="horizontal" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
+                <FormItem label="項目名稱">
+                  <Select
+                    v-model:value="createFormData.projectName"
+                    placeholder="請選擇項目名稱"
+                    style="width: 100%"
+                  >
+                    <SelectOption
+                      v-for="option in projectNameOptions"
+                      :key="option.value"
+                      :value="option.value"
+                    >
+                      {{ option.label }}
+                    </SelectOption>
+                  </Select>
+                </FormItem>
+
                 <FormItem :label="$t('page.legalPlatform.taskStatus')">
                   <span class="text-gray-700 font-medium">預備中</span>
                 </FormItem>

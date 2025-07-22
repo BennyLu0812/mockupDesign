@@ -47,6 +47,7 @@ const pagination = reactive({
 const tableData = ref([
   {
     id: 1,
+    projectNumber: 'LP-2024-001',
     name: '法律條文審查項目',
     type: '法案項目',
     status: '進行中',
@@ -61,6 +62,7 @@ const tableData = ref([
   },
   {
     id: 2,
+    projectNumber: 'LP-2024-002',
     name: '合同審核專案',
     type: '一般項目',
     status: '準備中',
@@ -75,6 +77,7 @@ const tableData = ref([
   },
   {
     id: 3,
+    projectNumber: 'LP-2024-003',
     name: '法規研究分析',
     type: '其他項目',
     status: '已完成',
@@ -91,6 +94,12 @@ const tableData = ref([
 
 // 表格列配置
 const columns = [
+  {
+    title: '項目編號',
+    dataIndex: 'projectNumber',
+    key: 'projectNumber',
+    width: 140,
+  },
   {
     title: $t('page.legalPlatform.projectName'),
     dataIndex: 'name',
