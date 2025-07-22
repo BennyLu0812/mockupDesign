@@ -16,8 +16,7 @@ import {
   Space,
   Table,
   Tag,
-  Statistic,
-  Progress,
+
   Divider,
   Empty,
   message,
@@ -57,15 +56,7 @@ const projectStatusOptions = [
   { value: '已取消', label: '已取消' },
 ];
 
-// 統計概覽數據
-const statisticsOverview = ref({
-  totalProjects: 45,
-  completedProjects: 18,
-  inProgressProjects: 22,
-  pendingProjects: 5,
-  overdueTasks: 8,
-  upcomingDeadlines: 12,
-});
+
 
 // 項目進度數據
 const projectProgressData = ref([
@@ -74,7 +65,7 @@ const projectProgressData = ref([
     name: '法律條文審查項目',
     type: '法案項目',
     status: '進行中',
-    progress: 75,
+
     startDate: '2024-01-15',
     endDate: '2024-03-15',
     dueDate: '2024-03-10',
@@ -93,7 +84,7 @@ const projectProgressData = ref([
     name: '合同審核專案',
     type: '一般項目',
     status: '進行中',
-    progress: 45,
+
     startDate: '2024-01-20',
     endDate: '2024-02-28',
     dueDate: '2024-02-25',
@@ -112,7 +103,7 @@ const projectProgressData = ref([
     name: '法規研究分析',
     type: '其他項目',
     status: '已完成',
-    progress: 100,
+
     startDate: '2024-01-10',
     endDate: '2024-01-25',
     dueDate: '2024-01-25',
@@ -131,7 +122,7 @@ const projectProgressData = ref([
     name: '知識產權保護項目',
     type: '法案項目',
     status: '準備中',
-    progress: 10,
+
     startDate: '2024-02-01',
     endDate: '2024-04-30',
     dueDate: '2024-04-25',
@@ -150,7 +141,7 @@ const projectProgressData = ref([
     name: '勞動法修訂研究',
     type: '法案項目',
     status: '進行中',
-    progress: 60,
+
     startDate: '2024-01-05',
     endDate: '2024-03-20',
     dueDate: '2024-03-15',
@@ -187,12 +178,7 @@ const columns = [
     key: 'status',
     width: 100,
   },
-  {
-    title: $t('page.legalPlatform.progressPercentage'),
-    dataIndex: 'progress',
-    key: 'progress',
-    width: 150,
-  },
+
   {
     title: $t('page.legalPlatform.taskCompletion'),
     key: 'taskCompletion',
@@ -272,13 +258,7 @@ const getRiskColor = (riskLevel: string) => {
   return colorMap[riskLevel] || 'default';
 };
 
-// 獲取進度條顏色
-const getProgressColor = (progress: number) => {
-  if (progress >= 80) return '#52c41a';
-  if (progress >= 60) return '#1890ff';
-  if (progress >= 40) return '#faad14';
-  return '#ff4d4f';
-};
+
 
 // 處理篩選
 const handleFilter = () => {
@@ -417,77 +397,7 @@ onMounted(() => {
         </Form>
       </Card>
 
-      <!-- 統計概覽 -->
-      <Card class="mb-4" :title="$t('page.legalPlatform.statisticsOverview')">
-        <Row :gutter="16">
-          <Col :span="4">
-            <Statistic
-              :title="$t('page.legalPlatform.projectCount')"
-              :value="statisticsOverview.totalProjects"
-              :value-style="{ color: '#1890ff' }"
-            >
-              <template #prefix>
-                <span class="icon-[lucide--folder] size-4" />
-              </template>
-            </Statistic>
-          </Col>
-          <Col :span="4">
-            <Statistic
-              :title="$t('page.legalPlatform.completedProjects')"
-              :value="statisticsOverview.completedProjects"
-              :value-style="{ color: '#52c41a' }"
-            >
-              <template #prefix>
-                <span class="icon-[lucide--check-circle] size-4" />
-              </template>
-            </Statistic>
-          </Col>
-          <Col :span="4">
-            <Statistic
-              :title="$t('page.legalPlatform.inProgressProjects')"
-              :value="statisticsOverview.inProgressProjects"
-              :value-style="{ color: '#faad14' }"
-            >
-              <template #prefix>
-                <span class="icon-[lucide--clock] size-4" />
-              </template>
-            </Statistic>
-          </Col>
-          <Col :span="4">
-            <Statistic
-              :title="$t('page.legalPlatform.pendingProjects')"
-              :value="statisticsOverview.pendingProjects"
-              :value-style="{ color: '#722ed1' }"
-            >
-              <template #prefix>
-                <span class="icon-[lucide--pause-circle] size-4" />
-              </template>
-            </Statistic>
-          </Col>
-          <Col :span="4">
-            <Statistic
-              :title="$t('page.legalPlatform.overdueTasks')"
-              :value="statisticsOverview.overdueTasks"
-              :value-style="{ color: '#ff4d4f' }"
-            >
-              <template #prefix>
-                <span class="icon-[lucide--alert-triangle] size-4" />
-              </template>
-            </Statistic>
-          </Col>
-          <Col :span="4">
-            <Statistic
-              :title="$t('page.legalPlatform.upcomingDeadlines')"
-              :value="statisticsOverview.upcomingDeadlines"
-              :value-style="{ color: '#fa8c16' }"
-            >
-              <template #prefix>
-                <span class="icon-[lucide--calendar-clock] size-4" />
-              </template>
-            </Statistic>
-          </Col>
-        </Row>
-      </Card>
+
 
       <!-- 項目進度數據表 -->
       <Card :title="$t('page.legalPlatform.projectItemsSummary')">
@@ -507,14 +417,7 @@ onMounted(() => {
                 {{ record.status }}
               </Tag>
             </template>
-            <template v-else-if="column.key === 'progress'">
-              <Progress
-                :percent="record.progress"
-                :stroke-color="getProgressColor(record.progress)"
-                :show-info="true"
-                size="small"
-              />
-            </template>
+
             <template v-else-if="column.key === 'taskCompletion'">
               <div class="text-center">
                 <div class="text-sm font-medium">

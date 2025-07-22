@@ -16,13 +16,8 @@ import {
   Space,
   Table,
   Tag,
-  Statistic,
   Progress,
-  Divider,
-  Empty,
   message,
-  Tabs,
-  TabPane,
 } from 'ant-design-vue';
 
 const router = useRouter();
@@ -56,27 +51,7 @@ const projectStatusOptions = [
   { value: '已取消', label: '已取消' },
 ];
 
-// 當月統計概覽數據
-const currentMonthStatistics = ref({
-  totalProjects: 28,
-  completedProjects: 12,
-  inProgressProjects: 14,
-  pendingProjects: 2,
-  monthlyCompletionRate: 85.7,
-  monthlyTaskCount: 156,
-  monthlyOverdueRate: 8.3,
-});
 
-// 下月統計概覽數據
-const nextMonthStatistics = ref({
-  totalProjects: 32,
-  completedProjects: 0,
-  inProgressProjects: 8,
-  pendingProjects: 24,
-  monthlyCompletionRate: 0,
-  monthlyTaskCount: 189,
-  monthlyOverdueRate: 0,
-});
 
 // 當月項目數據
 const currentMonthProjects = ref([
@@ -277,10 +252,7 @@ const columns = [
   },
 ];
 
-// 當前顯示的統計數據
-const currentStatistics = computed(() => {
-  return filterForm.monthType === 'current' ? currentMonthStatistics.value : nextMonthStatistics.value;
-});
+
 
 // 當前顯示的項目數據
 const currentProjectData = computed(() => {
@@ -478,79 +450,7 @@ onMounted(() => {
         </Form>
       </Card>
 
-      <!-- 月度統計概覽 -->
-      <Card class="mb-4" :title="$t('page.legalPlatform.monthlyOverview')">
-        <Row :gutter="16">
-          <Col :span="4">
-            <Statistic
-              :title="$t('page.legalPlatform.monthlyProjectCount')"
-              :value="currentStatistics.totalProjects"
-              :value-style="{ color: '#1890ff' }"
-            >
-              <template #prefix>
-                <span class="icon-[lucide--folder] size-4" />
-              </template>
-            </Statistic>
-          </Col>
-          <Col :span="4">
-            <Statistic
-              :title="$t('page.legalPlatform.completedProjects')"
-              :value="currentStatistics.completedProjects"
-              :value-style="{ color: '#52c41a' }"
-            >
-              <template #prefix>
-                <span class="icon-[lucide--check-circle] size-4" />
-              </template>
-            </Statistic>
-          </Col>
-          <Col :span="4">
-            <Statistic
-              :title="$t('page.legalPlatform.inProgressProjects')"
-              :value="currentStatistics.inProgressProjects"
-              :value-style="{ color: '#faad14' }"
-            >
-              <template #prefix>
-                <span class="icon-[lucide--clock] size-4" />
-              </template>
-            </Statistic>
-          </Col>
-          <Col :span="4">
-            <Statistic
-              :title="$t('page.legalPlatform.monthlyCompletionRate')"
-              :value="currentStatistics.monthlyCompletionRate"
-              suffix="%"
-              :value-style="{ color: '#722ed1' }"
-            >
-              <template #prefix>
-                <span class="icon-[lucide--trending-up] size-4" />
-              </template>
-            </Statistic>
-          </Col>
-          <Col :span="4">
-            <Statistic
-              :title="$t('page.legalPlatform.monthlyTaskCount')"
-              :value="currentStatistics.monthlyTaskCount"
-              :value-style="{ color: '#13c2c2' }"
-            >
-              <template #prefix>
-                <span class="icon-[lucide--list-checks] size-4" />
-              </template>
-            </Statistic>
-          </Col>
-          <Col :span="4">
-            <Statistic
-              :title="$t('page.legalPlatform.monthlyOverdueRate')"
-              :value="currentStatistics.monthlyOverdueRate"
-              suffix="%"
-              :value-style="{ color: '#ff4d4f' }"
-            >
-              <template #prefix>
-                <span class="icon-[lucide--alert-triangle] size-4" />
-              </template>
-            </Statistic>
-          </Col>
-        </Row>
-      </Card>
+
 
       <!-- 月度項目進度表 -->
       <Card :title="filterForm.monthType === 'current' ? $t('page.legalPlatform.currentMonthReport') : $t('page.legalPlatform.nextMonthReport')">
@@ -598,56 +498,7 @@ onMounted(() => {
         </Table>
       </Card>
 
-      <!-- 月度圖表分析區域 -->
-      <Row :gutter="16" class="mt-4">
-        <Col :span="12">
-          <Card :title="$t('page.legalPlatform.monthlyProjectStatus')">
-            <div class="h-64 flex items-center justify-center bg-gray-50 rounded">
-              <div class="text-center text-gray-500">
-                <span class="icon-[lucide--bar-chart-3] size-8 mb-2" />
-                <p>{{ $t('page.legalPlatform.monthlyProjectStatus') }}圖表</p>
-                <p class="text-sm">（開發中...）</p>
-              </div>
-            </div>
-          </Card>
-        </Col>
-        <Col :span="12">
-          <Card :title="$t('page.legalPlatform.monthlyTaskDistribution')">
-            <div class="h-64 flex items-center justify-center bg-gray-50 rounded">
-              <div class="text-center text-gray-500">
-                <span class="icon-[lucide--pie-chart] size-8 mb-2" />
-                <p>{{ $t('page.legalPlatform.monthlyTaskDistribution') }}圖表</p>
-                <p class="text-sm">（開發中...）</p>
-              </div>
-            </div>
-          </Card>
-        </Col>
-      </Row>
 
-      <Row :gutter="16" class="mt-4">
-        <Col :span="12">
-          <Card :title="$t('page.legalPlatform.monthlyPerformance')">
-            <div class="h-64 flex items-center justify-center bg-gray-50 rounded">
-              <div class="text-center text-gray-500">
-                <span class="icon-[lucide--trending-up] size-8 mb-2" />
-                <p>{{ $t('page.legalPlatform.monthlyPerformance') }}圖表</p>
-                <p class="text-sm">（開發中...）</p>
-              </div>
-            </div>
-          </Card>
-        </Col>
-        <Col :span="12">
-          <Card :title="$t('page.legalPlatform.monthlyComparisonAnalysis')">
-            <div class="h-64 flex items-center justify-center bg-gray-50 rounded">
-              <div class="text-center text-gray-500">
-                <span class="icon-[lucide--line-chart] size-8 mb-2" />
-                <p>{{ $t('page.legalPlatform.monthlyComparisonAnalysis') }}圖表</p>
-                <p class="text-sm">（開發中...）</p>
-              </div>
-            </div>
-          </Card>
-        </Col>
-      </Row>
     </div>
   </Page>
 </template>

@@ -94,13 +94,7 @@
           </Select>
         </FormItem>
         
-        <FormItem :label="$t('page.legalPlatform.taskPriority')">
-          <Select v-model:value="filterForm.priority" style="width: 120px" allow-clear @change="handlePriorityChange">
-            <SelectOption value="high">{{ $t('page.legalPlatform.high') }}</SelectOption>
-            <SelectOption value="medium">{{ $t('page.legalPlatform.medium') }}</SelectOption>
-            <SelectOption value="low">{{ $t('page.legalPlatform.low') }}</SelectOption>
-          </Select>
-        </FormItem>
+
         
         <FormItem>
           <Space>
@@ -164,11 +158,7 @@
             />
           </template>
           
-          <template v-else-if="column.key === 'priority'">
-            <Tag :color="getPriorityColor(record.priority)">
-              {{ getPriorityText(record.priority) }}
-            </Tag>
-          </template>
+
           
           <template v-else-if="column.key === 'myRole'">
             <Tag color="blue">
@@ -190,79 +180,9 @@
       </Table>
     </Card>
 
-    <!-- 我的任務狀態 -->
-    <Card :title="$t('page.legalPlatform.myTasksStatus')" class="mb-6">
-      <Table
-        :columns="taskColumns"
-        :data-source="taskData"
-        :pagination="{
-          current: taskPagination.current,
-          pageSize: taskPagination.pageSize,
-          total: taskPagination.total,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          showTotal: (total, range) => `${range[0]}-${range[1]} / ${total}`,
-        }"
-        @change="handleTaskTableChange"
-        :scroll="{ x: 1200 }"
-      >
-        <template #bodyCell="{ column, record }">
-          <template v-if="column.key === 'status'">
-            <Tag :color="getStatusColor(record.status)">
-              {{ getStatusText(record.status) }}
-            </Tag>
-          </template>
-          
-          <template v-else-if="column.key === 'priority'">
-            <Tag :color="getPriorityColor(record.priority)">
-              {{ getPriorityText(record.priority) }}
-            </Tag>
-          </template>
-          
-          <template v-else-if="column.key === 'progress'">
-            <Progress
-              :percent="record.progress"
-              :stroke-color="getProgressColor(record.progress)"
-              size="small"
-            />
-          </template>
-          
-          <template v-else-if="column.key === 'action'">
-            <Space>
-              <Button type="link" size="small" @click="handleViewTask(record)">
-                <template #icon>
-                  <span class="icon-[lucide--eye] size-4" />
-                </template>
-                {{ $t('page.legalPlatform.viewDetails') }}
-              </Button>
-            </Space>
-          </template>
-        </template>
-      </Table>
-    </Card>
 
-    <!-- 個人績效圖表 -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <Card :title="$t('page.legalPlatform.personalProgressChart')">
-        <div class="h-80 flex items-center justify-center text-gray-500">
-          <div class="text-center">
-            <span class="icon-[lucide--line-chart] size-12 mb-2 block mx-auto" />
-            <p>{{ $t('page.legalPlatform.personalProgressChart') }}</p>
-            <p class="text-sm">個人進度趨勢圖</p>
-          </div>
-        </div>
-      </Card>
-      
-      <Card :title="$t('page.legalPlatform.workloadAnalysis')">
-        <div class="h-80 flex items-center justify-center text-gray-500">
-          <div class="text-center">
-            <span class="icon-[lucide--pie-chart] size-12 mb-2 block mx-auto" />
-            <p>{{ $t('page.legalPlatform.workloadAnalysis') }}</p>
-            <p class="text-sm">個人工作量分析圖</p>
-          </div>
-        </div>
-      </Card>
-    </div>
+
+
   </div>
 </template>
 
@@ -304,7 +224,6 @@ const personalStats = reactive({
 const filterForm = reactive({
   projectType: undefined,
   status: undefined,
-  priority: undefined,
 });
 
 // 分頁配置
@@ -314,11 +233,7 @@ const pagination = reactive({
   total: 8,
 });
 
-const taskPagination = reactive({
-  current: 1,
-  pageSize: 10,
-  total: 24,
-});
+
 
 // 項目表格列配置
 const projectColumns: TableColumnsType = [
@@ -394,64 +309,7 @@ const projectColumns: TableColumnsType = [
   },
 ];
 
-// 任務表格列配置
-const taskColumns: TableColumnsType = [
-  {
-    title: '任務名稱',
-    dataIndex: 'taskName',
-    key: 'taskName',
-    width: 200,
-    fixed: 'left',
-  },
-  {
-    title: '所屬項目',
-    dataIndex: 'projectName',
-    key: 'projectName',
-    width: 150,
-  },
-  {
-    title: '狀態',
-    dataIndex: 'status',
-    key: 'status',
-    width: 100,
-    align: 'center',
-  },
-  {
-    title: '優先級',
-    dataIndex: 'priority',
-    key: 'priority',
-    width: 100,
-    align: 'center',
-  },
-  {
-    title: '進度',
-    dataIndex: 'progress',
-    key: 'progress',
-    width: 150,
-    align: 'center',
-  },
-  {
-    title: '開始時間',
-    dataIndex: 'startDate',
-    key: 'startDate',
-    width: 120,
-    align: 'center',
-  },
-  {
-    title: '截止時間',
-    dataIndex: 'dueDate',
-    key: 'dueDate',
-    width: 120,
-    align: 'center',
-  },
-  {
-    title: '操作',
-    key: 'action',
-    width: 100,
-    align: 'center',
-    fixed: 'right',
-  },
-];
+
 
 // 項目數據
 const projectData = ref([
@@ -493,39 +351,7 @@ const projectData = ref([
   },
 ]);
 
-// 任務數據
-const taskData = ref([
-  {
-    key: '1',
-    taskName: '條文第三章修訂',
-    projectName: '法律條文修訂項目',
-    status: 'inProgress',
-    priority: 'high',
-    progress: 80,
-    startDate: '2024-01-20',
-    dueDate: '2024-02-20',
-  },
-  {
-    key: '2',
-    taskName: '合同條款審查',
-    projectName: '合同審查項目',
-    status: 'pending',
-    priority: 'medium',
-    progress: 30,
-    startDate: '2024-02-05',
-    dueDate: '2024-02-25',
-  },
-  {
-    key: '3',
-    taskName: '法規解釋文件',
-    projectName: '法規諮詢項目',
-    status: 'completed',
-    priority: 'low',
-    progress: 100,
-    startDate: '2023-12-15',
-    dueDate: '2024-01-15',
-  },
-]);
+
 
 // 獲取項目類型顏色
 const getProjectTypeColor = (type: string) => {
@@ -587,33 +413,7 @@ const getStatusText = (status: string) => {
   }
 };
 
-// 獲取優先級顏色
-const getPriorityColor = (priority: string) => {
-  switch (priority) {
-    case 'high':
-      return 'red';
-    case 'medium':
-      return 'orange';
-    case 'low':
-      return 'green';
-    default:
-      return 'default';
-  }
-};
 
-// 獲取優先級文本
-const getPriorityText = (priority: string) => {
-  switch (priority) {
-    case 'high':
-      return '高';
-    case 'medium':
-      return '中';
-    case 'low':
-      return '低';
-    default:
-      return '未知';
-  }
-};
 
 // 獲取角色文本
 const getRoleText = (role: string) => {
@@ -646,34 +446,25 @@ const handleStatusChange = () => {
   loadProjectData();
 };
 
-// 處理優先級變更
-const handlePriorityChange = () => {
-  loadTaskData();
-};
+
 
 // 處理搜索
 const handleSearch = () => {
   pagination.current = 1;
-  taskPagination.current = 1;
   loadProjectData();
-  loadTaskData();
 };
 
 // 處理重置
 const handleReset = () => {
   filterForm.projectType = undefined;
   filterForm.status = undefined;
-  filterForm.priority = undefined;
   pagination.current = 1;
-  taskPagination.current = 1;
   loadProjectData();
-  loadTaskData();
 };
 
 // 處理刷新
 const handleRefresh = () => {
   loadProjectData();
-  loadTaskData();
   message.success('數據刷新成功');
 };
 
@@ -684,22 +475,14 @@ const handleTableChange = (pag: any) => {
   loadProjectData();
 };
 
-// 處理任務表格變更
-const handleTaskTableChange = (pag: any) => {
-  taskPagination.current = pag.current;
-  taskPagination.pageSize = pag.pageSize;
-  loadTaskData();
-};
+
 
 // 處理查看項目
 const handleViewProject = (record: any) => {
   message.info(`查看項目: ${record.projectName}`);
 };
 
-// 處理查看任務
-const handleViewTask = (record: any) => {
-  message.info(`查看任務: ${record.taskName}`);
-};
+
 
 // 加載項目數據
 const loadProjectData = () => {
@@ -707,16 +490,11 @@ const loadProjectData = () => {
   console.log('Loading project data with filters:', filterForm);
 };
 
-// 加載任務數據
-const loadTaskData = () => {
-  // 模擬API調用
-  console.log('Loading task data with filters:', filterForm);
-};
+
 
 // 組件掛載時初始化數據
 onMounted(() => {
   loadProjectData();
-  loadTaskData();
 });
 </script>
 

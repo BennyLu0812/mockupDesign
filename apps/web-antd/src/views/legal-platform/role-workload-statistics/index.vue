@@ -69,57 +69,7 @@
       </Form>
     </Card>
 
-    <!-- 統計概覽 -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      <Card>
-        <Statistic
-          :title="$t('page.legalPlatform.totalWorkload')"
-          :value="statisticsData.totalWorkload"
-          :value-style="{ color: '#3f8600' }"
-        >
-          <template #prefix>
-            <span class="icon-[lucide--briefcase] size-4" />
-          </template>
-        </Statistic>
-      </Card>
-      
-      <Card>
-        <Statistic
-          :title="$t('page.legalPlatform.completedWorkload')"
-          :value="statisticsData.completedWorkload"
-          :value-style="{ color: '#1890ff' }"
-        >
-          <template #prefix>
-            <span class="icon-[lucide--check-circle] size-4" />
-          </template>
-        </Statistic>
-      </Card>
-      
-      <Card>
-        <Statistic
-          :title="$t('page.legalPlatform.pendingWorkload')"
-          :value="statisticsData.pendingWorkload"
-          :value-style="{ color: '#faad14' }"
-        >
-          <template #prefix>
-            <span class="icon-[lucide--clock] size-4" />
-          </template>
-        </Statistic>
-      </Card>
-      
-      <Card>
-        <Statistic
-          :title="$t('page.legalPlatform.workEfficiency')"
-          :value="statisticsData.workEfficiency"
-          suffix="%"
-          :value-style="{ color: '#52c41a' }"
-        >
-          <template #prefix>
-            <span class="icon-[lucide--trending-up] size-4" />
-          </template>
-        </Statistic>
-      </Card>
-    </div>
+
 
     <!-- 角色工作量數據表格 -->
     <Card :title="$t('page.legalPlatform.roleBasedWorkload')" class="mb-6">
@@ -146,17 +96,7 @@
             />
           </template>
           
-          <template v-else-if="column.key === 'efficiency'">
-            <Tag :color="getEfficiencyColor(record.efficiency)">
-              {{ record.efficiency }}%
-            </Tag>
-          </template>
-          
-          <template v-else-if="column.key === 'performance'">
-            <Tag :color="getPerformanceColor(record.performance)">
-              {{ getPerformanceText(record.performance) }}
-            </Tag>
-          </template>
+
           
           <template v-else-if="column.key === 'action'">
             <Space>
@@ -172,28 +112,7 @@
       </Table>
     </Card>
 
-    <!-- 工作量圖表 -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <Card :title="$t('page.legalPlatform.workloadChart')">
-        <div class="h-80 flex items-center justify-center text-gray-500">
-          <div class="text-center">
-            <span class="icon-[lucide--bar-chart-3] size-12 mb-2 block mx-auto" />
-            <p>{{ $t('page.legalPlatform.workloadChart') }}</p>
-            <p class="text-sm">工作量分佈圖表</p>
-          </div>
-        </div>
-      </Card>
-      
-      <Card :title="$t('page.legalPlatform.roleComparison')">
-        <div class="h-80 flex items-center justify-center text-gray-500">
-          <div class="text-center">
-            <span class="icon-[lucide--pie-chart] size-12 mb-2 block mx-auto" />
-            <p>{{ $t('page.legalPlatform.roleComparison') }}</p>
-            <p class="text-sm">角色工作量對比圖</p>
-          </div>
-        </div>
-      </Card>
-    </div>
+
   </div>
 </template>
 
@@ -209,7 +128,6 @@ import {
   Button,
   Space,
   Table,
-  Statistic,
   Progress,
   Tag,
   message,
@@ -225,13 +143,7 @@ const filterForm = reactive({
   endDate: dayjs(),
 });
 
-// 統計數據
-const statisticsData = reactive({
-  totalWorkload: 1250,
-  completedWorkload: 980,
-  pendingWorkload: 270,
-  workEfficiency: 78.4,
-});
+
 
 // 分頁配置
 const pagination = reactive({
@@ -291,27 +203,7 @@ const workloadColumns: TableColumnsType = [
     width: 150,
     align: 'center',
   },
-  {
-    title: '工作效率',
-    dataIndex: 'efficiency',
-    key: 'efficiency',
-    width: 100,
-    align: 'center',
-  },
-  {
-    title: '績效評級',
-    dataIndex: 'performance',
-    key: 'performance',
-    width: 100,
-    align: 'center',
-  },
-  {
-    title: '平均完成時間',
-    dataIndex: 'avgCompletionTime',
-    key: 'avgCompletionTime',
-    width: 120,
-    align: 'center',
-  },
+
   {
     title: '操作',
     key: 'action',
@@ -332,9 +224,6 @@ const workloadData = ref([
     inProgressWorkload: 28,
     pendingWorkload: 8,
     workloadProgress: 77,
-    efficiency: 85,
-    performance: 'excellent',
-    avgCompletionTime: '3.2天',
   },
   {
     key: '2',
@@ -345,9 +234,6 @@ const workloadData = ref([
     inProgressWorkload: 20,
     pendingWorkload: 9,
     workloadProgress: 77,
-    efficiency: 78,
-    performance: 'good',
-    avgCompletionTime: '4.1天',
   },
   {
     key: '3',
@@ -358,9 +244,6 @@ const workloadData = ref([
     inProgressWorkload: 18,
     pendingWorkload: 8,
     workloadProgress: 73,
-    efficiency: 72,
-    performance: 'good',
-    avgCompletionTime: '4.5天',
   },
   {
     key: '4',
@@ -371,9 +254,6 @@ const workloadData = ref([
     inProgressWorkload: 20,
     pendingWorkload: 8,
     workloadProgress: 67,
-    efficiency: 68,
-    performance: 'average',
-    avgCompletionTime: '5.2天',
   },
   {
     key: '5',
@@ -384,9 +264,6 @@ const workloadData = ref([
     inProgressWorkload: 18,
     pendingWorkload: 9,
     workloadProgress: 63,
-    efficiency: 65,
-    performance: 'average',
-    avgCompletionTime: '5.8天',
   },
 ]);
 
@@ -397,44 +274,7 @@ const getProgressColor = (progress: number) => {
   return '#ff4d4f';
 };
 
-// 獲取效率顏色
-const getEfficiencyColor = (efficiency: number) => {
-  if (efficiency >= 80) return 'green';
-  if (efficiency >= 60) return 'orange';
-  return 'red';
-};
 
-// 獲取績效顏色
-const getPerformanceColor = (performance: string) => {
-  switch (performance) {
-    case 'excellent':
-      return 'green';
-    case 'good':
-      return 'blue';
-    case 'average':
-      return 'orange';
-    case 'poor':
-      return 'red';
-    default:
-      return 'default';
-  }
-};
-
-// 獲取績效文本
-const getPerformanceText = (performance: string) => {
-  switch (performance) {
-    case 'excellent':
-      return '優秀';
-    case 'good':
-      return '良好';
-    case 'average':
-      return '一般';
-    case 'poor':
-      return '較差';
-    default:
-      return '未知';
-  }
-};
 
 // 處理週期變更
 const handlePeriodChange = () => {
