@@ -5,9 +5,6 @@
       <h1 class="text-2xl font-bold text-gray-800">
         {{ $t('page.legalPlatform.projectDeadlineManagement') }}
       </h1>
-      <p class="text-gray-600 mt-2">
-        {{ $t('page.legalPlatform.projectDeadlineManagementDesc') }}
-      </p>
     </div>
 
     <!-- 篩選表單 -->
@@ -59,47 +56,7 @@
       </a-form>
     </div>
 
-    <!-- 統計概覽 -->
-    <div class="mb-6">
-      <a-row :gutter="16">
-        <a-col :span="6">
-          <a-card class="text-center">
-            <a-statistic
-              :title="$t('page.legalPlatform.upcomingDeadlines')"
-              :value="statistics.upcomingCount"
-              :value-style="{ color: '#faad14' }"
-            />
-          </a-card>
-        </a-col>
-        <a-col :span="6">
-          <a-card class="text-center">
-            <a-statistic
-              :title="$t('page.legalPlatform.overdueProjects')"
-              :value="statistics.overdueCount"
-              :value-style="{ color: '#ff4d4f' }"
-            />
-          </a-card>
-        </a-col>
-        <a-col :span="6">
-          <a-card class="text-center">
-            <a-statistic
-              :title="$t('page.legalPlatform.normal')"
-              :value="statistics.normalCount"
-              :value-style="{ color: '#52c41a' }"
-            />
-          </a-card>
-        </a-col>
-        <a-col :span="6">
-          <a-card class="text-center">
-            <a-statistic
-              :title="$t('page.legalPlatform.critical')"
-              :value="statistics.criticalCount"
-              :value-style="{ color: '#722ed1' }"
-            />
-          </a-card>
-        </a-col>
-      </a-row>
-    </div>
+
 
     <!-- 項目截止日期管理表格 -->
     <div class="bg-white rounded-lg shadow">
@@ -196,9 +153,46 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, defineOptions, h } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { message } from 'ant-design-vue'
+import { 
+  message,
+  Card,
+  Form,
+  FormItem,
+  Select,
+  SelectOption,
+  Button,
+  Space,
+  Table,
+  Modal,
+  Input,
+  DatePicker,
+  Textarea,
+  Tag,
+  Popconfirm
+} from 'ant-design-vue'
+import type { TableColumnsType } from 'ant-design-vue'
+import dayjs from 'dayjs'
+
+defineOptions({
+  components: {
+    ACard: Card,
+    AForm: Form,
+    AFormItem: FormItem,
+    ASelect: Select,
+    ASelectOption: SelectOption,
+    AButton: Button,
+    ASpace: Space,
+    ATable: Table,
+    AModal: Modal,
+    AInput: Input,
+    ADatePicker: DatePicker,
+    ATextarea: Textarea,
+    ATag: Tag,
+    APopconfirm: Popconfirm
+  }
+})
 
 const { t } = useI18n()
 
@@ -222,13 +216,7 @@ const modifyForm = reactive({
   reasonDetail: '',
 })
 
-// 統計數據
-const statistics = reactive({
-  upcomingCount: 12,
-  overdueCount: 3,
-  normalCount: 45,
-  criticalCount: 2,
-})
+
 
 // 分頁
 const pagination = reactive({
@@ -272,47 +260,88 @@ const projectList = ref([
 ])
 
 // 表格列配置
-const columns = [
+const columns: TableColumnsType = [
   {
-    title: '項目名稱',
+    title: t('page.legalPlatform.projectName'),
     dataIndex: 'projectName',
     key: 'projectName',
     width: 200,
   },
   {
-    title: '項目類型',
+    title: t('page.legalPlatform.projectType'),
     dataIndex: 'projectType',
     key: 'projectType',
     width: 120,
+    customRender: ({ record }: any) => {
+      const typeMap: Record<string, string> = {
+        general: t('page.legalPlatform.generalProject'),
+        bill: t('page.legalPlatform.billProject'),
+        other: t('page.legalPlatform.otherProject')
+      }
+      return typeMap[record.projectType] || record.projectType
+    }
   },
   {
-    title: '截止日期',
+    title: t('page.legalPlatform.deadline'),
     dataIndex: 'projectDeadline',
     key: 'projectDeadline',
     width: 150,
   },
   {
-    title: '截止狀態',
+    title: t('page.legalPlatform.deadlineStatus'),
     dataIndex: 'deadlineStatus',
     key: 'deadlineStatus',
     width: 120,
+    customRender: ({ record }: any) => {
+      const statusConfig: Record<string, { color: string; text: string }> = {
+        normal: { color: 'green', text: t('page.legalPlatform.normal') },
+        warning: { color: 'orange', text: t('page.legalPlatform.warning') },
+        overdue: { color: 'red', text: t('page.legalPlatform.overdue') },
+        critical: { color: 'purple', text: t('page.legalPlatform.critical') }
+      }
+      const config = statusConfig[record.deadlineStatus] || { color: 'default', text: record.deadlineStatus }
+      return h(Tag, { color: config.color }, () => config.text)
+    }
   },
   {
-    title: '剩餘/逾期天數',
+    title: t('page.legalPlatform.daysRemaining'),
     dataIndex: 'daysRemaining',
     key: 'daysRemaining',
     width: 150,
+    customRender: ({ record }: any) => {
+      const days = record.daysRemaining
+      if (days > 0) {
+        return `${days} ${t('page.legalPlatform.daysLeft')}`
+      } else if (days < 0) {
+        return h(Tag, { color: 'red' }, () => `${t('page.legalPlatform.overdue')} ${Math.abs(days)} ${t('page.legalPlatform.days')}`)
+      } else {
+        return h(Tag, { color: 'orange' }, () => t('page.legalPlatform.today'))
+      }
+    }
   },
   {
-    title: '負責人',
+    title: t('page.legalPlatform.assignee'),
     dataIndex: 'assignee',
     key: 'assignee',
     width: 100,
   },
   {
-    title: '操作',
+    title: t('page.legalPlatform.operation'),
     key: 'action',
     width: 200,
+    customRender: ({ record }: any) => {
+      return h(Space, {}, () => [
+        record.canModifyDeadline ? h(Button, {
+          type: 'link',
+          size: 'small',
+          onClick: () => handleModifyDeadline(record)
+        }, () => t('page.legalPlatform.modifyDeadline')) : null,
+        h(Button, {
+          type: 'link',
+          size: 'small'
+        }, () => t('page.legalPlatform.viewDetails'))
+      ])
+    }
   },
 ]
 
