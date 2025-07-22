@@ -45,13 +45,18 @@ const projectTemplates = ref([
 
 // 處理模板選擇
 const handleSelectTemplate = (template: any) => {
-  // 跳轉到新增項目頁面，並傳遞模板類型
-  router.push({
-    path: '/legal-platform/project-management/create',
-    query: {
-      templateType: template.type,
-    },
-  });
+  // 如果是法案項目，跳轉到專門的法案項目創建頁面
+  if (template.type === 'bill') {
+    router.push('/legal-platform/project-management/bill-create');
+  } else {
+    // 其他項目類型跳轉到通用創建頁面，並傳遞模板類型
+    router.push({
+      path: '/legal-platform/project-management/create',
+      query: {
+        templateType: template.type,
+      },
+    });
+  }
 };
 
 // 處理模板管理

@@ -173,7 +173,7 @@ const handleReset = () => {
 
 // 新增項目
 const handleCreate = () => {
-  router.push('/legal-platform/project-template-selection');
+  router.push('/legal-platform/project-management/project-template-selection');
 };
 
 // 查看項目詳情
