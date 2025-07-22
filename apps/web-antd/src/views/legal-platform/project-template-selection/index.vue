@@ -100,7 +100,17 @@ const handleTemplateDeleted = (templateId: string) => {
 
 // 獲取模板圖標類名
 const getTemplateIconClass = (iconName: string) => {
-  return ['icon-[' + iconName + ']', 'size-12', 'text-blue-500'];
+  const iconMap: Record<string, string> = {
+    'lucide--file-text': 'icon-[lucide--file-text] size-12 text-blue-500',
+    'lucide--folder': 'icon-[lucide--folder] size-12 text-blue-500',
+    'lucide--briefcase': 'icon-[lucide--briefcase] size-12 text-blue-500',
+    'lucide--users': 'icon-[lucide--users] size-12 text-blue-500',
+    'lucide--settings': 'icon-[lucide--settings] size-12 text-blue-500',
+    'lucide--layout': 'icon-[lucide--layout] size-12 text-blue-500',
+    'lucide--database': 'icon-[lucide--database] size-12 text-blue-500',
+    'lucide--globe': 'icon-[lucide--globe] size-12 text-blue-500'
+  };
+  return iconMap[iconName] || 'icon-[lucide--file-text] size-12 text-blue-500';
 };
 </script>
 

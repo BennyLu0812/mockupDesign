@@ -879,8 +879,13 @@ const getActivityIcon = (type: string) => {
 
 // 獲取活動圖標類名
 const getActivityIconClass = (type: string) => {
-  const iconName = getActivityIcon(type);
-  return 'icon-[' + iconName + '] size-4 text-gray-400 mt-1';
+  const iconClassMap: Record<string, string> = {
+    task_created: 'icon-[lucide--plus-circle] size-4 text-gray-400 mt-1',
+    status_changed: 'icon-[lucide--edit] size-4 text-gray-400 mt-1',
+    member_joined: 'icon-[lucide--user-plus] size-4 text-gray-400 mt-1',
+    project_created: 'icon-[lucide--folder-plus] size-4 text-gray-400 mt-1',
+  };
+  return iconClassMap[type] || 'icon-[lucide--circle] size-4 text-gray-400 mt-1';
 };
 
 // 標籤管理相關函數
@@ -1446,7 +1451,9 @@ onMounted(() => {
               <!-- 節點圖標 -->
               <div class="flex flex-col items-center">
                 <div class="node-icon-wrapper">
-                  <span :class="`icon-[${getNodeStatusIcon(node.status)}] size-6 ${getNodeStatusColor(node.status)}`" />
+                  <span v-if="node.status === 'completed'" :class="`icon-[lucide--check-circle] size-6 ${getNodeStatusColor(node.status)}`" />
+                  <span v-else-if="node.status === 'inProgress'" :class="`icon-[lucide--clock] size-6 ${getNodeStatusColor(node.status)}`" />
+                  <span v-else :class="`icon-[lucide--circle] size-6 ${getNodeStatusColor(node.status)}`" />
                 </div>
                 <!-- 連接線 -->
                 <div v-if="index < processNodes.length - 1" :class="getNodeLineClass(node.status, index === processNodes.length - 1)" />

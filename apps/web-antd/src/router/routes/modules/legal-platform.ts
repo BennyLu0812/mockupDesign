@@ -207,6 +207,15 @@ const routes: RouteRecordRaw[] = [
           title: $t('page.legalPlatform.projectDeadlineManagement'),
         },
       },
+      {
+        name: 'PersonnelWorkloadStatistics',
+        path: 'personnel-workload-statistics',
+        component: () => import('#/views/legal-platform/personnel-workload-statistics/index.vue'),
+        meta: {
+          icon: 'lucide:users-cog',
+          title: $t('page.legalPlatform.personnelWorkloadStatistics'),
+        },
+      },
     ],
   },
 ];
