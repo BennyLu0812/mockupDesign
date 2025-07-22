@@ -158,28 +158,7 @@
           </div>
         </Card>
 
-        <!-- 知悉統計 -->
-        <Card>
-          <div class="font-semibold mb-4">知悉統計</div>
-          <div class="space-y-3">
-            <div class="flex justify-between">
-              <span class="text-gray-600">總收件人</span>
-              <span class="font-medium">{{ notification.statistics.total }}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-600">已確認</span>
-              <span class="font-medium text-green-600">{{ notification.statistics.confirmed }}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-600">未確認</span>
-              <span class="font-medium text-orange-600">{{ notification.statistics.unconfirmed }}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-600">確認率</span>
-              <span class="font-medium">{{ notification.statistics.confirmRate }}%</span>
-            </div>
-          </div>
-        </Card>
+
       </div>
     </div>
 
@@ -319,12 +298,6 @@ const notification = ref({
     id: 'project1',
     name: '法案審議項目A',
     description: '關於某某法案的審議工作'
-  },
-  statistics: {
-    total: 5,
-    confirmed: 4,
-    unconfirmed: 1,
-    confirmRate: 80
   }
 });
 

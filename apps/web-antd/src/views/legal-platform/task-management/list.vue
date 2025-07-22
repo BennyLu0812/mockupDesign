@@ -153,6 +153,9 @@ const priorityOptions = [
 // 抽屜狀態
 const detailDrawerVisible = ref(false);
 const createDrawerVisible = ref(false);
+const notificationDrawerVisible = ref(false);
+const notificationReplyDrawerVisible = ref(false);
+const notificationForwardDrawerVisible = ref(false);
 const selectedTask = ref<any>(null);
 
 // 新增任務表單數據
@@ -269,6 +272,24 @@ const handleAddTask = () => {
   createDrawerVisible.value = true;
 };
 
+// 新增知悉
+const handleAddNotification = (record: any) => {
+  selectedTask.value = record;
+  notificationDrawerVisible.value = true;
+};
+
+// 知悉回復
+const handleNotificationReply = (record: any) => {
+  selectedTask.value = record;
+  notificationReplyDrawerVisible.value = true;
+};
+
+// 知悉轉發
+const handleNotificationForward = (record: any) => {
+  selectedTask.value = record;
+  notificationForwardDrawerVisible.value = true;
+};
+
 // 關閉詳情抽屜
 const closeDetailDrawer = () => {
   detailDrawerVisible.value = false;
@@ -291,6 +312,22 @@ const closeCreateDrawer = () => {
     estimatedHours: 0,
     attachments: [],
   });
+};
+
+// 關閉知悉相關抽屜
+const closeNotificationDrawer = () => {
+  notificationDrawerVisible.value = false;
+  selectedTask.value = null;
+};
+
+const closeNotificationReplyDrawer = () => {
+  notificationReplyDrawerVisible.value = false;
+  selectedTask.value = null;
+};
+
+const closeNotificationForwardDrawer = () => {
+  notificationForwardDrawerVisible.value = false;
+  selectedTask.value = null;
 };
 
 // 保存新增任務
@@ -488,6 +525,15 @@ onMounted(() => {
               <Space>
                 <Button type="link" size="small" @click="handleDetail(record)">
                   {{ $t('page.legalPlatform.detail') }}
+                </Button>
+                <Button type="link" size="small" @click="handleAddNotification(record)">
+                  {{ $t('page.legalPlatform.createNotification') }}
+                </Button>
+                <Button type="link" size="small" @click="handleNotificationReply(record)">
+                  {{ $t('page.legalPlatform.notificationReply') }}
+                </Button>
+                <Button type="link" size="small" @click="handleNotificationForward(record)">
+                  {{ $t('page.legalPlatform.notificationForward') }}
                 </Button>
                 <Button
                   type="link"
@@ -732,6 +778,104 @@ onMounted(() => {
           </Button>
           <Button type="primary" @click="handleSaveTask">
             {{ $t('page.legalPlatform.save') }}
+          </Button>
+        </div>
+      </template>
+    </Drawer>
+
+    <!-- 新增知悉抽屜 -->
+    <Drawer
+      v-model:open="notificationDrawerVisible"
+      :title="$t('page.legalPlatform.createNotification')"
+      placement="right"
+      :width="600"
+      @close="closeNotificationDrawer"
+    >
+      <div v-if="selectedTask" class="notification-form-container">
+        <Form layout="vertical">
+          <FormItem :label="$t('page.legalPlatform.notificationTitle')">
+            <Input :placeholder="$t('page.legalPlatform.notificationTitle')" />
+          </FormItem>
+          <FormItem :label="$t('page.legalPlatform.notificationContent')">
+            <Input.TextArea :rows="6" :placeholder="$t('page.legalPlatform.notificationContent')" />
+          </FormItem>
+          <FormItem :label="$t('page.legalPlatform.notificationRecipient')">
+            <Select mode="multiple" :placeholder="$t('page.legalPlatform.selectRecipient')">
+              <SelectOption value="director">{{ $t('page.legalPlatform.director') }}</SelectOption>
+              <SelectOption value="supervisor">{{ $t('page.legalPlatform.allSupervisors') }}</SelectOption>
+              <SelectOption value="secretary">{{ $t('page.legalPlatform.supervisorSecretary') }}</SelectOption>
+            </Select>
+          </FormItem>
+        </Form>
+      </div>
+      <template #footer>
+        <div class="flex justify-end space-x-2">
+          <Button @click="closeNotificationDrawer">
+            {{ $t('page.legalPlatform.cancel') }}
+          </Button>
+          <Button type="primary">
+            {{ $t('page.legalPlatform.sendNotification') }}
+          </Button>
+        </div>
+      </template>
+    </Drawer>
+
+    <!-- 知悉回復抽屜 -->
+    <Drawer
+      v-model:open="notificationReplyDrawerVisible"
+      :title="$t('page.legalPlatform.notificationReply')"
+      placement="right"
+      :width="600"
+      @close="closeNotificationReplyDrawer"
+    >
+      <div v-if="selectedTask" class="notification-reply-container">
+        <Form layout="vertical">
+          <FormItem :label="$t('page.legalPlatform.replyContent')">
+            <Input.TextArea :rows="6" :placeholder="$t('page.legalPlatform.replyContent')" />
+          </FormItem>
+        </Form>
+      </div>
+      <template #footer>
+        <div class="flex justify-end space-x-2">
+          <Button @click="closeNotificationReplyDrawer">
+            {{ $t('page.legalPlatform.cancel') }}
+          </Button>
+          <Button type="primary">
+            {{ $t('page.legalPlatform.replyNotification') }}
+          </Button>
+        </div>
+      </template>
+    </Drawer>
+
+    <!-- 知悉轉發抽屜 -->
+    <Drawer
+      v-model:open="notificationForwardDrawerVisible"
+      :title="$t('page.legalPlatform.notificationForward')"
+      placement="right"
+      :width="600"
+      @close="closeNotificationForwardDrawer"
+    >
+      <div v-if="selectedTask" class="notification-forward-container">
+        <Form layout="vertical">
+          <FormItem :label="$t('page.legalPlatform.forwardTo')">
+            <Select mode="multiple" :placeholder="$t('page.legalPlatform.selectRecipient')">
+              <SelectOption value="director">{{ $t('page.legalPlatform.director') }}</SelectOption>
+              <SelectOption value="supervisor">{{ $t('page.legalPlatform.allSupervisors') }}</SelectOption>
+              <SelectOption value="secretary">{{ $t('page.legalPlatform.supervisorSecretary') }}</SelectOption>
+            </Select>
+          </FormItem>
+          <FormItem label="轉發備註">
+            <Input.TextArea :rows="4" placeholder="請輸入轉發備註" />
+          </FormItem>
+        </Form>
+      </div>
+      <template #footer>
+        <div class="flex justify-end space-x-2">
+          <Button @click="closeNotificationForwardDrawer">
+            {{ $t('page.legalPlatform.cancel') }}
+          </Button>
+          <Button type="primary">
+            {{ $t('page.legalPlatform.notificationForward') }}
           </Button>
         </div>
       </template>

@@ -105,10 +105,6 @@
               {{ getStatusText(record.status) }}
             </Tag>
           </template>
-          <template v-else-if="column.key === 'hasAttachment'">
-            <span class="icon-[lucide--paperclip] size-4 text-gray-500" v-if="record.hasAttachment" />
-            <span v-else>-</span>
-          </template>
           <template v-else-if="column.key === 'operation'">
             <Space>
               <Button type="link" size="small" @click="handleView(record)">
@@ -147,37 +143,34 @@
       </Table>
     </Card>
 
-    <!-- 回復彈窗 -->
-    <Modal 
-      v-model:open="replyModalVisible" 
-      :title="$t('page.legalPlatform.replyNotification')"
-      @ok="handleReplySubmit"
-      @cancel="handleReplyCancel"
+    <!-- 新增知悉抽屜 -->
+    <Drawer
+      v-model:open="createDrawerVisible"
+      :title="$t('page.legalPlatform.createNotification')"
+      placement="right"
+      :width="600"
+      @close="handleCreateCancel"
     >
-      <Form :model="replyForm" layout="vertical">
-        <FormItem :label="$t('page.legalPlatform.replyContent')" required>
-          <TextArea 
-            v-model:value="replyForm.content" 
-            :rows="4" 
-            :placeholder="$t('page.legalPlatform.replyContent')"
+      <Form :model="createForm" layout="vertical">
+        <FormItem :label="$t('page.legalPlatform.notificationTitle')" required>
+          <Input
+            v-model:value="createForm.title"
+            :placeholder="$t('page.legalPlatform.notificationTitle')"
           />
         </FormItem>
-      </Form>
-    </Modal>
-
-    <!-- 轉發彈窗 -->
-    <Modal 
-      v-model:open="forwardModalVisible" 
-      :title="$t('page.legalPlatform.forwardNotification')"
-      @ok="handleForwardSubmit"
-      @cancel="handleForwardCancel"
-    >
-      <Form :model="forwardForm" layout="vertical">
-        <FormItem :label="$t('page.legalPlatform.forwardTo')" required>
-          <Select 
-            v-model:value="forwardForm.recipients" 
+        <FormItem :label="$t('page.legalPlatform.notificationContent')" required>
+          <TextArea
+            v-model:value="createForm.content"
+            :placeholder="$t('page.legalPlatform.notificationContent')"
+            :rows="6"
+          />
+        </FormItem>
+        <FormItem :label="$t('page.legalPlatform.notificationRecipient')" required>
+          <Select
+            v-model:value="createForm.recipients"
             mode="multiple"
             :placeholder="$t('page.legalPlatform.selectRecipient')"
+            style="width: 100%"
           >
             <SelectOption value="director">{{ $t('page.legalPlatform.director') }}</SelectOption>
             <SelectOption value="supervisor">{{ $t('page.legalPlatform.allSupervisors') }}</SelectOption>
@@ -186,14 +179,83 @@
           </Select>
         </FormItem>
         <FormItem :label="$t('page.legalPlatform.notificationRemarks')">
-          <TextArea 
-            v-model:value="forwardForm.remarks" 
-            :rows="3" 
+          <TextArea
+            v-model:value="createForm.remarks"
             :placeholder="$t('page.legalPlatform.notificationRemarks')"
+            :rows="3"
           />
         </FormItem>
       </Form>
-    </Modal>
+      <template #footer>
+        <Space>
+          <Button @click="handleCreateCancel">{{ $t('page.legalPlatform.cancel') }}</Button>
+          <Button type="primary" @click="handleCreateSubmit">{{ $t('page.legalPlatform.submit') }}</Button>
+        </Space>
+      </template>
+    </Drawer>
+
+    <!-- 回復抽屜 -->
+    <Drawer
+      v-model:open="replyDrawerVisible"
+      :title="$t('page.legalPlatform.replyNotification')"
+      placement="right"
+      :width="600"
+      @close="handleReplyCancel"
+    >
+      <Form :model="replyForm" layout="vertical">
+        <FormItem :label="$t('page.legalPlatform.replyContent')" required>
+          <TextArea
+            v-model:value="replyForm.content"
+            :placeholder="$t('page.legalPlatform.replyContent')"
+            :rows="6"
+          />
+        </FormItem>
+      </Form>
+      <template #footer>
+        <Space>
+          <Button @click="handleReplyCancel">{{ $t('page.legalPlatform.cancel') }}</Button>
+          <Button type="primary" @click="handleReplySubmit">{{ $t('page.legalPlatform.submit') }}</Button>
+        </Space>
+      </template>
+    </Drawer>
+
+    <!-- 轉發抽屜 -->
+    <Drawer
+      v-model:open="forwardDrawerVisible"
+      :title="$t('page.legalPlatform.forwardNotification')"
+      placement="right"
+      :width="600"
+      @close="handleForwardCancel"
+    >
+      <Form :model="forwardForm" layout="vertical">
+        <FormItem :label="$t('page.legalPlatform.forwardTo')" required>
+          <Select
+            v-model:value="forwardForm.recipients"
+            mode="multiple"
+            :placeholder="$t('page.legalPlatform.selectRecipient')"
+            style="width: 100%"
+          >
+            <SelectOption value="director">{{ $t('page.legalPlatform.director') }}</SelectOption>
+            <SelectOption value="supervisor">{{ $t('page.legalPlatform.allSupervisors') }}</SelectOption>
+            <SelectOption value="secretary">{{ $t('page.legalPlatform.supervisorSecretary') }}</SelectOption>
+            <SelectOption value="other">{{ $t('page.legalPlatform.otherPersonnel') }}</SelectOption>
+          </Select>
+        </FormItem>
+        <FormItem :label="$t('page.legalPlatform.notificationRemarks')">
+          <TextArea
+            v-model:value="forwardForm.remarks"
+            :placeholder="$t('page.legalPlatform.notificationRemarks')"
+            :rows="3"
+          />
+        </FormItem>
+      </Form>
+      <template #footer>
+        <Space>
+          <Button @click="handleForwardCancel">{{ $t('page.legalPlatform.cancel') }}</Button>
+          <Button type="primary" @click="handleForwardSubmit">{{ $t('page.legalPlatform.submit') }}</Button>
+        </Space>
+      </template>
+    </Drawer>
   </div>
 </template>
 
@@ -213,6 +275,7 @@ import {
   Table, 
   Tag, 
   Modal, 
+  Drawer,
   message 
 } from 'ant-design-vue';
 
@@ -225,8 +288,9 @@ const router = useRouter();
 // 響應式數據
 const loading = ref(false);
 const selectedRowKeys = ref<string[]>([]);
-const replyModalVisible = ref(false);
-const forwardModalVisible = ref(false);
+const createDrawerVisible = ref(false);
+const replyDrawerVisible = ref(false);
+const forwardDrawerVisible = ref(false);
 const currentRecord = ref<any>(null);
 
 
@@ -238,6 +302,14 @@ const searchForm = reactive({
   recipient: undefined,
   startDate: undefined,
   endDate: undefined
+});
+
+// 新增知悉表單
+const createForm = reactive({
+  title: '',
+  content: '',
+  recipients: [],
+  remarks: ''
 });
 
 // 回復表單
@@ -337,25 +409,7 @@ const columns = computed(() => [
     key: 'recipient',
     width: 120
   },
-  {
-    title: $t('page.legalPlatform.createTime'),
-    dataIndex: 'createTime',
-    key: 'createTime',
-    width: 150
-  },
-  {
-    title: $t('page.legalPlatform.notificationAttachment'),
-    dataIndex: 'hasAttachment',
-    key: 'hasAttachment',
-    width: 80,
-    align: 'center'
-  },
-  {
-    title: $t('page.legalPlatform.operation'),
-    key: 'operation',
-    width: 300,
-    fixed: 'right'
-  }
+  {    title: $t('page.legalPlatform.createTime'),    dataIndex: 'createTime',    key: 'createTime',    width: 150  },  {    title: $t('page.legalPlatform.operation'),    key: 'operation',    width: 300,    fixed: 'right'  }
 ]);
 
 // 狀態顏色映射
@@ -400,7 +454,33 @@ const handleReset = () => {
 };
 
 const handleCreate = () => {
-  router.push('/legal-platform/notification-management/create');
+  createForm.title = '';
+  createForm.content = '';
+  createForm.recipients = [];
+  createForm.remarks = '';
+  createDrawerVisible.value = true;
+};
+
+const handleCreateSubmit = () => {
+  if (!createForm.title.trim()) {
+    message.error('請輸入知悉標題');
+    return;
+  }
+  if (!createForm.content.trim()) {
+    message.error('請輸入知悉內容');
+    return;
+  }
+  if (createForm.recipients.length === 0) {
+    message.error('請選擇收件人');
+    return;
+  }
+  // 實際項目中這裡會調用API
+  message.success($t('page.legalPlatform.notificationSent'));
+  createDrawerVisible.value = false;
+};
+
+const handleCreateCancel = () => {
+  createDrawerVisible.value = false;
 };
 
 
@@ -412,14 +492,14 @@ const handleView = (record: any) => {
 const handleReply = (record: any) => {
   currentRecord.value = record;
   replyForm.content = '';
-  replyModalVisible.value = true;
+  replyDrawerVisible.value = true;
 };
 
 const handleForward = (record: any) => {
   currentRecord.value = record;
   forwardForm.recipients = [];
   forwardForm.remarks = '';
-  forwardModalVisible.value = true;
+  forwardDrawerVisible.value = true;
 };
 
 const handleConfirm = (record: any) => {
@@ -468,11 +548,11 @@ const handleReplySubmit = () => {
   }
   // 實際項目中這裡會調用API
   message.success($t('page.legalPlatform.notificationReplied'));
-  replyModalVisible.value = false;
+  replyDrawerVisible.value = false;
 };
 
 const handleReplyCancel = () => {
-  replyModalVisible.value = false;
+  replyDrawerVisible.value = false;
 };
 
 const handleForwardSubmit = () => {
@@ -482,11 +562,11 @@ const handleForwardSubmit = () => {
   }
   // 實際項目中這裡會調用API
   message.success($t('page.legalPlatform.notificationForwarded'));
-  forwardModalVisible.value = false;
+  forwardDrawerVisible.value = false;
 };
 
 const handleForwardCancel = () => {
-  forwardModalVisible.value = false;
+  forwardDrawerVisible.value = false;
 };
 
 const onSelectChange = (newSelectedRowKeys: string[]) => {

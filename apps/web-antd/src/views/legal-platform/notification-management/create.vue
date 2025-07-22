@@ -196,20 +196,20 @@
 
         <!-- 操作按鈕 -->
         <Card>
-          <Space direction="vertical" class="w-full">
-            <Button type="primary" size="large" block @click="handleSend" :loading="sending">
+          <Space class="w-full justify-center">
+            <Button type="primary" size="large" @click="handleSend" :loading="sending">
               <template #icon>
                 <span class="icon-[lucide--send] size-4" />
               </template>
               {{ $t('page.legalPlatform.sendNotification') }}
             </Button>
-            <Button size="large" block @click="handleSaveDraft" :loading="saving">
+            <Button size="large" @click="handleSaveDraft" :loading="saving">
               <template #icon>
                 <span class="icon-[lucide--save] size-4" />
               </template>
               {{ $t('page.legalPlatform.saveDraft') }}
             </Button>
-            <Button size="large" block @click="handleCancel">
+            <Button size="large" @click="handleCancel">
               <template #icon>
                 <span class="icon-[lucide--x] size-4" />
               </template>
