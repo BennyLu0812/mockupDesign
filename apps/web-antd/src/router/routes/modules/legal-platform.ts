@@ -57,6 +57,15 @@ const routes: RouteRecordRaw[] = [
             },
           },
           {
+            name: 'BillProjectCreate',
+            path: 'bill-create',
+            component: () => import('#/views/legal-platform/project-management/bill-create.vue'),
+            meta: {
+              icon: 'lucide:scale',
+              title: '新增法案項目',
+            },
+          },
+          {
             name: 'ProjectDetail',
             path: 'detail/:id',
             component: () => import('#/views/legal-platform/project-management/detail.vue'),
