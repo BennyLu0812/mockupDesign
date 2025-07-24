@@ -1053,10 +1053,7 @@ onMounted(() => {
               <span class="icon-[lucide--bell] size-4 mr-1" />
               發送通知
             </Button>
-            <Button @click="handleViewProcessNodes">
-              <span class="icon-[lucide--git-branch] size-4 mr-1" />
-              流程節點
-            </Button>
+
             <Button @click="handleRoleManagement">
               <span class="icon-[lucide--users] size-4 mr-1" />
               角色管理
