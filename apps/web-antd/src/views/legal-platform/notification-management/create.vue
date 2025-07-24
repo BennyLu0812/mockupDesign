@@ -1,6 +1,5 @@
 <template>
-  <div class="p-4">
-    <!-- 頁面標題 -->
+  <div class="p-6">
     <div class="mb-6">
       <Button @click="handleBack" class="mb-4">
         <template #icon>
@@ -15,9 +14,9 @@
       <!-- 主要內容區域 -->
       <div class="lg:col-span-2">
         <Card>
-          <Form :model="notificationForm" layout="vertical" :rules="rules" ref="formRef">
+          <Form ref="formRef" :model="notificationForm" :rules="rules" layout="vertical">
             <!-- 知悉標題 -->
-            <FormItem :label="$t('page.legalPlatform.notificationTitle')" name="title" required>
+            <FormItem :label="$t('page.legalPlatform.notificationTitle')" name="title">
               <Input 
                 v-model:value="notificationForm.title" 
                 :placeholder="$t('page.legalPlatform.notificationTitle')"
@@ -26,10 +25,10 @@
             </FormItem>
 
             <!-- 知悉內容 -->
-            <FormItem :label="$t('page.legalPlatform.notificationContent')" name="content" required>
-              <div class="border border-gray-300 rounded-lg">
-                <!-- 工具欄 -->
-                <div class="border-b border-gray-200 p-2 flex flex-wrap gap-2">
+            <FormItem :label="$t('page.legalPlatform.notificationContent')" name="content">
+              <div class="border border-gray-200 rounded-lg">
+                <!-- 格式化工具欄 -->
+                <div class="flex items-center gap-2 p-3 border-b border-gray-200 bg-gray-50">
                   <Button size="small" @click="insertFormat('bold')">
                     <span class="icon-[lucide--bold] size-4" />
                   </Button>
@@ -59,45 +58,6 @@
                   class="border-0 resize-none"
                   style="box-shadow: none;"
                 />
-              </div>
-            </FormItem>
-
-            <!-- 附件上傳 -->
-            <FormItem :label="$t('page.legalPlatform.notificationAttachment')">
-              <div class="space-y-4">
-                <!-- 項目附件選擇 -->
-                <div>
-                  <div class="mb-2 text-sm text-gray-600">{{ $t('page.legalPlatform.selectProjectAttachment') }}</div>
-                  <Select 
-                    v-model:value="notificationForm.projectAttachments" 
-                    mode="multiple"
-                    :placeholder="$t('page.legalPlatform.selectProjectAttachment')"
-                    class="w-full"
-                  >
-                    <SelectOption value="doc1">項目計劃書.docx</SelectOption>
-                    <SelectOption value="doc2">會議紀要.pdf</SelectOption>
-                    <SelectOption value="doc3">法案草案.docx</SelectOption>
-                    <SelectOption value="doc4">預算報告.xlsx</SelectOption>
-                  </Select>
-                </div>
-                
-                <!-- 文件上傳 -->
-                <div>
-                  <div class="mb-2 text-sm text-gray-600">{{ $t('page.legalPlatform.uploadFile') }}</div>
-                  <Upload 
-                    v-model:file-list="notificationForm.attachments"
-                    :before-upload="beforeUpload"
-                    multiple
-                    class="w-full"
-                  >
-                    <Button>
-                      <template #icon>
-                        <span class="icon-[lucide--upload] size-4" />
-                      </template>
-                      {{ $t('page.legalPlatform.uploadFile') }}
-                    </Button>
-                  </Upload>
-                </div>
               </div>
             </FormItem>
           </Form>
@@ -234,7 +194,6 @@ import {
   SelectOption, 
   Button, 
   Space, 
-  Upload, 
   DatePicker,
   Radio,
   RadioGroup,
@@ -263,8 +222,6 @@ const notificationForm = reactive({
   sendType: 'now',
   scheduledTime: undefined,
   relatedProject: '',
-  projectAttachments: [],
-  attachments: [],
   remarks: ''
 });
 
@@ -324,33 +281,6 @@ const insertFormat = (format: string) => {
     notificationForm.content.substring(end);
 };
 
-const beforeUpload = (file: any) => {
-  const isValidType = [
-    'application/pdf',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/vnd.ms-excel',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'image/jpeg',
-    'image/png',
-    'video/mp4',
-    'audio/mpeg'
-  ].includes(file.type);
-  
-  if (!isValidType) {
-    message.error('只能上傳 PDF、Word、Excel、圖片、音視頻文件！');
-    return false;
-  }
-  
-  const isLt10M = file.size / 1024 / 1024 < 10;
-  if (!isLt10M) {
-    message.error('文件大小不能超過 10MB！');
-    return false;
-  }
-  
-  return false; // 阻止自動上傳，由手動處理
-};
-
 const handleSend = async () => {
   try {
     await formRef.value.validate();
@@ -406,13 +336,5 @@ const handleCancel = () => {
 
 .ant-input, .ant-select-selector, .ant-picker {
   border-radius: 6px;
-}
-
-.ant-upload {
-  width: 100%;
-}
-
-.ant-upload .ant-btn {
-  width: 100%;
 }
 </style>

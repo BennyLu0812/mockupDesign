@@ -58,12 +58,12 @@
                 <span class="font-medium">{{ notification.recipient }}</span>
               </div>
               <div>
-                <span class="text-gray-500">{{ $t('page.legalPlatform.createTime') }}：</span>
+                <span class="text-gray-500">{{ $t('page.legalPlatform.notificationTime') }}：</span>
                 <span class="font-medium">{{ notification.createTime }}</span>
               </div>
               <div>
-                <span class="text-gray-500">{{ $t('page.legalPlatform.priority') }}：</span>
-                <Tag :color="getPriorityColor(notification.priority)">
+                <span class="text-gray-500">優先級：</span>
+                <Tag :color="getPriorityColor(notification.priority)" size="small">
                   {{ getPriorityText(notification.priority) }}
                 </Tag>
               </div>
@@ -80,30 +80,18 @@
             </div>
           </div>
         </Card>
+      </div>
 
-        <!-- 附件 -->
-        <Card v-if="notification.attachments && notification.attachments.length > 0">
-          <div class="font-semibold mb-4">{{ $t('page.legalPlatform.notificationAttachment') }}</div>
-          <div class="space-y-2">
-            <div 
-              v-for="attachment in notification.attachments" 
-              :key="attachment.id"
-              class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
-            >
-              <div class="flex items-center space-x-3">
-                <span class="icon-[lucide--file] size-5 text-gray-500" />
-                <div>
-                  <div class="font-medium">{{ attachment.name }}</div>
-                  <div class="text-sm text-gray-500">{{ attachment.size }}</div>
-                </div>
-              </div>
-              <Button type="link" @click="handleDownload(attachment)">
-                <template #icon>
-                  <span class="icon-[lucide--download] size-4" />
-                </template>
-                下載
-              </Button>
+      <!-- 側邊欄 -->
+      <div class="space-y-6">
+        <!-- 關聯項目 -->
+        <Card v-if="notification.relatedProject">
+          <div class="font-semibold mb-4">關聯項目</div>
+          <div class="p-3 border border-gray-200 rounded-lg">
+            <div class="font-medium text-blue-600 cursor-pointer hover:underline" @click="handleViewProject">
+              {{ notification.relatedProject.name }}
             </div>
+            <div class="text-sm text-gray-500 mt-1">{{ notification.relatedProject.description }}</div>
           </div>
         </Card>
 
@@ -124,10 +112,7 @@
             </div>
           </div>
         </Card>
-      </div>
 
-      <!-- 側邊欄 -->
-      <div class="space-y-6">
         <!-- 操作歷史 -->
         <Card>
           <div class="font-semibold mb-4">操作歷史</div>
@@ -146,19 +131,6 @@
             </div>
           </div>
         </Card>
-
-        <!-- 關聯項目 -->
-        <Card v-if="notification.relatedProject">
-          <div class="font-semibold mb-4">關聯項目</div>
-          <div class="p-3 border border-gray-200 rounded-lg">
-            <div class="font-medium text-blue-600 cursor-pointer hover:underline" @click="handleViewProject">
-              {{ notification.relatedProject.name }}
-            </div>
-            <div class="text-sm text-gray-500 mt-1">{{ notification.relatedProject.description }}</div>
-          </div>
-        </Card>
-
-
       </div>
     </div>
 
@@ -252,20 +224,6 @@ const notification = ref({
   recipient: '局長',
   createTime: '2024-01-15 10:30:00',
   priority: 'high',
-  attachments: [
-    {
-      id: '1',
-      name: '法案審議進度報告.pdf',
-      size: '2.5 MB',
-      url: '/files/report.pdf'
-    },
-    {
-      id: '2',
-      name: '修正條文對照表.docx',
-      size: '1.2 MB',
-      url: '/files/comparison.docx'
-    }
-  ],
   replies: [
     {
       id: '1',
@@ -387,11 +345,6 @@ const handleForward = () => {
   forwardForm.recipients = [];
   forwardForm.remarks = '';
   forwardModalVisible.value = true;
-};
-
-const handleDownload = (attachment: any) => {
-  // 實際項目中這裡會處理文件下載
-  message.info(`下載文件：${attachment.name}`);
 };
 
 const handleViewProject = () => {

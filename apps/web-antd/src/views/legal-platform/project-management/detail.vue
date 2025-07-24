@@ -266,17 +266,6 @@ const processModalVisible = ref(false);
 // 通知設置彈窗顯示狀態
 const notificationModalVisible = ref(false);
 
-// 通知設置
-const notificationSettings = ref({
-  emailEnabled: true,
-  smsEnabled: true,
-  projectUpdates: true,
-  milestoneChanges: true,
-  taskAssignments: true,
-  documentUploads: true,
-  comments: false,
-});
-
 // 通知歷史記錄
 const notificationHistory = ref([
   {
@@ -344,13 +333,8 @@ const notificationRecipients = ref([
 
 // 發送通知表單數據
 const notificationForm = reactive({
-  title: '',
   content: '',
-  type: 'project_update',
-  methods: ['email'],
   recipients: [],
-  scheduleTime: '',
-  isScheduled: false,
 });
 
 // 新增知悉功能相關狀態
@@ -415,6 +399,60 @@ const milestones = ref([
   },
 ]);
 
+// 新增任務數據（替換里程碑在左側顯示）
+const recentTasks = ref([
+  {
+    id: '1',
+    title: '法條第三章審查',
+    assignee: '陳大文',
+    status: 'inProgress',
+    priority: 'high',
+    dueDate: '2024-01-25',
+    createTime: '2024-01-20 14:30:00',
+    description: '對法律條文第三章進行詳細審查和分析',
+  },
+  {
+    id: '2',
+    title: '專家意見整理',
+    assignee: '張三',
+    status: 'completed',
+    priority: 'medium',
+    dueDate: '2024-01-22',
+    createTime: '2024-01-19 16:45:00',
+    description: '整理外部專家提供的審查意見',
+  },
+  {
+    id: '3',
+    title: '法規對比分析',
+    assignee: '李四',
+    status: 'pending',
+    priority: 'medium',
+    dueDate: '2024-01-28',
+    createTime: '2024-01-18 09:15:00',
+    description: '與現有法規進行對比分析',
+  },
+  {
+    id: '4',
+    title: '初稿撰寫',
+    assignee: '王五',
+    status: 'inProgress',
+    priority: 'high',
+    dueDate: '2024-01-30',
+    createTime: '2024-01-17 11:20:00',
+    description: '根據審查結果撰寫法條初稿',
+  },
+  {
+    id: '5',
+    title: '資料收集',
+    assignee: '趙六',
+    status: 'completed',
+    priority: 'low',
+    dueDate: '2024-01-20',
+    createTime: '2024-01-15 10:30:00',
+    description: '收集相關法律資料和案例',
+  },
+]);
+
 // 統計數據
 const statistics = reactive({
   inProgressTasks: 8,
@@ -459,6 +497,8 @@ const activities = ref([
   },
 ]);
 
+
+
 // 知悉信息
 const acknowledgments = ref([
   {
@@ -467,6 +507,18 @@ const acknowledgments = ref([
     assignee: '張三',
     status: 'acknowledged',
     time: '2024-01-20 10:30:00',
+    content: '已完成法條第一章的詳細審查工作，發現3處需要修改的條款，已整理成報告提交。',
+    attachments: [
+      { name: '第一章審查報告.pdf', size: '1.2MB' },
+      { name: '修改建議.docx', size: '856KB' }
+    ],
+    comments: [
+      {
+        user: '陳大文',
+        content: '審查工作很細致，建議盡快安排下一步工作',
+        time: '2024-01-20 11:00:00'
+      }
+    ]
   },
   {
     id: '2',
@@ -474,6 +526,9 @@ const acknowledgments = ref([
     assignee: '李四',
     status: 'pending',
     time: '2024-01-19 15:20:00',
+    content: '等待開始第二章的審查工作，需要先完成相關資料的收集。',
+    attachments: [],
+    comments: []
   },
   {
     id: '3',
@@ -481,7 +536,41 @@ const acknowledgments = ref([
     assignee: '陳大文',
     status: 'acknowledged',
     time: '2024-01-18 11:45:00',
+    content: '已整理完成外部專家的所有意見，共收集到15條建議，已分類歸檔。',
+    attachments: [
+      { name: '專家意見匯總.xlsx', size: '2.1MB' }
+    ],
+    comments: [
+      {
+        user: '張三',
+        content: '整理得很全面，可以開始下一階段工作',
+        time: '2024-01-18 14:30:00'
+      }
+    ]
   },
+  {
+    id: '4',
+    taskName: '法規對比分析',
+    assignee: '王五',
+    status: 'acknowledged',
+    time: '2024-01-17 09:30:00',
+    content: '完成了與現行法規的對比分析，發現5處衝突點，需要進一步討論解決方案。',
+    attachments: [
+      { name: '法規對比表.xlsx', size: '1.8MB' },
+      { name: '衝突點分析.pdf', size: '3.2MB' }
+    ],
+    comments: []
+  },
+  {
+    id: '5',
+    taskName: '初稿撰寫準備',
+    assignee: '趙六',
+    status: 'pending',
+    time: '2024-01-16 16:45:00',
+    content: '正在準備初稿撰寫的相關材料和模板。',
+    attachments: [],
+    comments: []
+  }
 ]);
 
 
@@ -499,6 +588,31 @@ const handleViewMoreStats = () => {
 // 處理查看所有里程碑
 const handleViewAllMilestones = () => {
   console.log('查看所有里程碑功能待實現');
+};
+
+// 處理查看所有任務
+const handleViewAllTasks = () => {
+  console.log('查看所有任務功能待實現');
+};
+
+// 獲取任務優先級顏色
+const getPriorityColor = (priority: string) => {
+  const colorMap: Record<string, string> = {
+    high: 'red',
+    medium: 'orange',
+    low: 'green',
+  };
+  return colorMap[priority] || 'default';
+};
+
+// 獲取任務優先級文本
+const getPriorityText = (priority: string) => {
+  const textMap: Record<string, string> = {
+    high: '高',
+    medium: '中',
+    low: '低',
+  };
+  return textMap[priority] || '未知';
 };
 
 // 處理角色管理
@@ -555,13 +669,8 @@ const getNodeLineClass = (status: string, isLast: boolean) => {
 const handleOpenNotificationModal = () => {
   notificationModalVisible.value = true;
   // 初始化表單數據
-  notificationForm.title = '';
   notificationForm.content = '';
-  notificationForm.type = 'project_update';
-  notificationForm.methods = ['email'];
   notificationForm.recipients = notificationRecipients.value.filter(r => r.selected).map(r => r.id);
-  notificationForm.scheduleTime = '';
-  notificationForm.isScheduled = false;
 };
 
 // 關閉通知設置彈窗
@@ -571,10 +680,6 @@ const handleCloseNotificationModal = () => {
 
 // 發送通知
 const handleSendNotification = () => {
-  if (!notificationForm.title.trim()) {
-    message.warning('請輸入通知標題');
-    return;
-  }
   if (!notificationForm.content.trim()) {
     message.warning('請輸入通知內容');
     return;
@@ -583,28 +688,24 @@ const handleSendNotification = () => {
     message.warning('請選擇通知接收人');
     return;
   }
-  if (notificationForm.methods.length === 0) {
-    message.warning('請選擇通知方式');
-    return;
-  }
 
   // 模擬發送通知
   const newNotification = {
     id: Date.now().toString(),
-    type: notificationForm.type,
-    title: notificationForm.title,
+    type: 'project_update',
+    title: '項目通知',
     content: notificationForm.content,
     recipients: notificationForm.recipients.map(id => {
       const recipient = notificationRecipients.value.find(r => r.id === id);
       return recipient?.name || '';
     }).filter(Boolean),
-    methods: notificationForm.methods,
-    sendTime: notificationForm.isScheduled ? notificationForm.scheduleTime : new Date().toLocaleString('zh-CN'),
-    status: notificationForm.isScheduled ? 'scheduled' : 'sent',
+    methods: ['email'],
+    sendTime: new Date().toLocaleString('zh-CN'),
+    status: 'sent',
   };
 
   notificationHistory.value.unshift(newNotification);
-  message.success(notificationForm.isScheduled ? '通知已安排發送' : '通知發送成功');
+  message.success('通知發送成功');
   handleCloseNotificationModal();
 };
 
@@ -618,11 +719,7 @@ const handleToggleRecipient = (recipientId: string) => {
   }
 };
 
-// 保存通知設置
-const handleSaveNotificationSettings = () => {
-  message.success('通知設置已保存');
-  console.log('通知設置:', notificationSettings.value);
-};
+
 
 // 獲取通知類型文本
 const getNotificationTypeText = (type: string) => {
@@ -1013,6 +1110,146 @@ const handleToggleFollow = () => {
   }
 };
 
+// 處理查看知悉詳情
+const handleViewAcknowledgmentDetail = (ack) => {
+  // 參考 notification-management/list 的做法，使用路由跳轉到詳情頁面
+  router.push(`/legal-platform/notification-management/detail/${ack.id}`);
+};
+
+
+
+// 處理查看更多知悉
+const handleViewMoreAcknowledments = () => {
+  console.log('查看更多知悉功能');
+  // 跳轉到知悉管理頁面
+  router.push('/legal-platform/notification-management/list');
+};
+
+// 處理查看項目
+const handleViewProject = () => {
+  console.log('查看項目詳情');
+  message.info('跳轉到項目詳情頁面');
+};
+
+// 新增任務抽屜狀態
+const createTaskDrawerVisible = ref(false);
+
+// 新增任務表單數據
+const createTaskFormData = reactive({
+  taskName: '',
+  taskDescription: '',
+  projectName: projectInfo.name, // 默認為當前項目
+  taskStatus: 'preparing',
+  taskResponsible: '',
+  taskStartTime: undefined,
+  taskEndTime: undefined,
+  taskParticipants: [],
+  taskRemarks: '',
+  taskDueTime: undefined,
+  estimatedHours: 0,
+  attachments: [] as any[],
+});
+
+// 任務負責人選項
+const taskResponsibleOptions = [
+  { value: 'chen', label: '陳大文' },
+  { value: 'zhang', label: '張三' },
+  { value: 'li', label: '李四' },
+  { value: 'wang', label: '王五' },
+  { value: 'zhao', label: '趙六' },
+  { value: 'qian', label: '錢七' },
+];
+
+// 任務參與人員選項（包含個人和小組）
+const taskParticipantOptions = [
+  // 個人選項
+  { value: 'chen', label: '陳大文', type: 'person' },
+  { value: 'zhang', label: '張三', type: 'person' },
+  { value: 'li', label: '李四', type: 'person' },
+  { value: 'wang', label: '王五', type: 'person' },
+  { value: 'zhao', label: '趙六', type: 'person' },
+  { value: 'qian', label: '錢七', type: 'person' },
+  // 小組選項
+  { value: 'group_legal_review', label: '法律審查小組', type: 'group' },
+  { value: 'group_data_collection', label: '資料收集小組', type: 'group' },
+];
+
+// 項目名稱選項
+const projectNameOptions = [
+  { value: 'project1', label: '法律諮詢系統開發' },
+  { value: 'project2', label: '合同管理平台' },
+  { value: 'project3', label: '法規檢索系統' },
+  { value: 'project4', label: '案件管理系統' },
+  { value: 'project5', label: '文件歸檔系統' },
+];
+
+// 獲取參與人員標籤
+const getParticipantLabel = (participantValue: string) => {
+  const participant = taskParticipantOptions.find(option => option.value === participantValue);
+  return participant ? participant.label : participantValue;
+};
+
+// 新增任務處理函數
+const handleAddTask = () => {
+  createTaskDrawerVisible.value = true;
+};
+
+// 關閉新增任務抽屜
+const closeCreateTaskDrawer = () => {
+  createTaskDrawerVisible.value = false;
+  // 重置表單
+  Object.assign(createTaskFormData, {
+    taskName: '',
+    taskDescription: '',
+    projectName: projectInfo.name,
+    taskStatus: 'preparing',
+    taskResponsible: '',
+    taskStartTime: undefined,
+    taskEndTime: undefined,
+    taskParticipants: [],
+    taskRemarks: '',
+    taskDueTime: undefined,
+    estimatedHours: 0,
+    attachments: [],
+  });
+};
+
+// 保存新增任務
+const handleSaveTask = () => {
+  if (!createTaskFormData.taskName) {
+    message.error('請輸入任務名稱');
+    return;
+  }
+  
+  if (!createTaskFormData.taskResponsible) {
+    message.error('請選擇任務負責人');
+    return;
+  }
+  
+  // 模擬保存
+  const newTask = {
+    id: Date.now(),
+    title: createTaskFormData.taskName,
+    description: createTaskFormData.taskDescription,
+    projectName: createTaskFormData.projectName,
+    status: 'preparing',
+    assignee: taskResponsibleOptions.find(opt => opt.value === createTaskFormData.taskResponsible)?.label || '未知',
+    creator: '當前用戶',
+    createTime: new Date().toLocaleString('zh-CN'),
+    priority: 'medium',
+    dueDate: createTaskFormData.taskDueTime,
+  };
+  
+  // 添加到最新任務列表
+  recentTasks.value.unshift(newTask);
+  if (recentTasks.value.length > 5) {
+    recentTasks.value = recentTasks.value.slice(0, 5);
+  }
+  
+  message.success('任務創建成功');
+  closeCreateTaskDrawer();
+};
+
 onMounted(() => {
   // 這裡可以根據路由參數加載具體的項目數據
   console.log('項目詳情頁面加載，項目ID:', route.params.id);
@@ -1057,6 +1294,11 @@ onMounted(() => {
             <Button @click="handleRoleManagement">
               <span class="icon-[lucide--users] size-4 mr-1" />
               角色管理
+            </Button>
+            <!-- 新增：新增任務按鈕 -->
+            <Button type="primary" @click="handleAddTask">
+              <span class="icon-[lucide--plus] size-4 mr-1" />
+              {{ $t('page.legalPlatform.addTask') }}
             </Button>
             <Button type="primary">
               <span class="icon-[lucide--eye] size-4 mr-1" />
@@ -1144,34 +1386,50 @@ onMounted(() => {
             </div>
           </Card>
 
-          <!-- 里程碑卡片 -->
+          <!-- 任務信息卡片（替換原來的里程碑位置） -->
           <Card>
             <template #title>
               <div class="flex items-center justify-between">
-                <span>里程碑</span>
-                <Button type="link" size="small" @click="handleViewAllMilestones">
+                <span>最新任務</span>
+                <Button type="link" size="small" @click="handleViewAllTasks">
                   全部
                 </Button>
               </div>
             </template>
-            <div v-if="milestones.length > 0">
-              <Timeline>
-                <TimelineItem
-                  v-for="milestone in milestones"
-                  :key="milestone.id"
-                  :color="getStatusColor(milestone.status)"
-                >
-                  <div class="milestone-item">
-                    <div class="flex items-center justify-between mb-1">
-                      <Text strong>{{ milestone.title }}</Text>
-                      <Text type="secondary" class="text-sm">{{ milestone.date }}</Text>
+            <div v-if="recentTasks.length > 0">
+              <div class="tasks-list space-y-4">
+                <div v-for="task in recentTasks" :key="task.id" class="task-item">
+                  <div class="flex items-start justify-between p-4 border rounded-lg hover:bg-gray-50">
+                    <div class="flex-1">
+                      <div class="flex items-center space-x-2 mb-2">
+                        <Text strong class="text-base">{{ task.title }}</Text>
+                        <Tag :color="getPriorityColor(task.priority)" size="small">
+                          {{ getPriorityText(task.priority) }}
+                        </Tag>
+                        <Tag :color="getStatusColor(task.status)" size="small">
+                          {{ getStatusText(task.status) }}
+                        </Tag>
+                      </div>
+                      <Text type="secondary" class="text-sm block mb-2">{{ task.description }}</Text>
+                      <div class="flex items-center space-x-4 text-xs text-gray-500">
+                        <span>負責人：{{ task.assignee }}</span>
+                        <span>到期時間：{{ task.dueDate }}</span>
+                        <span>創建時間：{{ task.createTime }}</span>
+                      </div>
                     </div>
-                    <Text type="secondary" class="text-sm">{{ milestone.description }}</Text>
+                    <div class="flex items-center space-x-2">
+                      <Button type="link" size="small">
+                        <span class="icon-[lucide--eye] size-4" />
+                      </Button>
+                      <Button type="link" size="small">
+                        <span class="icon-[lucide--edit] size-4" />
+                      </Button>
+                    </div>
                   </div>
-                </TimelineItem>
-              </Timeline>
+                </div>
+              </div>
             </div>
-            <Empty v-else description="暫無里程碑數據" />
+            <Empty v-else description="暫無任務數據" />
           </Card>
 
           <!-- 項目附件卡片 -->
@@ -1355,6 +1613,36 @@ onMounted(() => {
             </div>
           </Card>
 
+          <!-- 里程碑卡片（移動到右側） -->
+          <Card class="mb-6">
+            <template #title>
+              <div class="flex items-center justify-between">
+                <span>里程碑</span>
+                <Button type="link" size="small" @click="handleViewAllMilestones">
+                  全部
+                </Button>
+              </div>
+            </template>
+            <div v-if="milestones.length > 0">
+              <Timeline>
+                <TimelineItem
+                  v-for="milestone in milestones"
+                  :key="milestone.id"
+                  :color="getStatusColor(milestone.status)"
+                >
+                  <div class="milestone-item">
+                    <div class="flex items-center justify-between mb-1">
+                      <Text strong class="text-sm">{{ milestone.title }}</Text>
+                      <Text type="secondary" class="text-xs">{{ milestone.date }}</Text>
+                    </div>
+                    <Text type="secondary" class="text-xs">{{ milestone.description }}</Text>
+                  </div>
+                </TimelineItem>
+              </Timeline>
+            </div>
+            <Empty v-else description="暫無里程碑數據" />
+          </Card>
+
           <!-- 動態卡片 -->
           <Card class="mb-6" title="動態">
             <!-- 動態列表 -->
@@ -1378,9 +1666,11 @@ onMounted(() => {
           <!-- 知悉卡片 -->
           <Card class="mb-6" title="知悉">
             <div class="acknowledgments-list space-y-3">
-              <div v-for="ack in acknowledgments" :key="ack.id" class="ack-item">
+              <div v-for="ack in acknowledgments.slice(0, 3)" :key="ack.id" class="ack-item">
                 <div class="flex items-center justify-between mb-1">
-                  <Text strong class="text-sm">{{ ack.taskName }}</Text>
+                  <Text strong class="text-sm cursor-pointer hover:text-blue-500" @click="handleViewAcknowledgmentDetail(ack)">
+                    {{ ack.taskName }}
+                  </Text>
                   <Tag :color="getStatusColor(ack.status)" size="small">
                     {{ getStatusText(ack.status) }}
                   </Tag>
@@ -1389,7 +1679,15 @@ onMounted(() => {
                   <Text type="secondary" class="text-xs">負責人：{{ ack.assignee }}</Text>
                   <Text type="secondary" class="text-xs">{{ ack.time }}</Text>
                 </div>
+                <div v-if="ack.content" class="mt-2">
+                  <Text type="secondary" class="text-xs line-clamp-2">{{ ack.content }}</Text>
+                </div>
               </div>
+            </div>
+            <div v-if="acknowledgments.length > 3" class="mt-4">
+              <Button type="link" block @click="handleViewMoreAcknowledments">
+                查看更多
+              </Button>
             </div>
           </Card>
 
@@ -1532,147 +1830,51 @@ onMounted(() => {
     <!-- 通知功能模態框 -->
     <Modal
       v-model:open="notificationModalVisible"
-      title="項目通知管理"
-      width="800px"
+      title="發送通知"
+      width="600px"
       :footer="null"
       @cancel="handleCloseNotificationModal"
     >
       <div class="notification-modal-content">
-        <!-- 通知設置 -->
-        <Card title="通知設置" class="mb-4">
-          <Row :gutter="16">
-            <Col :span="12">
-              <div class="setting-item">
-                <Text strong>郵件通知</Text>
-                <Switch v-model:checked="notificationSettings.emailEnabled" class="ml-2" />
-              </div>
-            </Col>
-            <Col :span="12">
-              <div class="setting-item">
-                <Text strong>短信通知</Text>
-                <Switch v-model:checked="notificationSettings.smsEnabled" class="ml-2" />
-              </div>
-            </Col>
-          </Row>
+        <Form layout="vertical">
+          <FormItem label="通知內容">
+            <Input.TextArea 
+              v-model:value="notificationForm.content" 
+              :rows="6" 
+              placeholder="請輸入通知內容"
+            />
+          </FormItem>
           
-          <Divider />
-          
-          <div class="notification-types">
-            <Text strong class="block mb-3">通知類型設置</Text>
-            <Row :gutter="[16, 8]">
-              <Col :span="12">
-                <Checkbox v-model:checked="notificationSettings.milestoneChanges">
-                  里程碑更新
-                </Checkbox>
-              </Col>
-              <Col :span="12">
-                <Checkbox v-model:checked="notificationSettings.taskAssignments">
-                  任務分配
-                </Checkbox>
-              </Col>
-              <Col :span="12">
-                <Checkbox v-model:checked="notificationSettings.projectUpdates">
-                  項目更新
-                </Checkbox>
-              </Col>
-              <Col :span="12">
-                <Checkbox v-model:checked="notificationSettings.documentUploads">
-                  文檔上傳
-                </Checkbox>
-              </Col>
-              <Col :span="12">
-                <Checkbox v-model:checked="notificationSettings.comments">
-                  評論回復
-                </Checkbox>
-              </Col>
-            </Row>
-          </div>
-          
-          <div class="mt-4">
-            <Button type="primary" @click="handleSaveNotificationSettings">
-              保存設置
-            </Button>
-          </div>
-        </Card>
-        
-        <!-- 發送通知 -->
-        <Card title="發送通知">
-          <Form layout="vertical">
-            <FormItem label="通知標題">
-              <Input v-model:value="notificationForm.title" placeholder="請輸入通知標題" />
-            </FormItem>
-            
-            <FormItem label="通知內容">
-              <Input.TextArea 
-                v-model:value="notificationForm.content" 
-                :rows="4" 
-                placeholder="請輸入通知內容"
-              />
-            </FormItem>
-            
-            <FormItem label="通知類型">
-              <Select v-model:value="notificationForm.type" placeholder="請選擇通知類型">
-                <SelectOption value="project_update">項目更新</SelectOption>
-                <SelectOption value="milestone_change">里程碑變更</SelectOption>
-                <SelectOption value="task_assignment">任務分配</SelectOption>
-                <SelectOption value="document_upload">文檔上傳</SelectOption>
-                <SelectOption value="comment">評論回復</SelectOption>
-              </Select>
-            </FormItem>
-            
-            <FormItem label="通知方式">
-              <Checkbox.Group v-model:value="notificationForm.methods">
-                <Checkbox value="email">郵件</Checkbox>
-                <Checkbox value="sms">短信</Checkbox>
-              </Checkbox.Group>
-            </FormItem>
-            
-            <FormItem label="接收人員">
-              <div class="recipients-list space-y-2">
-                <div v-for="recipient in notificationRecipients" :key="recipient.id" class="recipient-item">
-                  <Checkbox 
-                    :checked="notificationForm.recipients.includes(recipient.id)"
-                    @change="handleToggleRecipient(recipient.id)"
-                  >
-                    <div class="flex items-center space-x-2">
-                      <Avatar :src="recipient.avatar" size="small" />
-                      <div>
-                        <Text class="text-sm">{{ recipient.name }}</Text>
-                        <Text type="secondary" class="text-xs block">{{ recipient.role }} | {{ recipient.email }}</Text>
-                      </div>
+          <FormItem label="接收人員">
+            <div class="recipients-list space-y-2">
+              <div v-for="recipient in notificationRecipients" :key="recipient.id" class="recipient-item">
+                <Checkbox 
+                  :checked="notificationForm.recipients.includes(recipient.id)"
+                  @change="handleToggleRecipient(recipient.id)"
+                >
+                  <div class="flex items-center space-x-2">
+                    <Avatar :src="recipient.avatar" size="small" />
+                    <div>
+                      <Text class="text-sm">{{ recipient.name }}</Text>
+                      <Text type="secondary" class="text-xs block">{{ recipient.role }} | {{ recipient.email }}</Text>
                     </div>
-                  </Checkbox>
-                </div>
-              </div>
-            </FormItem>
-            
-            <FormItem label="發送時間">
-              <div class="flex items-center space-x-2 mb-2">
-                <Checkbox v-model:checked="notificationForm.isScheduled">
-                  定時發送
+                  </div>
                 </Checkbox>
               </div>
-              <DatePicker 
-                v-if="notificationForm.isScheduled"
-                v-model:value="notificationForm.scheduleTime" 
-                show-time 
-                placeholder="選擇發送時間"
-                class="w-full"
-              />
-            </FormItem>
-            
-            <FormItem>
-              <Space>
-                <Button type="primary" @click="handleSendNotification">
-                  發送通知
-                </Button>
-                <Button @click="handleCloseNotificationModal">
-                  取消
-                </Button>
-              </Space>
-            </FormItem>
-          </Form>
-        </Card>
+            </div>
+          </FormItem>
+          
+          <FormItem>
+            <Space>
+              <Button type="primary" @click="handleSendNotification">
+                發送通知
+              </Button>
+              <Button @click="handleCloseNotificationModal">
+                取消
+              </Button>
+            </Space>
+          </FormItem>
+        </Form>
       </div>
     </Modal>
 
@@ -1873,6 +2075,119 @@ onMounted(() => {
         </div>
       </div>
     </Drawer>
+
+    <!-- 新增任務抽屜 -->
+    <Drawer
+      v-model:open="createTaskDrawerVisible"
+      title="新增任務"
+      placement="right"
+      width="600"
+      :closable="true"
+      @close="closeCreateTaskDrawer"
+    >
+      <div class="create-task-form-container">
+        <Form
+          :model="createTaskFormData"
+          layout="vertical"
+        >
+          <FormItem label="任務名稱" required>
+            <Input v-model:value="createTaskFormData.taskName" placeholder="請輸入任務名稱" />
+          </FormItem>
+          
+          <FormItem label="任務描述">
+            <Textarea
+              v-model:value="createTaskFormData.taskDescription"
+              placeholder="請輸入任務描述"
+              :rows="4"
+            />
+          </FormItem>
+          
+          <FormItem label="所屬項目">
+            <Select v-model:value="createTaskFormData.projectName" placeholder="請選擇項目">
+              <SelectOption v-for="project in projectNameOptions" :key="project.value" :value="project.label">
+                {{ project.label }}
+              </SelectOption>
+            </Select>
+          </FormItem>
+          
+          <FormItem label="任務負責人" required>
+            <Select v-model:value="createTaskFormData.taskResponsible" placeholder="請選擇負責人">
+              <SelectOption v-for="person in taskResponsibleOptions" :key="person.value" :value="person.value">
+                {{ person.label }}
+              </SelectOption>
+            </Select>
+          </FormItem>
+          
+          <FormItem label="任務參與人員">
+            <Select
+              v-model:value="createTaskFormData.taskParticipants"
+              mode="multiple"
+              placeholder="請選擇參與人員"
+              style="width: 100%"
+            >
+              <SelectOption v-for="participant in taskParticipantOptions" :key="participant.value" :value="participant.value">
+                <div class="flex items-center space-x-2">
+                  <span class="icon-[lucide--user]" v-if="participant.type === 'person'" />
+                  <span class="icon-[lucide--users]" v-else />
+                  <span>{{ participant.label }}</span>
+                </div>
+              </SelectOption>
+            </Select>
+          </FormItem>
+          
+          <FormItem label="開始時間">
+            <DatePicker
+              v-model:value="createTaskFormData.taskStartTime"
+              placeholder="請選擇開始時間"
+              style="width: 100%"
+            />
+          </FormItem>
+          
+          <FormItem label="結束時間">
+            <DatePicker
+              v-model:value="createTaskFormData.taskEndTime"
+              placeholder="請選擇結束時間"
+              style="width: 100%"
+            />
+          </FormItem>
+          
+          <FormItem label="到期時間">
+            <DatePicker
+              v-model:value="createTaskFormData.taskDueTime"
+              show-time
+              placeholder="請選擇到期時間"
+              style="width: 100%"
+            />
+          </FormItem>
+          
+          <FormItem label="預估工時（小時）">
+            <Input
+              v-model:value="createTaskFormData.estimatedHours"
+              type="number"
+              placeholder="請輸入預估工時"
+              :min="0"
+            />
+          </FormItem>
+          
+          <FormItem label="備註">
+            <Textarea
+              v-model:value="createTaskFormData.taskRemarks"
+              placeholder="請輸入備註信息"
+              :rows="3"
+            />
+          </FormItem>
+        </Form>
+        
+        <div class="flex justify-end space-x-2 mt-6">
+          <Button @click="closeCreateTaskDrawer">取消</Button>
+          <Button type="primary" @click="handleSaveTask">
+            保存任務
+          </Button>
+        </div>
+      </div>
+    </Drawer>
+
+
   </Page>
 </template>
 
@@ -1932,7 +2247,23 @@ onMounted(() => {
   background-color: #fafafa;
   border-radius: 6px;
   border: 1px solid #f0f0f0;
+  transition: all 0.2s ease;
 }
+
+.ack-item:hover {
+  background-color: #f5f5f5;
+  border-color: #d9d9d9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+
 
 /* 附件相關樣式 */
 .attachment-item {
@@ -2030,17 +2361,6 @@ onMounted(() => {
 .notification-modal-content {
   max-height: 70vh;
   overflow-y: auto;
-}
-
-.setting-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 0;
-}
-
-.notification-types {
-  margin-top: 16px;
 }
 
 .recipients-list {
@@ -2173,6 +2493,85 @@ onMounted(() => {
 @media (max-width: 768px) {
   .notification-form-container {
     padding: 0 8px;
+  }
+}
+
+/* 新增任務抽屜樣式 */
+.create-task-form-container {
+  padding: 0;
+}
+
+/* 新增任務抽屜響應式 */
+@media (max-width: 768px) {
+  .create-task-form-container {
+    padding: 0 8px;
+  }
+}
+
+/* 知悉詳情模態框樣式 */
+.acknowledgment-detail-content {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.detail-item {
+  margin-bottom: 12px;
+}
+
+.content-section {
+  padding: 16px;
+  background-color: #fafafa;
+  border-radius: 6px;
+  border: 1px solid #f0f0f0;
+}
+
+.attachment-item-simple {
+  transition: all 0.2s ease;
+}
+
+.attachment-item-simple:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comment-item-detail {
+  padding: 12px;
+  background-color: #fafafa;
+  border-radius: 6px;
+  border: 1px solid #f0f0f0;
+}
+
+.attachments-list .attachment-item {
+  transition: all 0.2s ease;
+}
+
+.attachments-list .attachment-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.comments-list .comment-item {
+  transition: all 0.2s ease;
+}
+
+/* 知悉詳情模態框響應式 */
+@media (max-width: 768px) {
+  .acknowledgment-detail-content {
+    max-height: 60vh;
+  }
+  
+  .detail-item {
+    margin-bottom: 8px;
+  }
+  
+  .attachments-list .flex {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .attachments-list .flex > div:last-child {
+    margin-top: 8px;
+    align-self: flex-end;
   }
 }
 </style>

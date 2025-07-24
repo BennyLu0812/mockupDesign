@@ -40,6 +40,12 @@ const searchForm = reactive({
   endDate: undefined,
 });
 
+// 快速篩選狀態
+const quickFilter = ref({
+  createdByMe: false,
+  servedByMe: false,
+});
+
 // 分頁配置
 const pagination = reactive({
   current: 1,
@@ -132,6 +138,16 @@ const filteredProjects = computed(() => {
   return myProjectsData.value.filter(project => {
     // 確保項目包含當前用戶
     if (!project.participants.includes(currentUser.value.name)) {
+      return false;
+    }
+    
+    // 快速篩選：由我創建
+    if (quickFilter.value.createdByMe && project.creator !== currentUser.value.name) {
+      return false;
+    }
+    
+    // 快速篩選：由我服務（參與但非創建者）
+    if (quickFilter.value.servedByMe && project.creator === currentUser.value.name) {
       return false;
     }
     
@@ -245,6 +261,25 @@ const handleReset = () => {
     startDate: undefined,
     endDate: undefined,
   });
+  // 重置快速篩選
+  quickFilter.value.createdByMe = false;
+  quickFilter.value.servedByMe = false;
+  pagination.current = 1;
+  updatePagination();
+};
+
+// 由我創建篩選
+const handleCreatedByMe = () => {
+  quickFilter.value.createdByMe = !quickFilter.value.createdByMe;
+  quickFilter.value.servedByMe = false; // 互斥
+  pagination.current = 1;
+  updatePagination();
+};
+
+// 由我負責篩選（原來的由我服務）
+const handleServedByMe = () => {
+  quickFilter.value.servedByMe = !quickFilter.value.servedByMe;
+  quickFilter.value.createdByMe = false; // 互斥
   pagination.current = 1;
   updatePagination();
 };
@@ -302,40 +337,6 @@ onMounted(() => {
 <template>
   <Page :title="$t('page.legalPlatform.myProjects')">
     <div class="my-projects">
-      <!-- 統計卡片區域 -->
-      <Row :gutter="16" class="mb-6">
-        <Col :span="6">
-          <Card class="text-center">
-            <div class="text-2xl font-bold text-blue-600">{{ filteredProjects.length }}</div>
-            <div class="text-gray-500 mt-1">{{ $t('page.legalPlatform.participatingProjects') }}</div>
-          </Card>
-        </Col>
-        <Col :span="6">
-          <Card class="text-center">
-            <div class="text-2xl font-bold text-green-600">
-              {{ filteredProjects.filter(p => p.status === '進行中').length }}
-            </div>
-            <div class="text-gray-500 mt-1">{{ $t('page.legalPlatform.inProgress') }}</div>
-          </Card>
-        </Col>
-        <Col :span="6">
-          <Card class="text-center">
-            <div class="text-2xl font-bold text-gray-600">
-              {{ filteredProjects.filter(p => p.status === '已完成').length }}
-            </div>
-            <div class="text-gray-500 mt-1">{{ $t('page.legalPlatform.completed') }}</div>
-          </Card>
-        </Col>
-        <Col :span="6">
-          <Card class="text-center">
-            <div class="text-2xl font-bold text-orange-600">
-              {{ filteredProjects.filter(p => p.myRole === '項目負責人').length }}
-            </div>
-            <div class="text-gray-500 mt-1">{{ $t('page.legalPlatform.projectLeader') }}</div>
-          </Card>
-        </Col>
-      </Row>
-
       <!-- 搜索區域 -->
       <Card class="mb-4">
         <Form
@@ -438,6 +439,24 @@ onMounted(() => {
                       <span class="icon-[lucide--refresh-cw] size-4" />
                     </template>
                     {{ $t('page.legalPlatform.reset') }}
+                  </Button>
+                  <Button 
+                    :type="quickFilter.createdByMe ? 'primary' : 'default'"
+                    @click="handleCreatedByMe"
+                  >
+                    <template #icon>
+                      <span class="icon-[lucide--user-plus] size-4" />
+                    </template>
+                    由我創建
+                  </Button>
+                  <Button 
+                    :type="quickFilter.servedByMe ? 'primary' : 'default'"
+                    @click="handleServedByMe"
+                  >
+                    <template #icon>
+                      <span class="icon-[lucide--users] size-4" />
+                    </template>
+                    由我負責
                   </Button>
                 </Space>
               </FormItem>

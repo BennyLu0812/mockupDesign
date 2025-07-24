@@ -729,7 +729,7 @@ onMounted(() => {
                   @click="handleEditRole(record)"
                 >
                   <span class="icon-[lucide--edit] size-4 mr-1" />
-                  編輯
+                  角色權限配置
                 </Button>
                 <Popconfirm
                   title="確定要刪除這個角色嗎？"

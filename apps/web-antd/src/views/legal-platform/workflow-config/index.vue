@@ -223,7 +223,7 @@ onMounted(() => {
 
       <div class="grid grid-cols-12 gap-2">
         <!-- 左側狀態列表 -->
-        <div class="col-span-3">
+        <div class="col-span-2">
           <Card title="工作流狀態" class="h-full">
             <div class="space-y-1 status-list">
               <div
@@ -260,7 +260,7 @@ onMounted(() => {
         </div>
 
         <!-- 右側狀態轉換矩陣 -->
-        <div class="col-span-9 pl-1">
+        <div class="col-span-10 pl-1">
           <Card title="狀態轉換矩陣" class="mb-6">
             <div class="overflow-x-auto">
               <table class="w-full border-collapse">

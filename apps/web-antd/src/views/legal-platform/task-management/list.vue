@@ -13,27 +13,27 @@ import {
   Input,
   InputNumber,
   Modal,
-  Pagination,
   Row,
   Select,
   SelectOption,
+  SelectOptGroup,
   Space,
   Table,
   Tag,
   Upload,
-  message,
 } from 'ant-design-vue';
 
-// 搜索表單
+// 搜索表单
 const searchForm = reactive({
   taskName: '',
   taskStatus: undefined,
   taskNumber: '',
+  projectName: undefined, // 新增项目名称字段
   startDate: undefined,
   endDate: undefined,
 });
 
-// 分頁配置
+// 分页配置
 const pagination = reactive({
   current: 1,
   pageSize: 10,
@@ -41,14 +41,14 @@ const pagination = reactive({
   showSizeChanger: true,
   showQuickJumper: true,
   showTotal: (total: number, range: [number, number]) => 
-    `第 ${range[0]}-${range[1]} 條，共 ${total} 條`,
+    `第 ${range[0]}-${range[1]} 条，共 ${total} 条`,
 });
 
-// 表格數據
+// 表格数据
 const tableData = ref([
   {
     id: 1,
-    title: '法律條文審查任務',
+    title: '法律条文审核任务',
     projectName: '法律諮詢系統開發',
     status: 'inProgress',
     assignee: '陳大文',
@@ -60,7 +60,7 @@ const tableData = ref([
   },
   {
     id: 2,
-    title: '合同審核任務',
+    title: '合同审核任务',
     projectName: '合同管理平台',
     status: 'preparing',
     assignee: '李四',
@@ -99,7 +99,7 @@ const columns = [
     width: 200,
   },
   {
-    title: '項目名稱',
+    title: '项目名稱',
     dataIndex: 'projectName',
     key: 'projectName',
     width: 150,
@@ -173,6 +173,7 @@ const createFormData = reactive({
   taskDescription: '',
   projectName: '',
   taskStatus: 'preparing',
+  taskResponsible: '', // 新增：任務負責人
   taskStartTime: undefined,
   taskEndTime: undefined,
   taskParticipants: [],
@@ -182,11 +183,28 @@ const createFormData = reactive({
   attachments: [] as any[],
 });
 
-// 任務參與人員選項
-const taskParticipantOptions = [
+// 任務負責人選項
+const taskResponsibleOptions = [
   { value: 'chen', label: '陳大文' },
   { value: 'zhang', label: '張三' },
   { value: 'li', label: '李四' },
+  { value: 'wang', label: '王五' },
+  { value: 'zhao', label: '趙六' },
+  { value: 'qian', label: '錢七' },
+];
+
+// 任務參與人員選項（包含個人和小組）
+const taskParticipantOptions = [
+  // 個人選項
+  { value: 'chen', label: '陳大文', type: 'person' },
+  { value: 'zhang', label: '張三', type: 'person' },
+  { value: 'li', label: '李四', type: 'person' },
+  { value: 'wang', label: '王五', type: 'person' },
+  { value: 'zhao', label: '趙六', type: 'person' },
+  { value: 'qian', label: '錢七', type: 'person' },
+  // 小組選項
+  { value: 'group_legal_review', label: '法律審查小組', type: 'group' },
+  { value: 'group_data_collection', label: '資料收集小組', type: 'group' },
 ];
 
 // 項目名稱選項
@@ -235,6 +253,12 @@ const getPriorityConfig = (priority: string) => {
   return configMap[priority] || { text: priority, color: 'gray' };
 };
 
+// 獲取參與人員標籤
+const getParticipantLabel = (participantValue: string) => {
+  const participant = taskParticipantOptions.find(option => option.value === participantValue);
+  return participant ? participant.label : participantValue;
+};
+
 // 搜索
 const handleSearch = () => {
   console.log('搜索條件:', searchForm);
@@ -256,7 +280,32 @@ const handleReset = () => {
 
 // 查看詳情
 const handleDetail = (record: any) => {
-  selectedTask.value = { ...record };
+  // 為詳情頁面提供完整的模擬數據
+  selectedTask.value = {
+    ...record,
+    // 添加完整的模擬數據，避免顯示「未設定」
+    taskResponsible: record.taskResponsible || '陳大文',
+    taskStartTime: record.taskStartTime || '2024-01-15 09:00:00',
+    taskEndTime: record.taskEndTime || '2024-01-25 18:00:00',
+    taskParticipants: record.taskParticipants || ['chen', 'zhang', 'group_legal_review'],
+    taskRemarks: record.taskRemarks || '此任務需要仔細審核相關法律條文，確保合規性。',
+    taskDueTime: record.taskDueTime || '2024-01-25 17:00:00',
+    estimatedHours: record.estimatedHours || 40,
+    attachments: record.attachments || [
+      {
+        uid: '1',
+        name: '法律條文參考資料.pdf',
+        status: 'done',
+        url: '#'
+      },
+      {
+        uid: '2', 
+        name: '審核清單.docx',
+        status: 'done',
+        url: '#'
+      }
+    ]
+  };
   detailDrawerVisible.value = true;
 };
 
@@ -324,6 +373,7 @@ const closeCreateDrawer = () => {
     taskDescription: '',
     projectName: '',
     taskStatus: 'preparing',
+    taskResponsible: '', // 新增：重置任務負責人
     taskStartTime: undefined,
     taskEndTime: undefined,
     taskParticipants: [],
@@ -354,6 +404,11 @@ const closeNotificationForwardDrawer = () => {
 const handleSaveTask = () => {
   if (!createFormData.taskName) {
     message.error('請輸入任務名稱');
+    return;
+  }
+  
+  if (!createFormData.taskResponsible) {
+    message.error('請選擇任務負責人');
     return;
   }
   
@@ -479,6 +534,24 @@ onMounted(() => {
           </Row>
           <Row :gutter="16" class="w-full mt-4">
             <Col :span="8">
+              <FormItem label="項目名稱">
+                <Select
+                  v-model:value="searchForm.projectName"
+                  placeholder="請選擇項目名稱"
+                  allow-clear
+                  class="w-full"
+                >
+                  <SelectOption
+                    v-for="option in projectNameOptions"
+                    :key="option.value"
+                    :value="option.value"
+                  >
+                    {{ option.label }}
+                  </SelectOption>
+                </Select>
+              </FormItem>
+            </Col>
+            <Col :span="8">
               <FormItem :label="$t('page.legalPlatform.startDate')">
                 <DatePicker
                   v-model:value="searchForm.startDate"
@@ -497,9 +570,6 @@ onMounted(() => {
                   format="YYYY-MM-DD"
                 />
               </FormItem>
-            </Col>
-            <Col :span="8">
-              <!-- 留空位置 -->
             </Col>
           </Row>
           <Row :gutter="16" class="w-full mt-4">
@@ -613,15 +683,45 @@ onMounted(() => {
                   <span class="text-gray-600">項目名稱:</span>
                   <span class="font-medium">{{ selectedTask.projectName }}</span>
                 </div>
+                <!-- 任務負責人 -->
+                <div class="flex justify-between">
+                  <span class="text-gray-600">任務負責人:</span>
+                  <span class="font-medium">{{ selectedTask.taskResponsible }}</span>
+                </div>
                 <div class="flex justify-between">
                   <span class="text-gray-600">{{ $t('page.legalPlatform.taskStatus') }}:</span>
                   <Tag :color="getStatusColor(selectedTask.status)">
                     {{ getStatusText(selectedTask.status) }}
                   </Tag>
                 </div>
+                <!-- 任務開始時間 -->
                 <div class="flex justify-between">
-                  <span class="text-gray-600">{{ $t('page.legalPlatform.assignee') }}:</span>
-                  <span>{{ selectedTask.assignee }}</span>
+                  <span class="text-gray-600">{{ $t('page.legalPlatform.taskStartTime') }}:</span>
+                  <span>{{ selectedTask.taskStartTime }}</span>
+                </div>
+                <!-- 任務結束時間 -->
+                <div class="flex justify-between">
+                  <span class="text-gray-600">{{ $t('page.legalPlatform.taskEndTime') }}:</span>
+                  <span>{{ selectedTask.taskEndTime }}</span>
+                </div>
+                <!-- 任務參與人員 -->
+                <div class="flex justify-between">
+                  <span class="text-gray-600">{{ $t('page.legalPlatform.taskParticipants') }}:</span>
+                  <div class="flex flex-wrap gap-1">
+                    <Tag v-for="participant in selectedTask.taskParticipants" :key="participant" size="small">
+                      {{ getParticipantLabel(participant) }}
+                    </Tag>
+                  </div>
+                </div>
+                <!-- 任務備註 -->
+                <div class="flex justify-between">
+                  <span class="text-gray-600">{{ $t('page.legalPlatform.taskRemarks') }}:</span>
+                  <span class="text-right max-w-[200px] break-words">{{ selectedTask.taskRemarks }}</span>
+                </div>
+                <!-- 任務到期時間 -->
+                <div class="flex justify-between">
+                  <span class="text-gray-600">{{ $t('page.legalPlatform.taskDueTime') }}:</span>
+                  <span>{{ selectedTask.taskDueTime }}</span>
                 </div>
                 <div class="flex justify-between">
                   <span class="text-gray-600">{{ $t('page.legalPlatform.creator') }}:</span>
@@ -636,6 +736,36 @@ onMounted(() => {
                   <Tag :color="getPriorityConfig(selectedTask.priority).color">
                     {{ getPriorityConfig(selectedTask.priority).text }}
                   </Tag>
+                </div>
+              </div>
+            </Card>
+
+            <!-- 工時卡片 -->
+            <Card class="mb-1" :title="$t('page.legalPlatform.workHours')">
+              <div class="space-y-3">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">{{ $t('page.legalPlatform.estimatedHours') }}:</span>
+                  <span class="font-medium">{{ selectedTask.estimatedHours }} 小時</span>
+                </div>
+              </div>
+            </Card>
+
+            <!-- 附件卡片 -->
+            <Card class="mb-1" :title="$t('page.legalPlatform.attachments')">
+              <div class="space-y-2">
+                <div v-if="selectedTask.attachments && selectedTask.attachments.length > 0">
+                  <div v-for="attachment in selectedTask.attachments" :key="attachment.uid" class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                    <div class="flex items-center">
+                      <span class="icon-[lucide--file] size-4 mr-2 text-gray-500" />
+                      <span class="text-sm">{{ attachment.name }}</span>
+                    </div>
+                    <Button type="link" size="small">
+                      下載
+                    </Button>
+                  </div>
+                </div>
+                <div v-else class="text-gray-400 text-sm">
+                  無附件
                 </div>
               </div>
             </Card>
@@ -729,6 +859,23 @@ onMounted(() => {
                   </Select>
                 </FormItem>
 
+                <!-- 新增：任務負責人 -->
+                <FormItem label="任務負責人">
+                  <Select
+                    v-model:value="createFormData.taskResponsible"
+                    placeholder="請選擇任務負責人"
+                    style="width: 100%"
+                  >
+                    <SelectOption
+                      v-for="option in taskResponsibleOptions"
+                      :key="option.value"
+                      :value="option.value"
+                    >
+                      {{ option.label }}
+                    </SelectOption>
+                  </Select>
+                </FormItem>
+
                 <FormItem :label="$t('page.legalPlatform.taskStatus')">
                   <span class="text-gray-700 font-medium">預備中</span>
                 </FormItem>
@@ -755,13 +902,24 @@ onMounted(() => {
                     mode="multiple"
                     :placeholder="$t('page.legalPlatform.taskParticipants')"
                   >
-                    <SelectOption
-                      v-for="option in taskParticipantOptions"
-                      :key="option.value"
-                      :value="option.value"
-                    >
-                      {{ option.label }}
-                    </SelectOption>
+                    <SelectOptGroup label="個人">
+                      <SelectOption
+                        v-for="option in taskParticipantOptions.filter(opt => opt.type === 'person')"
+                        :key="option.value"
+                        :value="option.value"
+                      >
+                        {{ option.label }}
+                      </SelectOption>
+                    </SelectOptGroup>
+                    <SelectOptGroup label="小組">
+                      <SelectOption
+                        v-for="option in taskParticipantOptions.filter(opt => opt.type === 'group')"
+                        :key="option.value"
+                        :value="option.value"
+                      >
+                        {{ option.label }}
+                      </SelectOption>
+                    </SelectOptGroup>
                   </Select>
                 </FormItem>
 
