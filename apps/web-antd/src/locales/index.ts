@@ -62,6 +62,10 @@ async function loadDayjsLocale(lang: SupportedLanguagesType) {
       locale = await import('dayjs/locale/zh-cn');
       break;
     }
+    case 'zh-TW': {
+      locale = await import('dayjs/locale/zh-tw');
+      break;
+    }
     // 默认使用英语
     default: {
       locale = await import('dayjs/locale/en');
@@ -86,6 +90,12 @@ async function loadAntdLocale(lang: SupportedLanguagesType) {
     }
     case 'zh-CN': {
       antdLocale.value = antdDefaultLocale;
+      break;
+    }
+    case 'zh-TW': {
+      // 需要導入繁體中文的 antd locale
+      const antdZhTwLocale = await import('ant-design-vue/es/locale/zh_TW');
+      antdLocale.value = antdZhTwLocale.default;
       break;
     }
   }
