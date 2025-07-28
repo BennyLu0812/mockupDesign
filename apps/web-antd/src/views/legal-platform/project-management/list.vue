@@ -50,7 +50,7 @@ const tableData = ref([
     projectNumber: 'LP-2024-001',
     name: '法律條文審查項目',
     type: '法案項目',
-    status: '進行中',
+    status: '處理中',
     creator: '陳大文',
     createTime: '2024-01-15 10:30:00',
     startTime: '2024-01-15',
@@ -65,7 +65,7 @@ const tableData = ref([
     projectNumber: 'LP-2024-002',
     name: '合同審核專案',
     type: '一般項目',
-    status: '準備中',
+    status: '待處理',
     creator: '張三',
     createTime: '2024-01-14 14:20:00',
     startTime: '2024-01-20',
@@ -147,8 +147,8 @@ const projectTypeOptions = [
 
 // 項目狀態選項
 const projectStatusOptions = [
-  { value: '準備中', label: '準備中' },
-  { value: '進行中', label: '進行中' },
+  { value: '待處理', label: '待處理' },
+  { value: '處理中', label: '處理中' },
   { value: '已完成', label: '已完成' },
   { value: '已取消', label: '已取消' },
 ];
@@ -198,8 +198,8 @@ const handleDelete = (record: any) => {
 // 獲取狀態標籤顏色
 const getStatusColor = (status: string) => {
   const colorMap: Record<string, string> = {
-    '準備中': 'blue',
-    '進行中': 'green',
+    '待處理': 'blue',
+    '處理中': 'green',
     '已完成': 'gray',
     '已取消': 'red',
   };

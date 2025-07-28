@@ -231,8 +231,8 @@ const projectTypeOptions = [
 
 // 項目狀態選項
 const projectStatusOptions = [
-  { value: '準備中', label: '準備中' },
-  { value: '進行中', label: '進行中' },
+  { value: '待處理', label: '待處理' },
+  { value: '處理中', label: '處理中' },
   { value: '已完成', label: '已完成' },
   { value: '已取消', label: '已取消' },
 ];
@@ -292,8 +292,8 @@ const handleViewDetail = (record: any) => {
 // 獲取狀態標籤顏色
 const getStatusColor = (status: string) => {
   const colorMap: Record<string, string> = {
-    '準備中': 'blue',
-    '進行中': 'green',
+    '待處理': 'blue',
+    '處理中': 'green',
     '已完成': 'gray',
     '已取消': 'red',
   };

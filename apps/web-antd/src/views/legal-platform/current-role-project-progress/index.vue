@@ -401,7 +401,7 @@ const getStatusColor = (status: string) => {
 const getStatusText = (status: string) => {
   switch (status) {
     case 'inProgress':
-      return '進行中';
+      return '處理中';
     case 'completed':
       return '已完成';
     case 'pending':

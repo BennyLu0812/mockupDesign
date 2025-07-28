@@ -26,7 +26,7 @@ const route = useRoute();
 const formData = reactive({
   projectName: '',
   projectType: '一般項目',
-  projectStatus: '進行中',
+  projectStatus: '處理中',
   projectStartTime: undefined as string | undefined,
   projectEndTime: undefined as string | undefined,
   projectDueTime: undefined as string | undefined,
@@ -67,11 +67,11 @@ const participantOptions = [
 
 // 項目狀態選項
 const projectStatusOptions = [
-  { value: '進行中', label: '進行中' },
+  { value: '處理中', label: '處理中' },
   { value: '已完成', label: '已完成' },
   { value: '已取消', label: '已取消' },
   { value: '暫停', label: '暫停' },
-  { value: '預備中', label: '預備中' },
+  { value: '待處理', label: '待處理' },
 ];
 
 // 附件上傳配置
@@ -162,7 +162,7 @@ const mockProjectData = {
   1: {
     projectName: '法律條文審查項目',
     projectType: '法案項目',
-    projectStatus: '進行中',
+    projectStatus: '處理中',
     projectStartTime: '2024-01-15',
     projectEndTime: '2024-03-15',
     projectDueTime: '2024-03-10',

@@ -30,7 +30,7 @@ const route = useRoute();
 const formData = reactive({
   projectName: '',
   projectType: '法案項目',
-  projectStatus: '進行中',
+  projectStatus: '處理中',
   projectStartTime: null,
   projectEndTime: null,
   projectDueTime: null,
@@ -61,7 +61,7 @@ const rules = {
 
 // 項目狀態選項
 const projectStatusOptions = [
-  { label: '進行中', value: '進行中' },
+  { label: '處理中', value: '處理中' },
   { label: '已完成', value: '已完成' },
   { label: '已取消', value: '已取消' },
 ];
@@ -335,7 +335,7 @@ onMounted(() => {
     Object.assign(formData, {
       projectName: '法案項目示例',
       projectType: '法案項目',
-      projectStatus: '進行中',
+      projectStatus: '處理中',
       projectStartTime: dayjs('2024-01-01'),
       projectEndTime: dayjs('2024-12-31'),
       projectDueTime: dayjs('2024-12-31'),

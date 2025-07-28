@@ -44,7 +44,7 @@ const projectInfo = reactive({
   id: route.params.id || '1',
   name: '法律條文審查項目',
   type: '法案項目',
-  status: '進行中',
+  status: '處理中',
   creator: '陳大文',
   createTime: '2024-01-15 10:30:00',
   startTime: '2024-01-15',
@@ -58,6 +58,238 @@ const projectInfo = reactive({
 // 關注功能相關狀態
 const isFollowing = ref(false);
 const followersCount = ref(12);
+
+// 流程狀態指示器相關數據
+const processSteps = ref([
+  {
+    id: 1,
+    name: '待處理',
+    status: 'pending', // pending, active, completed
+    number: '1'
+  },
+  {
+    id: 2,
+    name: '處理中',
+    status: 'active',
+    number: '2'
+  },
+  {
+    id: 3,
+    name: '已完成',
+    status: 'pending',
+    number: '✓'
+  }
+]);
+
+// 根據項目狀態更新流程步驟
+const updateProcessSteps = () => {
+  const status = projectInfo.status;
+  
+  // 重置所有步驟為 pending
+  processSteps.value.forEach(step => {
+    step.status = 'pending';
+  });
+  
+  if (status === '待處理') {
+    processSteps.value[0].status = 'active';
+  } else if (status === '處理中') {
+    processSteps.value[0].status = 'completed';
+    processSteps.value[1].status = 'active';
+  } else if (status === '已完成') {
+    processSteps.value[0].status = 'completed';
+    processSteps.value[1].status = 'completed';
+    processSteps.value[2].status = 'completed';
+  }
+};
+
+// 獲取步驟圓形樣式
+const getStepCircleStyle = (step: any) => {
+  if (step.status === 'pending') {
+    return {
+      width: '24px',
+      height: '24px',
+      borderRadius: '50%',
+      border: '2px solid #E5E7EB',
+      backgroundColor: '#FFFFFF',
+      color: '#9CA3AF',
+      fontSize: '14px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontWeight: 'bold'
+    };
+  } else if (step.status === 'active') {
+    return {
+      width: '24px',
+      height: '24px',
+      borderRadius: '50%',
+      backgroundColor: '#F97316',
+      color: '#FFFFFF',
+      fontSize: '14px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontWeight: 'bold'
+    };
+  } else { // completed
+    return {
+      width: '24px',
+      height: '24px',
+      borderRadius: '50%',
+      backgroundColor: '#10B981',
+      color: '#FFFFFF',
+      fontSize: '14px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontWeight: 'bold'
+    };
+  }
+};
+
+// 獲取步驟文字樣式
+const getStepTextStyle = (step: any) => {
+  if (step.status === 'pending') {
+    return {
+      fontSize: '14px',
+      color: '#9CA3AF',
+      marginTop: '8px',
+      textAlign: 'center'
+    };
+  } else if (step.status === 'active') {
+    return {
+      fontSize: '14px',
+      color: '#F97316',
+      marginTop: '8px',
+      textAlign: 'center'
+    };
+  } else { // completed
+    return {
+      fontSize: '14px',
+      color: '#10B981',
+      marginTop: '8px',
+      textAlign: 'center'
+    };
+  }
+};
+
+// 獲取連接線樣式
+const getConnectorStyle = (index: number) => {
+  const currentStep = processSteps.value[index];
+  const nextStep = processSteps.value[index + 1];
+  
+  if (currentStep.status === 'completed') {
+    return {
+      width: '40px',
+      height: '2px',
+      backgroundColor: currentStep.status === 'completed' && nextStep?.status === 'active' ? '#F97316' : 
+                       currentStep.status === 'completed' && nextStep?.status === 'completed' ? '#10B981' : '#E5E7EB',
+      margin: '0 8px'
+    };
+  } else {
+    return {
+      width: '40px',
+      height: '2px',
+      backgroundColor: '#E5E7EB',
+      margin: '0 8px'
+    };
+  }
+};
+
+// 內聯版本的樣式函數
+// 獲取步驟圓形樣式（內聯版本）
+const getStepCircleStyleInline = (step: any) => {
+  if (step.status === 'pending') {
+    return {
+      width: '18px',
+      height: '18px',
+      borderRadius: '50%',
+      border: '1.5px solid #E5E7EB',
+      backgroundColor: '#FFFFFF',
+      color: '#9CA3AF',
+      fontSize: '10px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontWeight: 'bold'
+    };
+  } else if (step.status === 'active') {
+    return {
+      width: '18px',
+      height: '18px',
+      borderRadius: '50%',
+      backgroundColor: '#F97316',
+      color: '#FFFFFF',
+      fontSize: '10px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontWeight: 'bold'
+    };
+  } else { // completed
+    return {
+      width: '18px',
+      height: '18px',
+      borderRadius: '50%',
+      backgroundColor: '#10B981',
+      color: '#FFFFFF',
+      fontSize: '10px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontWeight: 'bold'
+    };
+  }
+};
+
+// 獲取步驟文字樣式（內聯版本）
+const getStepTextStyleInline = (step: any) => {
+  if (step.status === 'pending') {
+    return {
+      fontSize: '10px',
+      color: '#9CA3AF',
+      marginTop: '2px',
+      textAlign: 'center'
+    };
+  } else if (step.status === 'active') {
+    return {
+      fontSize: '10px',
+      color: '#F97316',
+      marginTop: '2px',
+      textAlign: 'center'
+    };
+  } else { // completed
+    return {
+      fontSize: '10px',
+      color: '#10B981',
+      marginTop: '2px',
+      textAlign: 'center'
+    };
+  }
+};
+
+// 獲取連接線樣式（內聯版本）
+const getConnectorStyleInline = (index: number) => {
+  const currentStep = processSteps.value[index];
+  const nextStep = processSteps.value[index + 1];
+  
+  if (currentStep.status === 'completed') {
+    return {
+      width: '24px',
+      height: '1.5px',
+      backgroundColor: currentStep.status === 'completed' && nextStep?.status === 'active' ? '#F97316' : 
+                       currentStep.status === 'completed' && nextStep?.status === 'completed' ? '#10B981' : '#E5E7EB',
+      margin: '0 4px'
+    };
+  } else {
+    return {
+      width: '24px',
+      height: '1.5px',
+      backgroundColor: '#E5E7EB',
+      margin: '0 4px'
+    };
+  }
+};
 
 // 項目成員
 const projectMembers = ref([
@@ -96,6 +328,33 @@ const attachments = ref([
     tags: ['重要', '審查報告'],
     remark: '這是初步審查報告，包含了對法條的詳細分析',
     url: '/api/files/report.pdf',
+    version: '1.2',
+    history: [
+      {
+        version: '1.0',
+        uploadTime: '2024-01-15 09:30:00',
+        uploader: '陳大文',
+        size: '2.1MB',
+        url: '/api/files/report_v1.pdf',
+        remark: '初始版本'
+      },
+      {
+        version: '1.1',
+        uploadTime: '2024-01-18 14:20:00',
+        uploader: '陳大文',
+        size: '2.3MB',
+        url: '/api/files/report_v1.1.pdf',
+        remark: '修正了第二章的錯誤'
+      },
+      {
+        version: '1.2',
+        uploadTime: '2024-01-20 10:30:00',
+        uploader: '陳大文',
+        size: '2.5MB',
+        url: '/api/files/report.pdf',
+        remark: '添加了第四章的內容'
+      }
+    ],
     comments: [
       {
         id: '1',
@@ -125,6 +384,25 @@ const attachments = ref([
     tags: ['參考資料'],
     remark: '收集的相關法律參考資料',
     url: '/api/files/references.docx',
+    version: '2.0',
+    history: [
+      {
+        version: '1.0',
+        uploadTime: '2024-01-16 11:20:00',
+        uploader: '李四',
+        size: '1.2MB',
+        url: '/api/files/references_v1.docx',
+        remark: '初始版本'
+      },
+      {
+        version: '2.0',
+        uploadTime: '2024-01-18 16:45:00',
+        uploader: '李四',
+        size: '1.8MB',
+        url: '/api/files/references.docx',
+        remark: '增加了新的參考資料'
+      }
+    ],
     comments: [],
   },
   {
@@ -137,6 +415,33 @@ const attachments = ref([
     tags: ['進度管理', '圖表'],
     remark: '項目各階段進度統計',
     url: '/api/files/progress.xlsx',
+    version: '2.1',
+    history: [
+      {
+        version: '1.0',
+        uploadTime: '2024-01-17 14:30:00',
+        uploader: '張三',
+        size: '650KB',
+        url: '/api/files/progress_v1.xlsx',
+        remark: '初始版本'
+      },
+      {
+        version: '2.0',
+        uploadTime: '2024-01-18 16:20:00',
+        uploader: '張三',
+        size: '780KB',
+        url: '/api/files/progress_v2.xlsx',
+        remark: '更新了進度數據'
+      },
+      {
+        version: '2.1',
+        uploadTime: '2024-01-19 09:15:00',
+        uploader: '張三',
+        size: '856KB',
+        url: '/api/files/progress.xlsx',
+        remark: '添加了新的進度圖表'
+      }
+    ],
     comments: [
       {
         id: '1',
@@ -235,7 +540,7 @@ const processNodes = ref([
     operatorAvatar: '/api/placeholder/32/32',
     operateTime: '2024-01-18 08:30:00',
     description: '正在進行法律條文的初步審查工作',
-    duration: '進行中',
+    duration: '處理中',
   },
   {
     id: '5',
@@ -342,6 +647,10 @@ const notificationDrawerVisible = ref(false);
 const selectedAttachment = ref(null);
 const submittingNotification = ref(false);
 const notificationFormRef = ref();
+
+// 附件歷史版本相關狀態
+const historyVersionDrawerVisible = ref(false);
+const selectedAttachmentHistory = ref<any>(null);
 
 // 新增知悉表單數據
 const attachmentNotificationForm = reactive({
@@ -770,6 +1079,26 @@ const handleUploadAttachment = () => {
   message.info('上傳附件功能待實現');
 };
 
+// 查看附件歷史版本
+const handleViewAttachmentHistory = (attachment: any) => {
+  selectedAttachmentHistory.value = attachment;
+  historyVersionDrawerVisible.value = true;
+};
+
+// 下載歷史版本附件
+const handleDownloadHistoryVersion = (version: any) => {
+  console.log('下載歷史版本:', version);
+  message.success(`開始下載 ${selectedAttachmentHistory.value.name} (版本 ${version.version})`);
+  // 這裡實現文件下載邏輯
+};
+
+// 預覽歷史版本附件
+const handlePreviewHistoryVersion = (version: any) => {
+  console.log('預覽歷史版本:', version);
+  message.info(`預覽 ${selectedAttachmentHistory.value.name} (版本 ${version.version})`);
+  // 這裡可以實現不同文件類型的預覽邏輯
+};
+
 // 預覽附件
 const handlePreviewAttachment = (attachment: any) => {
   console.log('預覽附件:', attachment);
@@ -884,7 +1213,7 @@ const getStatusColor = (status: string) => {
 const getStatusText = (status: string) => {
   const textMap: Record<string, string> = {
     completed: '已完成',
-    inProgress: '進行中',
+    inProgress: '處理中',
     pending: '待處理',
     acknowledged: '已知悉',
   };
@@ -1253,14 +1582,18 @@ const handleSaveTask = () => {
 onMounted(() => {
   // 這裡可以根據路由參數加載具體的項目數據
   console.log('項目詳情頁面加載，項目ID:', route.params.id);
+  // 初始化流程步驟狀態
+  updateProcessSteps();
 });
 </script>
 
 <template>
   <Page :title="$t('page.legalPlatform.projectDetail')">
+
+    
     <div class="project-detail">
       <!-- 頁面標題 -->
-      <div class="mb-6">
+      <div class="mb-5">
         <div class="flex items-center justify-between">
           <div>
             <Title :level="2" class="!mb-2">
@@ -1300,24 +1633,40 @@ onMounted(() => {
               <span class="icon-[lucide--plus] size-4 mr-1" />
               {{ $t('page.legalPlatform.addTask') }}
             </Button>
-            <Button type="primary">
-              <span class="icon-[lucide--eye] size-4 mr-1" />
-              概覽
-            </Button>
+
           </Space>
         </div>
+        
+        <!-- 流程狀態指示器 - 在新增任務按鈕下方，向右對齊 -->
+        <div class="flex justify-end mt-3">
+          <div class="process-indicator-below-button">
+            <div class="process-steps-inline">
+              <template v-for="(step, index) in processSteps" :key="step.id">
+                <div class="step-container-inline">
+                  <div class="step-circle-inline" :style="getStepCircleStyleInline(step)">
+                    {{ step.number }}
+                  </div>
+                  <div class="step-text-inline" :style="getStepTextStyleInline(step)">
+                    {{ step.name }}
+                  </div>
+                </div>
+                <div v-if="index < processSteps.length - 1" class="step-connector-inline" :style="getConnectorStyleInline(index)"></div>
+              </template>
+            </div>
+          </div>
+        </div>
       </div>
-
+      
       <!-- 主要內容區域 -->
-      <Row :gutter="24">
+      <Row :gutter="5">
         <!-- 左側主要內容 -->
         <Col :xs="24" :lg="16">
           <!-- 項目基本信息卡片 -->
-          <Card class="mb-6" title="項目信息">
-            <Row :gutter="16">
+          <Card class="mb-5" title="項目信息">
+            <Row :gutter="5">
               <!-- 項目詳情 -->
               <Col :span="24">
-                <div class="project-details space-y-3">
+                <div class="project-details space-y-1">
                   <div>
                     <Text type="secondary">項目名稱：</Text>
                     <Text strong>{{ projectInfo.name }}</Text>
@@ -1352,14 +1701,14 @@ onMounted(() => {
             <Divider />
             <div>
               <Text type="secondary">項目描述：</Text>
-              <Paragraph class="!mt-2">
+              <Paragraph class="!mt-1">
                 {{ projectInfo.description }}
               </Paragraph>
             </div>
           </Card>
 
           <!-- 成員卡片 -->
-          <Card class="mb-6">
+          <Card class="mb-5">
             <template #title>
               <div class="flex items-center justify-between">
                 <span>成員</span>
@@ -1368,9 +1717,9 @@ onMounted(() => {
                   邀請
                 </Button>
               </div>
-            </template>
+             </template>
             <div class="members-list">
-              <Row :gutter="[12, 12]">
+              <Row :gutter="[5, 5]">
                 <Col v-for="member in projectMembers" :key="member.id" :xs="12" :sm="8" :md="6" :lg="4">
                   <Card class="member-card" size="small">
                     <div class="flex flex-col items-center text-center p-3">
@@ -1397,11 +1746,11 @@ onMounted(() => {
               </div>
             </template>
             <div v-if="recentTasks.length > 0">
-              <div class="tasks-list space-y-4">
+              <div class="tasks-list space-y-1">
                 <div v-for="task in recentTasks" :key="task.id" class="task-item">
                   <div class="flex items-start justify-between p-4 border rounded-lg hover:bg-gray-50">
                     <div class="flex-1">
-                      <div class="flex items-center space-x-2 mb-2">
+                      <div class="flex items-center space-x-1 mb-1">
                         <Text strong class="text-base">{{ task.title }}</Text>
                         <Tag :color="getPriorityColor(task.priority)" size="small">
                           {{ getPriorityText(task.priority) }}
@@ -1410,14 +1759,14 @@ onMounted(() => {
                           {{ getStatusText(task.status) }}
                         </Tag>
                       </div>
-                      <Text type="secondary" class="text-sm block mb-2">{{ task.description }}</Text>
-                      <div class="flex items-center space-x-4 text-xs text-gray-500">
+                      <Text type="secondary" class="text-sm block mb-1">{{ task.description }}</Text>
+                      <div class="flex items-center space-x-1 text-xs text-gray-500">
                         <span>負責人：{{ task.assignee }}</span>
                         <span>到期時間：{{ task.dueDate }}</span>
                         <span>創建時間：{{ task.createTime }}</span>
                       </div>
                     </div>
-                    <div class="flex items-center space-x-2">
+                    <div class="flex items-center space-x-1">
                       <Button type="link" size="small">
                         <span class="icon-[lucide--eye] size-4" />
                       </Button>
@@ -1432,8 +1781,8 @@ onMounted(() => {
             <Empty v-else description="暫無任務數據" />
           </Card>
 
-          <!-- 項目附件卡片 -->
-          <Card class="mb-6">
+          <!-- 最新任務卡片 -->
+          <Card class="mb-5">
             <template #title>
               <div class="flex items-center justify-between">
                 <span>項目附件</span>
@@ -1443,7 +1792,7 @@ onMounted(() => {
                 </Button>
               </div>
             </template>
-            <div v-if="attachments.length > 0" class="attachments-list space-y-3">
+            <div v-if="attachments.length > 0" class="attachments-list space-y-1">
               <div v-for="attachment in attachments" :key="attachment.id" class="attachment-item">
                 <div class="flex items-start space-x-3 p-3 border rounded-lg hover:bg-gray-50">
                   <!-- 文件圖標 -->
@@ -1468,6 +1817,14 @@ onMounted(() => {
                         <Button type="link" size="small" @click="handleDownloadAttachment(attachment)">
                           <span class="icon-[lucide--download] size-4" />
                         </Button>
+                        <Button 
+                          v-if="attachment.history && attachment.history.length > 0" 
+                          type="link" 
+                          size="small" 
+                          @click="handleViewAttachmentHistory(attachment)"
+                        >
+                          <span class="icon-[lucide--history] size-4" />
+                        </Button>
                         <Popconfirm
                           title="確定要刪除這個附件嗎？"
                           ok-text="確定"
@@ -1482,7 +1839,7 @@ onMounted(() => {
                     </div>
                     
                     <!-- 文件詳情 -->
-                    <div class="flex items-center space-x-4 text-xs text-gray-500 mb-2">
+                    <div class="flex items-center space-x-1 text-xs text-gray-500 mb-1">
                       <span>{{ attachment.size }}</span>
                       <span>{{ attachment.type }}</span>
                       <span>{{ attachment.uploadTime }}</span>
@@ -1490,23 +1847,23 @@ onMounted(() => {
                     </div>
                     
                     <!-- 標籤 -->
-                    <div v-if="attachment.tags && attachment.tags.length > 0" class="mb-2">
+                    <div v-if="attachment.tags && attachment.tags.length > 0" class="mb-1">
                       <Tag v-for="tag in attachment.tags" :key="tag" size="small" class="mr-1">
                         {{ tag }}
                       </Tag>
                     </div>
                     
                     <!-- 備註 -->
-                    <div v-if="attachment.remark" class="text-xs text-gray-600 mb-2">
+                    <div v-if="attachment.remark" class="text-xs text-gray-600 mb-1">
                       <Text type="secondary">備註：{{ attachment.remark }}</Text>
                     </div>
                     
                     <!-- 評論區域 -->
                     <div v-if="attachment.comments && attachment.comments.length > 0" class="comments-section">
-                      <Divider class="!my-2" />
-                      <div class="space-y-2">
+                      <Divider class="!my-1" />
+                      <div class="space-y-1">
                         <div v-for="comment in attachment.comments" :key="comment.id" class="comment-item">
-                          <div class="flex items-start space-x-2">
+                          <div class="flex items-start space-x-1">
                             <Avatar :src="comment.avatar" :size="20">
                               {{ comment.user.charAt(0) }}
                             </Avatar>
@@ -1518,9 +1875,9 @@ onMounted(() => {
                               <div class="text-xs text-gray-600 mt-1">{{ comment.content }}</div>
                               
                               <!-- 回復 -->
-                              <div v-if="comment.replies && comment.replies.length > 0" class="ml-4 mt-2 space-y-1">
+                              <div v-if="comment.replies && comment.replies.length > 0" class="ml-2 mt-1 space-y-1">
                                 <div v-for="reply in comment.replies" :key="reply.id" class="reply-item">
-                                  <div class="flex items-start space-x-2">
+                                  <div class="flex items-start space-x-1">
                                     <Avatar :src="reply.avatar" :size="16">
                                       {{ reply.user.charAt(0) }}
                                     </Avatar>
@@ -1529,13 +1886,13 @@ onMounted(() => {
                                         <Text strong>{{ reply.user }}</Text>
                                         <Text type="secondary" class="ml-2">{{ reply.time }}</Text>
                                       </div>
-                                      <div class="text-xs text-gray-600 mt-1">{{ reply.content }}</div>
+                                      <div class="text-xs text-gray-600 mt-0">{{ reply.content }}</div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
                               
-                              <Button type="link" size="small" class="text-xs p-0 h-auto mt-1" @click="handleReplyComment(attachment, comment)">
+                              <Button type="link" size="small" class="text-xs p-0 h-auto mt-0" @click="handleReplyComment(attachment, comment)">
                                 回復
                               </Button>
                             </div>
@@ -1813,7 +2170,7 @@ onMounted(() => {
             <Col :span="8">
               <div class="text-center">
                 <div class="text-2xl font-bold text-blue-500">{{ processNodes.filter(n => n.status === 'inProgress').length }}</div>
-                <div class="text-sm text-gray-500">進行中</div>
+                <div class="text-sm text-gray-500">處理中</div>
               </div>
             </Col>
             <Col :span="8">
@@ -2187,11 +2544,174 @@ onMounted(() => {
       </div>
     </Drawer>
 
+    <!-- 附件歷史版本抽屜 -->
+    <Drawer
+      v-model:open="historyVersionDrawerVisible"
+      title="附件歷史版本"
+      width="500"
+      :closable="true"
+      @close="selectedAttachmentHistory = null"
+    >
+      <div v-if="selectedAttachmentHistory">
+        <div class="mb-4">
+          <div class="flex items-center mb-2">
+            <span :class="getFileIconClass(selectedAttachmentHistory.type)" class="size-6 mr-2" />
+            <Text strong>{{ selectedAttachmentHistory.name }}</Text>
+          </div>
+          <Text type="secondary" class="text-sm">當前版本: {{ selectedAttachmentHistory.version }}</Text>
+        </div>
+        
+        <Divider orientation="left">版本歷史</Divider>
+        
+        <div class="history-list space-y-3">
+          <div v-for="(version, index) in selectedAttachmentHistory.history" :key="index" class="history-item p-3 border rounded-lg hover:bg-gray-50">
+            <div class="flex items-center justify-between mb-2">
+              <Text strong>版本 {{ version.version }}</Text>
+              <div class="flex items-center space-x-2">
+                <Button type="link" size="small" @click="handlePreviewHistoryVersion(version)">
+                  <span class="icon-[lucide--eye] size-4" />
+                </Button>
+                <Button type="link" size="small" @click="handleDownloadHistoryVersion(version)">
+                  <span class="icon-[lucide--download] size-4" />
+                </Button>
+              </div>
+            </div>
+            
+            <div class="text-xs text-gray-500 space-y-1">
+              <div class="flex items-center justify-between">
+                <span>上傳時間:</span>
+                <span>{{ version.uploadTime }}</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span>上傳者:</span>
+                <span>{{ version.uploader }}</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span>文件大小:</span>
+                <span>{{ version.size }}</span>
+              </div>
+              <div v-if="version.remark" class="mt-2">
+                <Text type="secondary">備註: {{ version.remark }}</Text>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Empty v-else description="未選擇附件" />
+    </Drawer>
 
   </Page>
 </template>
 
 <style scoped>
+/* 流程狀態指示器樣式 */
+.process-indicator {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(229, 231, 235, 0.5);
+}
+
+.process-steps {
+  display: flex;
+  align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.step-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.step-circle {
+  transition: all 0.3s ease;
+}
+
+.step-text {
+  white-space: nowrap;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.step-connector {
+  transition: all 0.3s ease;
+}
+
+/* 內聯版本流程狀態指示器樣式 */
+.process-indicator-inline {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: rgba(249, 250, 251, 0.8);
+  border-radius: 8px;
+  border: 1px solid rgba(229, 231, 235, 0.6);
+}
+
+.process-steps-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.step-container-inline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.step-circle-inline {
+  transition: all 0.3s ease;
+}
+
+.step-text-inline {
+  white-space: nowrap;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.step-connector-inline {
+  transition: all 0.3s ease;
+}
+
+/* 右對齊版本流程狀態指示器樣式 */
+.process-indicator-inline-right {
+  padding: 8px 12px;
+  background: rgba(249, 250, 251, 0.6);
+  border-radius: 6px;
+  border: 1px solid rgba(229, 231, 235, 0.4);
+}
+
+.process-indicator-inline-right .process-steps-inline {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* 按鈕下方版本流程狀態指示器樣式 */
+.process-indicator-below-button {
+  padding: 6px 10px;
+  background: rgba(249, 250, 251, 0.5);
+  border-radius: 4px;
+  border: 1px solid rgba(229, 231, 235, 0.3);
+}
+
+.process-indicator-below-button .process-steps-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
 .project-detail {
   background-color: #ffffff;
 }
@@ -2505,6 +3025,28 @@ onMounted(() => {
 @media (max-width: 768px) {
   .create-task-form-container {
     padding: 0 8px;
+  }
+}
+
+/* 附件歷史版本抽屜樣式 */
+.history-list {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.history-item {
+  transition: all 0.2s ease;
+}
+
+.history-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 附件歷史版本抽屜響應式 */
+@media (max-width: 768px) {
+  .history-list {
+    max-height: 400px;
   }
 }
 
