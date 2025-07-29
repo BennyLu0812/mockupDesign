@@ -66,6 +66,15 @@ const routes: RouteRecordRaw[] = [
             },
           },
           {
+            name: 'BillEditor',
+            path: 'bill-editor',
+            component: () => import('#/views/legal-platform/bill-editor/index.vue'),
+            meta: {
+              icon: 'lucide:edit',
+              title: $t('bill-editor.title'),
+            },
+          },
+          {
             name: 'ProjectDetail',
             path: 'detail/:id',
             component: () => import('#/views/legal-platform/project-management/detail.vue'),

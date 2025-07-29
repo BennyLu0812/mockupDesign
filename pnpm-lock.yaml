@@ -629,6 +629,9 @@ importers:
 
   apps/web-antd:
     dependencies:
+      '@tinymce/tinymce-vue':
+        specifier: ^6.2.0
+        version: 6.2.0(vue@3.5.13(typescript@5.8.3))
       '@vben/access':
         specifier: workspace:*
         version: link:../../packages/effects/access
@@ -3951,6 +3954,15 @@ packages:
     resolution: {integrity: sha512-GYdZ3SJBQPzgxhuCE2fvpiH46qzHiVx5XzBSdtESgiqh4poj8UgckjGWYEhxaBbcVt1oLzh1m3Ql4TyH32TOzQ==}
     peerDependencies:
       vue: ^3.5.13
+
+  '@tinymce/tinymce-vue@6.2.0':
+    resolution: {integrity: sha512-HiXKB+M3mJnWO6/8kY0HsP255+8zLZw5JMqHKVUvsXvzYyHW+splXXwYDYOkCYqf39R5nBqQaK2l2WL9rz3y5w==}
+    peerDependencies:
+      tinymce: ^7.0.0 || ^6.0.0 || ^5.5.1
+      vue: ^3.5.13
+    peerDependenciesMeta:
+      tinymce:
+        optional: true
 
   '@tootallnate/once@1.1.2':
     resolution: {integrity: sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==}
@@ -13058,6 +13070,10 @@ snapshots:
   '@tanstack/vue-virtual@3.13.6(vue@3.5.13(typescript@5.8.3))':
     dependencies:
       '@tanstack/virtual-core': 3.13.6
+      vue: 3.5.13(typescript@5.8.3)
+
+  '@tinymce/tinymce-vue@6.2.0(vue@3.5.13(typescript@5.8.3))':
+    dependencies:
       vue: 3.5.13(typescript@5.8.3)
 
   '@tootallnate/once@1.1.2': {}
