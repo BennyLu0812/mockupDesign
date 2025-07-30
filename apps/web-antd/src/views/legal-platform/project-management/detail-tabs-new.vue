@@ -19,6 +19,7 @@ import {
   Input,
   InputNumber,
   Modal,
+  Pagination,
   Popconfirm,
   Radio,
   RadioGroup,
@@ -297,8 +298,8 @@ const projectMembers = ref([
   },
 ]);
 
-// 最新任務
-const recentTasks = ref([
+// 所有任務數據
+const allTasks = ref([
   {
     id: 1,
     title: '法律條文審核任務',
@@ -354,7 +355,137 @@ const recentTasks = ref([
     priority: 'high',
     taskNumber: 'LP-2024-005',
   },
+  {
+    id: 6,
+    title: '法規條文修訂',
+    projectName: '法律條文審查項目',
+    status: 'pending',
+    assignee: '王小明',
+    creator: '陳大文',
+    createTime: '2024-01-27 09:00:00',
+    priority: 'medium',
+    taskNumber: 'LP-2024-006',
+  },
+  {
+    id: 7,
+    title: '法律意見書撰寫',
+    projectName: '法律條文審查項目',
+    status: 'inProgress',
+    assignee: '李小華',
+    creator: '陳大文',
+    createTime: '2024-01-28 14:30:00',
+    priority: 'high',
+    taskNumber: 'LP-2024-007',
+  },
+  {
+    id: 8,
+    title: '合規性檢查',
+    projectName: '法律條文審查項目',
+    status: 'completed',
+    assignee: '張三豐',
+    creator: '陳大文',
+    createTime: '2024-01-29 11:15:00',
+    priority: 'low',
+    taskNumber: 'LP-2024-008',
+  },
+  {
+    id: 9,
+    title: '風險評估報告',
+    projectName: '法律條文審查項目',
+    status: 'preparing',
+    assignee: '劉華',
+    creator: '陳大文',
+    createTime: '2024-01-30 16:45:00',
+    priority: 'medium',
+    taskNumber: 'LP-2024-009',
+  },
+  {
+    id: 10,
+    title: '最終審核確認',
+    projectName: '法律條文審查項目',
+    status: 'pending',
+    assignee: '周雅',
+    creator: '陳大文',
+    createTime: '2024-01-31 10:00:00',
+    priority: 'high',
+    taskNumber: 'LP-2024-010',
+  },
 ]);
+
+// 任務分頁配置
+const taskPagination = reactive({
+  current: 1,
+  pageSize: 5,
+  total: 0,
+  showSizeChanger: true,
+  showQuickJumper: true,
+  showTotal: (total, range) => `第 ${range[0]}-${range[1]} 條，共 ${total} 條`,
+});
+
+// 任務查詢表單
+const taskSearchForm = reactive({
+  searchColumn: '',
+  searchValue: '',
+});
+
+// 可查詢的列選項
+const searchableColumns = [
+  { value: 'taskNumber', label: '任務編號' },
+  { value: 'title', label: '任務名稱' },
+  { value: 'status', label: '狀態' },
+  { value: 'assignee', label: '負責人' },
+  { value: 'creator', label: '創建人' },
+  { value: 'priority', label: '優先級' },
+];
+
+// 狀態選項
+const statusOptions = [
+  { value: 'pending', label: '待處理' },
+  { value: 'inProgress', label: '處理中' },
+  { value: 'completed', label: '已完成' },
+  { value: 'cancelled', label: '已取消' },
+  { value: 'preparing', label: '準備中' },
+];
+
+// 優先級選項
+const priorityOptions = [
+  { value: 'low', label: '低' },
+  { value: 'medium', label: '中' },
+  { value: 'high', label: '高' },
+];
+
+// 過濾後的任務數據
+const filteredTasks = computed(() => {
+  let filtered = allTasks.value;
+  
+  if (taskSearchForm.searchColumn && taskSearchForm.searchValue) {
+    filtered = allTasks.value.filter(task => {
+      const value = task[taskSearchForm.searchColumn];
+      
+      // 對於狀態和優先級，進行精確匹配
+      if (['status', 'priority'].includes(taskSearchForm.searchColumn)) {
+        return value === taskSearchForm.searchValue;
+      }
+      
+      // 對於其他字段，進行模糊匹配
+      if (typeof value === 'string') {
+        return value.toLowerCase().includes(taskSearchForm.searchValue.toLowerCase());
+      }
+      
+      return false;
+    });
+  }
+  
+  return filtered;
+});
+
+// 當前頁任務數據
+const recentTasks = computed(() => {
+  const start = (taskPagination.current - 1) * taskPagination.pageSize;
+  const end = start + taskPagination.pageSize;
+  taskPagination.total = filteredTasks.value.length;
+  return filteredTasks.value.slice(start, end);
+});
 
 // 控制評論顯示狀態
 const commentVisibility = ref({});
@@ -937,9 +1068,80 @@ const handleReplyComment = (attachment, comment) => {
   message.info(`回復評論：${comment.content}`);
 };
 
+// 查看任務詳情相關狀態
+const viewTaskDrawerVisible = ref(false);
+const viewTaskData = ref({});
+
 const handleViewTaskDetail = (task) => {
-  message.info(`查看任務詳情：${task.title}`);
+  viewTaskData.value = { ...task };
+  viewTaskDrawerVisible.value = true;
 };
+
+// 關閉查看任務詳情抽屜
+const closeViewTaskDrawer = () => {
+  viewTaskDrawerVisible.value = false;
+  viewTaskData.value = {};
+};
+
+// 編輯任務相關狀態
+const editTaskDrawerVisible = ref(false);
+const editTaskFormData = ref({});
+
+// 處理編輯任務
+const handleEditTask = (task) => {
+  editTaskFormData.value = { ...task };
+  editTaskDrawerVisible.value = true;
+};
+
+// 關閉編輯任務抽屜
+const closeEditTaskDrawer = () => {
+  editTaskDrawerVisible.value = false;
+  editTaskFormData.value = {};
+};
+
+// 保存編輯任務
+const handleSaveEditTask = () => {
+  // 找到要編輯的任務並更新
+  const index = allTasks.value.findIndex(task => task.id === editTaskFormData.value.id);
+  if (index !== -1) {
+    allTasks.value[index] = { ...editTaskFormData.value };
+    message.success('任務編輯成功');
+    closeEditTaskDrawer();
+  }
+};
+
+// 處理任務分頁變化
+const handleTaskPageChange = (page, pageSize) => {
+  taskPagination.current = page;
+  taskPagination.pageSize = pageSize;
+};
+
+// 處理任務查詢
+const handleTaskSearch = () => {
+  taskPagination.current = 1; // 重置到第一頁
+};
+
+// 重置任務查詢
+const handleTaskSearchReset = () => {
+  taskSearchForm.searchColumn = '';
+  taskSearchForm.searchValue = '';
+  taskPagination.current = 1;
+};
+
+// 獲取查詢值的選項（用於狀態和優先級的下拉選擇）
+const getSearchValueOptions = computed(() => {
+  if (taskSearchForm.searchColumn === 'status') {
+    return statusOptions;
+  } else if (taskSearchForm.searchColumn === 'priority') {
+    return priorityOptions;
+  }
+  return [];
+});
+
+// 判斷是否顯示下拉選擇器
+const isSelectSearch = computed(() => {
+  return ['status', 'priority'].includes(taskSearchForm.searchColumn);
+});
 
 const handleViewMoreTasks = () => {
   router.push('/legal-platform/project-management/task-management/list');
@@ -1409,6 +1611,63 @@ onMounted(() => {
         <!-- 任務管理 Tab -->
         <TabPane key="tasks" tab="任務管理">
           <Card title="項目任務">
+            <!-- 查詢表單 -->
+            <div class="mb-4">
+              <Form layout="inline" :model="taskSearchForm">
+                <FormItem label="查詢列">
+                  <Select
+                    v-model:value="taskSearchForm.searchColumn"
+                    placeholder="選擇查詢列"
+                    style="width: 120px"
+                    @change="taskSearchForm.searchValue = ''"
+                  >
+                    <SelectOption
+                      v-for="column in searchableColumns"
+                      :key="column.value"
+                      :value="column.value"
+                    >
+                      {{ column.label }}
+                    </SelectOption>
+                  </Select>
+                </FormItem>
+                <FormItem label="查詢值">
+                  <!-- 文本輸入 -->
+                  <Input
+                    v-if="!isSelectSearch"
+                    v-model:value="taskSearchForm.searchValue"
+                    placeholder="請輸入查詢值"
+                    style="width: 200px"
+                    @pressEnter="handleTaskSearch"
+                  />
+                  <!-- 下拉選擇 -->
+                  <Select
+                    v-else
+                    v-model:value="taskSearchForm.searchValue"
+                    placeholder="請選擇查詢值"
+                    style="width: 200px"
+                  >
+                    <SelectOption
+                      v-for="option in getSearchValueOptions"
+                      :key="option.value"
+                      :value="option.value"
+                    >
+                      {{ option.label }}
+                    </SelectOption>
+                  </Select>
+                </FormItem>
+                <FormItem>
+                  <Space>
+                    <Button type="primary" @click="handleTaskSearch">
+                      查詢
+                    </Button>
+                    <Button @click="handleTaskSearchReset">
+                      重置
+                    </Button>
+                  </Space>
+                </FormItem>
+              </Form>
+            </div>
+            
             <div v-if="recentTasks.length > 0">
               <Table 
                 :columns="taskColumns"
@@ -1429,18 +1688,29 @@ onMounted(() => {
                   
                   <!-- 操作列 -->
                   <template v-else-if="column.key === 'operation'">
-                    <Button type="link" size="small" @click="handleViewTaskDetail(record)">
-                      查看詳情
-                    </Button>
+                    <Space>
+                      <Button type="link" size="small" @click="handleViewTaskDetail(record)">
+                        查看詳情
+                      </Button>
+                      <Button type="link" size="small" @click="handleEditTask(record)">
+                        編輯
+                      </Button>
+                    </Space>
                   </template>
                 </template>
               </Table>
               
-              <!-- 查看更多按鈕 -->
-              <div class="text-center mt-4">
-                <Button type="primary" @click="handleViewMoreTasks">
-                  查看更多
-                </Button>
+              <!-- 分頁組件 -->
+              <div class="mt-4 flex justify-end">
+                <Pagination
+                  v-model:current="taskPagination.current"
+                  v-model:page-size="taskPagination.pageSize"
+                  :total="taskPagination.total"
+                  :show-size-changer="taskPagination.showSizeChanger"
+                  :show-quick-jumper="taskPagination.showQuickJumper"
+                  :show-total="taskPagination.showTotal"
+                  @change="handleTaskPageChange"
+                />
               </div>
             </div>
             <Empty v-else description="暫無任務數據" />
@@ -2064,6 +2334,175 @@ onMounted(() => {
         <div class="flex justify-end space-x-2">
           <Button @click="closeCreateTaskDrawer">取消</Button>
           <Button type="primary" @click="handleSaveTask">保存</Button>
+        </div>
+      </template>
+    </Drawer>
+
+    <!-- 編輯任務抽屜 -->
+    <Drawer
+      v-model:open="editTaskDrawerVisible"
+      title="編輯任務"
+      width="600"
+      @close="closeEditTaskDrawer"
+    >
+      <Form
+        :model="editTaskFormData"
+        layout="vertical"
+        class="space-y-4"
+      >
+        <FormItem label="任務編號">
+          <Input
+            v-model:value="editTaskFormData.taskNumber"
+            disabled
+          />
+        </FormItem>
+        
+        <FormItem label="任務名稱" required>
+          <Input
+            v-model:value="editTaskFormData.title"
+            placeholder="請輸入任務名稱"
+          />
+        </FormItem>
+        
+        <FormItem label="項目名稱">
+          <Input
+            v-model:value="editTaskFormData.projectName"
+            placeholder="請輸入項目名稱"
+          />
+        </FormItem>
+        
+        <FormItem label="狀態" required>
+          <Select
+            v-model:value="editTaskFormData.status"
+            placeholder="請選擇狀態"
+          >
+            <SelectOption
+              v-for="status in statusOptions"
+              :key="status.value"
+              :value="status.value"
+            >
+              {{ status.label }}
+            </SelectOption>
+          </Select>
+        </FormItem>
+        
+        <FormItem label="負責人" required>
+          <Input
+            v-model:value="editTaskFormData.assignee"
+            placeholder="請輸入負責人"
+          />
+        </FormItem>
+        
+        <FormItem label="創建人">
+          <Input
+            v-model:value="editTaskFormData.creator"
+            placeholder="請輸入創建人"
+          />
+        </FormItem>
+        
+        <FormItem label="創建時間">
+          <Input
+            v-model:value="editTaskFormData.createTime"
+            disabled
+          />
+        </FormItem>
+        
+        <FormItem label="優先級" required>
+          <Select
+            v-model:value="editTaskFormData.priority"
+            placeholder="請選擇優先級"
+          >
+            <SelectOption
+              v-for="priority in priorityOptions"
+              :key="priority.value"
+              :value="priority.value"
+            >
+              {{ priority.label }}
+            </SelectOption>
+          </Select>
+        </FormItem>
+      </Form>
+      
+      <template #footer>
+        <div class="flex justify-end space-x-2">
+          <Button @click="closeEditTaskDrawer">取消</Button>
+          <Button type="primary" @click="handleSaveEditTask">保存</Button>
+        </div>
+      </template>
+     </Drawer>
+
+    <!-- 查看任務詳情抽屜 -->
+    <Drawer
+      v-model:open="viewTaskDrawerVisible"
+      title="查看任務詳情"
+      width="600"
+      @close="closeViewTaskDrawer"
+    >
+      <Form
+        :model="viewTaskData"
+        layout="vertical"
+        class="space-y-4"
+      >
+        <FormItem label="任務編號">
+          <Input
+            v-model:value="viewTaskData.taskNumber"
+            disabled
+          />
+        </FormItem>
+        
+        <FormItem label="任務名稱">
+          <Input
+            v-model:value="viewTaskData.title"
+            disabled
+          />
+        </FormItem>
+        
+        <FormItem label="項目名稱">
+          <Input
+            v-model:value="viewTaskData.projectName"
+            disabled
+          />
+        </FormItem>
+        
+        <FormItem label="狀態">
+          <Input
+            :value="getStatusText(viewTaskData.status)"
+            disabled
+          />
+        </FormItem>
+        
+        <FormItem label="負責人">
+          <Input
+            v-model:value="viewTaskData.assignee"
+            disabled
+          />
+        </FormItem>
+        
+        <FormItem label="創建人">
+          <Input
+            v-model:value="viewTaskData.creator"
+            disabled
+          />
+        </FormItem>
+        
+        <FormItem label="創建時間">
+          <Input
+            v-model:value="viewTaskData.createTime"
+            disabled
+          />
+        </FormItem>
+        
+        <FormItem label="優先級">
+          <Input
+            :value="getPriorityText(viewTaskData.priority)"
+            disabled
+          />
+        </FormItem>
+      </Form>
+      
+      <template #footer>
+        <div class="flex justify-end">
+          <Button @click="closeViewTaskDrawer">關閉</Button>
         </div>
       </template>
     </Drawer>
