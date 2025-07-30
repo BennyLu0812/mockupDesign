@@ -17,6 +17,7 @@ import {
   Form,
   FormItem,
   Input,
+  InputNumber,
   Modal,
   Popconfirm,
   Radio,
@@ -65,12 +66,150 @@ const projectInfo = reactive({
 const isFollowing = ref(false);
 const followersCount = ref(12);
 
+// 通知功能相關數據
+const notificationModalVisible = ref(false);
+const notificationForm = reactive({
+  content: '',
+  recipients: [],
+});
+
+// 可選的通知接收人（項目成員）
+const notificationRecipients = ref([
+  {
+    id: '1',
+    name: '陳大文',
+    role: '項目負責人',
+    email: 'chen@example.com',
+    avatar: '/api/placeholder/32/32',
+    selected: false,
+  },
+  {
+    id: '2',
+    name: '陳志華',
+    role: '法律顧問',
+    email: 'chen.zh@example.com',
+    avatar: '/api/placeholder/32/32',
+    selected: false,
+  },
+  {
+    id: '3',
+    name: '林雅婷',
+    role: '項目助理',
+    email: 'lin@example.com',
+    avatar: '/api/placeholder/32/32',
+    selected: false,
+  },
+  {
+    id: '4',
+    name: '黃建國',
+    role: '技術專家',
+    email: 'huang@example.com',
+    avatar: '/api/placeholder/32/32',
+    selected: false,
+  },
+]);
+
+// 新增任務抽屜狀態
+const createTaskDrawerVisible = ref(false);
+
+// 新增任務表單數據
+const createTaskFormData = reactive({
+  taskName: '',
+  taskDescription: '',
+  projectName: projectInfo.name, // 默認為當前項目
+  taskStatus: 'preparing',
+  taskResponsible: '',
+  taskStartTime: undefined,
+  taskEndTime: undefined,
+  taskParticipants: [],
+  taskRemarks: '',
+  taskDueTime: undefined,
+  estimatedHours: 0,
+  attachments: [] as any[],
+});
+
+// 任務負責人選項
+const taskResponsibleOptions = [
+  { value: 'chen', label: '陳大文' },
+  { value: 'zhang', label: '陳志華' },
+  { value: 'li', label: '林雅婷' },
+  { value: 'wang', label: '黃建國' },
+  { value: 'zhao', label: '趙六' },
+  { value: 'qian', label: '錢七' },
+];
+
+// 任務參與人員選項（包含個人和小組）
+const taskParticipantOptions = [
+  // 個人選項
+  { value: 'chen', label: '陳大文', type: 'person' },
+  { value: 'zhang', label: '陳志華', type: 'person' },
+  { value: 'li', label: '林雅婷', type: 'person' },
+  { value: 'wang', label: '黃建國', type: 'person' },
+  { value: 'zhao', label: '趙六', type: 'person' },
+  { value: 'qian', label: '錢七', type: 'person' },
+  // 小組選項
+  { value: 'group_legal_review', label: '法律審查小組', type: 'group' },
+  { value: 'group_data_collection', label: '資料收集小組', type: 'group' },
+];
+
+// 項目名稱選項
+const projectNameOptions = [
+  { value: 'project1', label: '法律諮詢系統開發' },
+  { value: 'project2', label: '合同管理平台' },
+  { value: 'project3', label: '法規檢索系統' },
+  { value: 'project4', label: '案件管理系統' },
+  { value: 'project5', label: '文件歸檔系統' },
+];
+
 // 項目標籤
 const projectTags = ref([
-  { id: 1, name: '法律審查', color: 'blue' },
-  { id: 2, name: '緊急', color: 'red' },
-  { id: 3, name: '政府項目', color: 'green' },
+  {
+    id: '1',
+    name: '法律審查',
+    color: 'blue',
+    description: '項目法律審查標籤',
+    createTime: '2024-01-15 10:30:00',
+    creator: '陳大文',
+  },
+  {
+    id: '2',
+    name: '緊急',
+    color: 'red',
+    description: '緊急處理標籤',
+    createTime: '2024-01-15 11:00:00',
+    creator: '陳大文',
+  },
+  {
+    id: '3',
+    name: '政府項目',
+    color: 'green',
+    description: '政府相關項目標籤',
+    createTime: '2024-01-15 12:00:00',
+    creator: '陳大文',
+  },
 ]);
+
+// 標籤管理相關數據
+const tagManagementVisible = ref(false);
+const tagForm = reactive({
+  id: '',
+  name: '',
+  color: 'blue',
+  description: '',
+});
+const isEditingTag = ref(false);
+const tagColors = [
+  { value: 'blue', label: '藍色' },
+  { value: 'green', label: '綠色' },
+  { value: 'red', label: '紅色' },
+  { value: 'orange', label: '橙色' },
+  { value: 'purple', label: '紫色' },
+  { value: 'cyan', label: '青色' },
+  { value: 'magenta', label: '洋紅' },
+  { value: 'gold', label: '金色' },
+  { value: 'lime', label: '檸檬綠' },
+  { value: 'volcano', label: '火山紅' },
+];
 
 // 任務表格列配置
 const taskColumns = [
@@ -452,6 +591,7 @@ const getStatusColor = (status: string) => {
     inProgress: 'blue',
     completed: 'green',
     cancelled: 'red',
+    preparing: 'purple',
   };
   return colorMap[status] || 'default';
 };
@@ -462,6 +602,7 @@ const getStatusText = (status: string) => {
     inProgress: '處理中',
     completed: '已完成',
     cancelled: '已取消',
+    preparing: '準備中',
   };
   return textMap[status] || status;
 };
@@ -547,12 +688,134 @@ const handleToggleFollow = () => {
   }
 };
 
+// 通知功能相關處理函數
+// 打開通知設置彈窗
+const handleOpenNotificationModal = () => {
+  notificationModalVisible.value = true;
+  // 初始化表單數據
+  notificationForm.content = '';
+  notificationForm.recipients = notificationRecipients.value.filter(r => r.selected).map(r => r.id);
+};
+
+// 關閉通知設置彈窗
+const handleCloseNotificationModal = () => {
+  notificationModalVisible.value = false;
+};
+
+// 發送通知
+const handleSendNotification = () => {
+  if (!notificationForm.content.trim()) {
+    message.warning('請輸入通知內容');
+    return;
+  }
+  if (notificationForm.recipients.length === 0) {
+    message.warning('請選擇通知接收人');
+    return;
+  }
+
+  // 模擬發送通知
+  const newNotification = {
+    id: Date.now().toString(),
+    title: '項目通知',
+    content: notificationForm.content,
+    recipients: notificationForm.recipients.map(id => {
+      const recipient = notificationRecipients.value.find(r => r.id === id);
+      return recipient?.name || '';
+    }).filter(Boolean),
+    methods: ['email'],
+    sendTime: new Date().toLocaleString('zh-CN'),
+    status: 'sent',
+  };
+
+  notificationHistory.value.unshift(newNotification);
+  message.success('通知發送成功');
+  handleCloseNotificationModal();
+};
+
+// 切換接收人選擇狀態
+const handleToggleRecipient = (recipientId: string) => {
+  const recipient = notificationRecipients.value.find(r => r.id === recipientId);
+  if (recipient) {
+    recipient.selected = !recipient.selected;
+    // 更新表單中的接收人列表
+    notificationForm.recipients = notificationRecipients.value.filter(r => r.selected).map(r => r.id);
+  }
+};
+
 const handleInviteMember = () => {
   message.info('邀請成員功能開發中');
 };
 
 const handleViewAllTasks = () => {
   message.info('查看全部任務功能開發中');
+};
+
+// 獲取參與人員標籤
+const getParticipantLabel = (participantValue: string) => {
+  const participant = taskParticipantOptions.find(option => option.value === participantValue);
+  return participant ? participant.label : participantValue;
+};
+
+// 新增任務處理函數
+const handleAddTask = () => {
+  createTaskDrawerVisible.value = true;
+};
+
+// 關閉新增任務抽屜
+const closeCreateTaskDrawer = () => {
+  createTaskDrawerVisible.value = false;
+  // 重置表單
+  Object.assign(createTaskFormData, {
+    taskName: '',
+    taskDescription: '',
+    projectName: projectInfo.name,
+    taskStatus: 'preparing',
+    taskResponsible: '',
+    taskStartTime: undefined,
+    taskEndTime: undefined,
+    taskParticipants: [],
+    taskRemarks: '',
+    taskDueTime: undefined,
+    estimatedHours: 0,
+    attachments: [],
+  });
+};
+
+// 保存新增任務
+const handleSaveTask = () => {
+  if (!createTaskFormData.taskName) {
+    message.error('請輸入任務名稱');
+    return;
+  }
+  
+  if (!createTaskFormData.taskResponsible) {
+    message.error('請選擇任務負責人');
+    return;
+  }
+  
+  // 模擬保存
+  const newTask = {
+    id: Date.now(),
+    title: createTaskFormData.taskName,
+    description: createTaskFormData.taskDescription,
+    projectName: createTaskFormData.projectName,
+    status: 'preparing',
+    assignee: taskResponsibleOptions.find(opt => opt.value === createTaskFormData.taskResponsible)?.label || '未知',
+    creator: '當前用戶',
+    createTime: new Date().toLocaleString('zh-CN'),
+    priority: 'medium',
+    dueDate: createTaskFormData.taskDueTime,
+    taskNumber: `T${Date.now().toString().slice(-6)}`,
+  };
+  
+  // 添加到最新任務列表
+  recentTasks.value.unshift(newTask);
+  if (recentTasks.value.length > 5) {
+    recentTasks.value = recentTasks.value.slice(0, 5);
+  }
+  
+  message.success('任務創建成功');
+  closeCreateTaskDrawer();
 };
 
 const handleUploadAttachment = () => {
@@ -615,6 +878,116 @@ const handleDownloadVersion = (attachment, version) => {
 // 恢復到指定版本
 const handleRestoreVersion = (attachment, version) => {
   message.success(`恢復到版本 ${version.version}`);
+};
+
+// 標籤管理相關函數
+// 打開標籤管理模態框
+const handleOpenTagManagement = () => {
+  tagManagementVisible.value = true;
+};
+
+// 關閉標籤管理模態框
+const handleCloseTagManagement = () => {
+  tagManagementVisible.value = false;
+  resetTagForm();
+};
+
+// 重置標籤表單
+const resetTagForm = () => {
+  tagForm.id = '';
+  tagForm.name = '';
+  tagForm.color = 'blue';
+  tagForm.description = '';
+  isEditingTag.value = false;
+};
+
+// 添加新標籤
+const handleAddTag = () => {
+  if (!tagForm.name.trim()) {
+    message.warning('請輸入標籤名稱');
+    return;
+  }
+  
+  // 檢查標籤名稱是否重複
+  const existingTag = projectTags.value.find(tag => tag.name === tagForm.name.trim());
+  if (existingTag && existingTag.id !== tagForm.id) {
+    message.warning('標籤名稱已存在');
+    return;
+  }
+  
+  if (isEditingTag.value) {
+    // 編輯現有標籤
+    const tagIndex = projectTags.value.findIndex(tag => tag.id === tagForm.id);
+    if (tagIndex > -1) {
+      projectTags.value[tagIndex] = {
+        ...projectTags.value[tagIndex],
+        name: tagForm.name.trim(),
+        color: tagForm.color,
+        description: tagForm.description.trim(),
+      };
+      message.success('標籤更新成功');
+    }
+  } else {
+    // 添加新標籤
+    const newTag = {
+      id: Date.now().toString(),
+      name: tagForm.name.trim(),
+      color: tagForm.color,
+      description: tagForm.description.trim(),
+      createTime: new Date().toLocaleString('zh-CN'),
+      creator: '當前用戶', // 這裡應該從用戶狀態獲取
+    };
+    projectTags.value.push(newTag);
+    message.success('標籤添加成功');
+  }
+  
+  resetTagForm();
+};
+
+// 編輯標籤
+const handleEditTag = (tag: any) => {
+  tagForm.id = tag.id;
+  tagForm.name = tag.name;
+  tagForm.color = tag.color;
+  tagForm.description = tag.description;
+  isEditingTag.value = true;
+};
+
+// 刪除標籤
+const handleDeleteTag = (tagId: string) => {
+  const tagIndex = projectTags.value.findIndex(tag => tag.id === tagId);
+  if (tagIndex > -1) {
+    projectTags.value.splice(tagIndex, 1);
+    message.success('標籤刪除成功');
+  }
+};
+
+// 獲取顏色預覽樣式
+const getColorPreviewStyle = (color: string) => {
+  return {
+    backgroundColor: getTagColor(color),
+    width: '16px',
+    height: '16px',
+    borderRadius: '2px',
+    display: 'inline-block',
+  };
+};
+
+// 獲取標籤顏色
+const getTagColor = (color: string) => {
+  const colorMap: Record<string, string> = {
+    blue: '#1890ff',
+    green: '#52c41a',
+    red: '#ff4d4f',
+    orange: '#fa8c16',
+    purple: '#722ed1',
+    cyan: '#13c2c2',
+    magenta: '#eb2f96',
+    gold: '#faad14',
+    lime: '#a0d911',
+    volcano: '#fa541c',
+  };
+  return colorMap[color] || '#1890ff';
 };
 
 // 根據項目狀態更新流程步驟
@@ -784,6 +1157,10 @@ onMounted(() => {
               <Tag v-for="tag in projectTags" :key="tag.id" :color="tag.color">
                 {{ tag.name }}
               </Tag>
+              <Button size="small" type="dashed" @click="handleOpenTagManagement">
+                <span class="icon-[lucide--tag] size-4 mr-1" />
+                標籤管理
+              </Button>
             </Space>
           </div>
           <Space size="small">
@@ -795,6 +1172,14 @@ onMounted(() => {
               <span :class="isFollowing ? 'icon-[lucide--heart] text-orange-500' : 'icon-[lucide--heart]'" class="size-4 mr-1" />
               {{ isFollowing ? '已關注' : '關注' }}
               <span class="ml-1 text-xs">({{ followersCount }})</span>
+            </Button>
+            <Button @click="handleOpenNotificationModal">
+              <span class="icon-[lucide--bell] size-4 mr-1" />
+              發送通知
+            </Button>
+            <Button type="primary" @click="handleAddTask">
+              <span class="icon-[lucide--plus] size-4 mr-1" />
+              新增任務
             </Button>
           </Space>
         </div>
@@ -913,16 +1298,7 @@ onMounted(() => {
         
         <!-- 任務管理 Tab -->
         <TabPane key="tasks" tab="任務管理">
-          <Card>
-            <template #title>
-              <div class="flex items-center justify-between">
-                <span>項目任務</span>
-                <Button type="primary" @click="handleViewMoreTasks">
-                  <span class="icon-[lucide--plus] size-4 mr-1" />
-                  新增任務
-                </Button>
-              </div>
-            </template>
+          <Card title="項目任務">
             <div v-if="recentTasks.length > 0">
               <Table 
                 :columns="taskColumns"
@@ -1306,6 +1682,282 @@ onMounted(() => {
         </TabPane>
       </Tabs>
     </div>
+    
+    <!-- 標籤管理模態框 -->
+    <Modal
+      v-model:open="tagManagementVisible"
+      title="標籤管理"
+      width="800px"
+      :footer="null"
+      @cancel="handleCloseTagManagement"
+    >
+      <div class="tag-management-content">
+        <!-- 現有標籤列表 -->
+        <Card title="現有標籤" class="mb-4">
+          <div v-if="projectTags.length > 0" class="tags-list space-y-3">
+            <div v-for="tag in projectTags" :key="tag.id" class="tag-item">
+              <div class="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+                <div class="flex items-center space-x-3">
+                  <div :style="getColorPreviewStyle(tag.color)"></div>
+                  <div>
+                    <Text strong class="text-sm">{{ tag.name }}</Text>
+                    <Text type="secondary" class="text-xs block">{{ tag.description || '無描述' }}</Text>
+                    <Text type="secondary" class="text-xs">創建時間：{{ tag.createTime }} | 創建者：{{ tag.creator }}</Text>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <Button size="small" @click="handleEditTag(tag)">
+                    <span class="icon-[lucide--edit] size-4" />
+                  </Button>
+                  <Popconfirm
+                    title="確定要刪除這個標籤嗎？"
+                    ok-text="確定"
+                    cancel-text="取消"
+                    @confirm="handleDeleteTag(tag.id)"
+                  >
+                    <Button size="small" danger>
+                      <span class="icon-[lucide--trash-2] size-4" />
+                    </Button>
+                  </Popconfirm>
+                </div>
+              </div>
+            </div>
+          </div>
+          <Empty v-else description="暫無標籤" />
+        </Card>
+        
+        <!-- 添加/編輯標籤表單 -->
+        <Card :title="isEditingTag ? '編輯標籤' : '添加標籤'">
+          <Form layout="vertical">
+            <FormItem label="標籤名稱" required>
+              <Input 
+                v-model:value="tagForm.name" 
+                placeholder="請輸入標籤名稱"
+                :maxlength="20"
+              />
+            </FormItem>
+            
+            <FormItem label="標籤顏色" required>
+              <Select v-model:value="tagForm.color" placeholder="請選擇標籤顏色">
+                <SelectOption v-for="color in tagColors" :key="color.value" :value="color.value">
+                  <div class="flex items-center space-x-2">
+                    <div :style="getColorPreviewStyle(color.value)"></div>
+                    <span>{{ color.label }}</span>
+                  </div>
+                </SelectOption>
+              </Select>
+            </FormItem>
+            
+            <FormItem label="標籤描述">
+              <Input.TextArea 
+                v-model:value="tagForm.description" 
+                placeholder="請輸入標籤描述（可選）"
+                :rows="3" 
+                :maxlength="100"
+              />
+            </FormItem>
+            
+            <FormItem>
+              <Space>
+                <Button type="primary" @click="handleAddTag">
+                  {{ isEditingTag ? '更新標籤' : '添加標籤' }}
+                </Button>
+                <Button v-if="isEditingTag" @click="resetTagForm">
+                  取消編輯
+                </Button>
+              </Space>
+            </FormItem>
+          </Form>
+        </Card>
+       </div>
+     </Modal>
+     
+     <!-- 通知功能模態框 -->
+     <Modal
+       v-model:open="notificationModalVisible"
+       title="發送通知"
+       width="600px"
+       :footer="null"
+       @cancel="handleCloseNotificationModal"
+     >
+       <div class="notification-modal-content">
+         <Form layout="vertical">
+           <FormItem label="通知內容">
+             <Input.TextArea 
+               v-model:value="notificationForm.content" 
+               :rows="6" 
+               placeholder="請輸入通知內容"
+             />
+           </FormItem>
+           
+           <FormItem label="接收人員">
+             <div class="recipients-list space-y-2">
+               <div v-for="recipient in notificationRecipients" :key="recipient.id" class="recipient-item">
+                 <Checkbox 
+                   :checked="notificationForm.recipients.includes(recipient.id)"
+                   @change="handleToggleRecipient(recipient.id)"
+                 >
+                   <div class="flex items-center space-x-2">
+                     <Avatar :src="recipient.avatar" size="small" />
+                     <div>
+                       <Text class="text-sm">{{ recipient.name }}</Text>
+                       <Text type="secondary" class="text-xs block">{{ recipient.role }} | {{ recipient.email }}</Text>
+                     </div>
+                   </div>
+                 </Checkbox>
+               </div>
+             </div>
+           </FormItem>
+           
+           <FormItem>
+             <Space>
+               <Button type="primary" @click="handleSendNotification">
+                 發送通知
+               </Button>
+               <Button @click="handleCloseNotificationModal">
+                 取消
+               </Button>
+             </Space>
+           </FormItem>
+         </Form>
+       </div>
+     </Modal>
+
+    <!-- 新增任務抽屜 -->
+    <Drawer
+      v-model:open="createTaskDrawerVisible"
+      title="新增任務"
+      width="600"
+      @close="closeCreateTaskDrawer"
+    >
+      <Form
+        :model="createTaskFormData"
+        layout="vertical"
+        class="space-y-4"
+      >
+        <FormItem label="任務名稱" required>
+          <Input
+            v-model:value="createTaskFormData.taskName"
+            placeholder="請輸入任務名稱"
+          />
+        </FormItem>
+        
+        <FormItem label="任務描述">
+          <Textarea
+            v-model:value="createTaskFormData.taskDescription"
+            placeholder="請輸入任務描述"
+            :rows="4"
+          />
+        </FormItem>
+        
+        <FormItem label="所屬項目">
+          <Select
+            v-model:value="createTaskFormData.projectName"
+            placeholder="請選擇項目"
+          >
+            <SelectOption
+              v-for="project in projectNameOptions"
+              :key="project.value"
+              :value="project.value"
+            >
+              {{ project.label }}
+            </SelectOption>
+          </Select>
+        </FormItem>
+        
+        <FormItem label="任務負責人" required>
+          <Select
+            v-model:value="createTaskFormData.taskResponsible"
+            placeholder="請選擇負責人"
+          >
+            <SelectOption
+              v-for="person in taskResponsibleOptions"
+              :key="person.value"
+              :value="person.value"
+            >
+              {{ person.label }}
+            </SelectOption>
+          </Select>
+        </FormItem>
+        
+        <FormItem label="參與人員">
+          <Select
+            v-model:value="createTaskFormData.taskParticipants"
+            mode="multiple"
+            placeholder="請選擇參與人員"
+          >
+            <SelectOption
+              v-for="participant in taskParticipantOptions"
+              :key="participant.value"
+              :value="participant.value"
+            >
+              {{ participant.label }}
+              <span v-if="participant.type === 'group'" class="text-xs text-gray-500 ml-1">(小組)</span>
+            </SelectOption>
+          </Select>
+        </FormItem>
+        
+        <Row :gutter="16">
+          <Col :span="12">
+            <FormItem label="開始時間">
+              <DatePicker
+                v-model:value="createTaskFormData.taskStartTime"
+                show-time
+                format="YYYY-MM-DD HH:mm:ss"
+                placeholder="選擇開始時間"
+                class="w-full"
+              />
+            </FormItem>
+          </Col>
+          <Col :span="12">
+            <FormItem label="結束時間">
+              <DatePicker
+                v-model:value="createTaskFormData.taskEndTime"
+                show-time
+                format="YYYY-MM-DD HH:mm:ss"
+                placeholder="選擇結束時間"
+                class="w-full"
+              />
+            </FormItem>
+          </Col>
+        </Row>
+        
+        <FormItem label="到期時間">
+          <DatePicker
+            v-model:value="createTaskFormData.taskDueTime"
+            show-time
+            format="YYYY-MM-DD HH:mm:ss"
+            placeholder="選擇到期時間"
+            class="w-full"
+          />
+        </FormItem>
+        
+        <FormItem label="預估工時（小時）">
+          <InputNumber
+            v-model:value="createTaskFormData.estimatedHours"
+            :min="0"
+            :max="1000"
+            placeholder="請輸入預估工時"
+            class="w-full"
+          />
+        </FormItem>
+        
+        <FormItem label="備註">
+          <Textarea
+            v-model:value="createTaskFormData.taskRemarks"
+            placeholder="請輸入備註信息"
+            :rows="3"
+          />
+        </FormItem>
+      </Form>
+      
+      <template #footer>
+        <div class="flex justify-end space-x-2">
+          <Button @click="closeCreateTaskDrawer">取消</Button>
+          <Button type="primary" @click="handleSaveTask">保存</Button>
+        </div>
+      </template>
+    </Drawer>
   </Page>
 </template>
 
