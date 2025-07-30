@@ -1963,7 +1963,11 @@ onMounted(() => {
 
 <style scoped>
 .project-detail-tabs {
-  padding: 0;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin: 16px;
 }
 
 .project-tabs :deep(.ant-tabs-content-holder) {
