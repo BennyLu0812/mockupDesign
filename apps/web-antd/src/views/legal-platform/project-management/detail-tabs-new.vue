@@ -579,10 +579,18 @@ const notificationHistory = ref([
     content: '您有新的任務需要處理',
     recipients: ['李小美', '王志明'],
     methods: ['email', 'sms'],
+    sendTime: '2024-01-21 10:30:00',
     status: 'sent',
-    sendTime: '2024-01-20 09:00:00',
   },
 ]);
+
+// 統計數據
+const statistics = reactive({
+  inProgressTasks: 8,
+  cancelledTasks: 2,
+  completedTasks: 15,
+  totalTasks: 25,
+});
 
 // 工具函數
 const getStatusColor = (status: string) => {
@@ -748,6 +756,11 @@ const handleInviteMember = () => {
 
 const handleViewAllTasks = () => {
   message.info('查看全部任務功能開發中');
+};
+
+// 處理查看更多統計
+const handleViewMoreStats = () => {
+  message.info('查看更多統計功能開發中');
 };
 
 // 獲取參與人員標籤
@@ -1236,24 +1249,39 @@ onMounted(() => {
               </Card>
             </Col>
             <Col :xs="24" :lg="8">
-              <Card title="項目統計" class="mb-6">
-                <div class="space-y-4">
-                  <div class="flex justify-between">
-                    <Text type="secondary">總任務數</Text>
-                    <Text strong>{{ recentTasks.length }}</Text>
+              <Card title="統計" class="mb-6">
+                <div class="statistics-grid space-y-4">
+                  <div class="stat-item flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                      <span class="icon-[lucide--clock] size-4 text-blue-500" />
+                      <Text>進行中任務</Text>
+                    </div>
+                    <Text strong class="text-blue-500">{{ statistics.inProgressTasks }}</Text>
                   </div>
-                  <div class="flex justify-between">
-                    <Text type="secondary">團隊成員</Text>
-                    <Text strong>{{ projectMembers.length }}</Text>
+                  <div class="stat-item flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                      <span class="icon-[lucide--x-circle] size-4 text-red-500" />
+                      <Text>已取消任務</Text>
+                    </div>
+                    <Text strong class="text-red-500">{{ statistics.cancelledTasks }}</Text>
                   </div>
-                  <div class="flex justify-between">
-                    <Text type="secondary">項目附件</Text>
-                    <Text strong>{{ attachments.length }}</Text>
+                  <div class="stat-item flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                      <span class="icon-[lucide--check-circle] size-4 text-green-500" />
+                      <Text>已完成任務</Text>
+                    </div>
+                    <Text strong class="text-green-500">{{ statistics.completedTasks }}</Text>
                   </div>
-                  <div class="flex justify-between">
-                    <Text type="secondary">關注人數</Text>
-                    <Text strong>{{ followersCount }}</Text>
+                  <Divider class="!my-3" />
+                  <div class="stat-item flex items-center justify-between">
+                    <Text strong>總任務數</Text>
+                    <Text strong class="text-lg">{{ statistics.totalTasks }}</Text>
                   </div>
+                </div>
+                <div class="mt-4">
+                  <Button type="link" block @click="handleViewMoreStats">
+                    查看更多
+                  </Button>
                 </div>
               </Card>
             </Col>
