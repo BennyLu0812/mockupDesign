@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Page } from '@vben/common-ui';
 import { $t } from '#/locales';
@@ -569,7 +569,87 @@ const acknowledgments = ref([
     time: '2024-01-21 09:00:00',
     content: '已確認收到任務，將在期限內完成',
   },
+  {
+    id: '2',
+    taskName: '法規研究分析',
+    assignee: '王志明',
+    status: 'pending',
+    time: '2024-01-20 14:30:00',
+    content: '等待確認中',
+  },
+  {
+    id: '3',
+    taskName: '合同審核任務',
+    assignee: '陳大文',
+    status: 'acknowledged',
+    time: '2024-01-19 16:45:00',
+    content: '已知悉，正在處理中',
+  },
+  {
+    id: '4',
+    taskName: '項目進度報告',
+    assignee: '李小美',
+    status: 'acknowledged',
+    time: '2024-01-18 11:20:00',
+    content: '報告已收到並審閱',
+  },
+  {
+    id: '5',
+    taskName: '法律意見書撰寫',
+    assignee: '王志明',
+    status: 'pending',
+    time: '2024-01-17 13:15:00',
+    content: '待確認任務詳情',
+  },
+  {
+    id: '6',
+    taskName: '會議紀要整理',
+    assignee: '陳大文',
+    status: 'acknowledged',
+    time: '2024-01-16 09:30:00',
+    content: '會議紀要已整理完成',
+  },
 ]);
+
+// 知悉表格列配置
+const acknowledgmentColumns = [
+  {
+    title: '任務名稱',
+    dataIndex: 'taskName',
+    key: 'taskName',
+    width: 200,
+    ellipsis: true
+  },
+  {
+    title: '狀態',
+    dataIndex: 'status',
+    key: 'status',
+    width: 100
+  },
+  {
+    title: '負責人',
+    dataIndex: 'assignee',
+    key: 'assignee',
+    width: 100
+  },
+  {
+    title: '時間',
+    dataIndex: 'time',
+    key: 'time',
+    width: 150
+  },
+  {
+    title: '操作',
+    key: 'operation',
+    width: 100,
+    fixed: 'right'
+  }
+];
+
+// 知悉表格數據（最新5筆）
+const acknowledgmentTableData = computed(() => {
+  return acknowledgments.value.slice(0, 5);
+});
 
 // 通知記錄
 const notificationHistory = ref([
@@ -600,6 +680,7 @@ const getStatusColor = (status: string) => {
     completed: 'green',
     cancelled: 'red',
     preparing: 'purple',
+    acknowledged: 'green',
   };
   return colorMap[status] || 'default';
 };
@@ -611,6 +692,7 @@ const getStatusText = (status: string) => {
     completed: '已完成',
     cancelled: '已取消',
     preparing: '準備中',
+    acknowledged: '已知悉',
   };
   return textMap[status] || status;
 };
@@ -1621,28 +1703,27 @@ onMounted(() => {
         <!-- 知悉 Tab -->
         <TabPane key="acknowledgments" tab="知悉">
           <Card title="知悉記錄">
-            <div v-if="acknowledgments.length > 0" class="acknowledgments-list space-y-4">
-              <div v-for="ack in acknowledgments" :key="ack.id" class="ack-item">
-                <div class="flex items-center justify-between mb-2">
-                  <Text strong class="text-base cursor-pointer hover:text-blue-500" @click="handleViewAcknowledgmentDetail(ack)">
-                    {{ ack.taskName }}
-                  </Text>
-                  <Tag :color="getStatusColor(ack.status)" size="small">
-                    {{ getStatusText(ack.status) }}
+            <Table 
+              :columns="acknowledgmentColumns" 
+              :data-source="acknowledgmentTableData" 
+              :pagination="false"
+              size="middle"
+            >
+              <template #bodyCell="{ column, record }">
+                <template v-if="column.key === 'status'">
+                  <Tag :color="getStatusColor(record.status)">
+                    {{ getStatusText(record.status) }}
                   </Tag>
-                </div>
-                <div class="flex items-center justify-between">
-                  <Text type="secondary" class="text-sm">負責人：{{ ack.assignee }}</Text>
-                  <Text type="secondary" class="text-sm">{{ ack.time }}</Text>
-                </div>
-                <div v-if="ack.content" class="mt-2">
-                  <Text type="secondary" class="text-sm">{{ ack.content }}</Text>
-                </div>
-              </div>
-            </div>
-            <Empty v-else description="暫無知悉記錄" />
-            <div v-if="acknowledgments.length > 3" class="mt-4">
-              <Button type="link" block @click="handleViewMoreAcknowledments">
+                </template>
+                <template v-else-if="column.key === 'operation'">
+                  <Button type="link" size="small" @click="handleViewAcknowledgmentDetail(record)">
+                    查看詳情
+                  </Button>
+                </template>
+              </template>
+            </Table>
+            <div v-if="acknowledgments.length > 5" class="mt-4 text-center">
+              <Button type="link" @click="handleViewMoreAcknowledments">
                 查看更多
               </Button>
             </div>
