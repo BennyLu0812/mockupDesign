@@ -194,7 +194,6 @@ const generatePreviewContent = () => {
        <div class="bill-header" data-section="basicInfo">
          <h1 class="${getValidationClass('billTitle')}">${document.basicInfo.billTitle || $t('bill-editor.basicInfo.billTitle')}</h1>
          <p class="bill-number ${getValidationClass('billNumber')}">${document.basicInfo.billNumber || ''}</p>
-         <p class="bill-type">${document.basicInfo.billType || ''}</p>
        </div>
        
        <div class="bill-basic-info" data-section="basicInfo">
@@ -338,7 +337,7 @@ const validateDocumentFormat = () => {
 const getValidationClass = (fieldId: string) => {
   const error = validationErrors.value.find(e => e.id === fieldId);
   if (!error) return '';
-  return error.type === 'error' ? 'validation-error' : 'validation-warning';
+  return '';
 };
 
 // 處理預覽內容點擊
@@ -1143,7 +1142,7 @@ onMounted(() => {
         <!-- 主編輯區 -->
         <LayoutContent class="bill-editor-content" style="margin-right: 5px;">
           <div class="editor-main">
-            <Card class="editor-card">
+            <Card >
               <template #title>
                 <div class="editor-card-title">
                   <span>{{ $t('bill-editor.mainEditor.title') }}</span>
@@ -1513,7 +1512,7 @@ onMounted(() => {
         </LayoutContent>
         
         <!-- 右側預覽 -->
-        <LayoutSider width="50%" class="bill-editor-preview">
+        <LayoutSider width="35%" class="bill-editor-preview">
           <Card class="preview-card">
             <template #title>
               <div class="preview-header">
@@ -1579,26 +1578,7 @@ onMounted(() => {
               </div>
             </div>
             
-            <!-- 格式校驗提示 -->
-            <div v-if="validationErrors.length > 0" class="validation-alerts">
-              <div class="validation-header">
-                <span class="icon-[lucide--alert-triangle] size-4 text-orange-500" />
-                <span>{{ $t('bill-editor.rightPreview.validationTip') }}</span>
-              </div>
-              <div class="validation-list">
-                <div 
-                  v-for="error in validationErrors.slice(0, 3)" 
-                  :key="error.id"
-                  :class="['validation-item', error.type === 'error' ? 'validation-error-item' : 'validation-warning-item']"
-                >
-                  <span :class="error.type === 'error' ? 'icon-[lucide--x-circle] size-3' : 'icon-[lucide--alert-circle] size-3'" />
-                  <span>{{ error.message }}</span>
-                </div>
-                <div v-if="validationErrors.length > 3" class="validation-more">
-                  <span>還有 {{ validationErrors.length - 3 }} 個問題...</span>
-                </div>
-              </div>
-            </div>
+
             
             <!-- 預覽內容 -->
              <div class="preview-content-wrapper">
@@ -2278,7 +2258,7 @@ onMounted(() => {
   margin: 16px 0;
   padding: 12px;
   background: #f6f8fa;
-  border-left: 4px solid #1890ff;
+  border-left: 4px solid #555;
 }
 
 :deep(.bill-preview .other-dates) {
