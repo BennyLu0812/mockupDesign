@@ -223,6 +223,92 @@ const commentVisibility = ref({});
 // 控制版本顯示狀態
 const versionVisibility = ref({});
 
+// 流程狀態指示器相關數據
+const processSteps = ref([
+  {
+    id: 1,
+    name: '待處理',
+    status: 'pending', // pending, active, completed
+    number: '1'
+  },
+  {
+    id: 2,
+    name: '處理中',
+    status: 'active',
+    number: '2'
+  },
+  {
+    id: 3,
+    name: '已完成',
+    status: 'pending',
+    number: '✓'
+  }
+]);
+
+// 項目流程節點記錄
+const processNodes = ref([
+  {
+    id: '1',
+    nodeName: '項目創建',
+    status: 'completed',
+    operator: '陳大文',
+    operatorAvatar: '/api/placeholder/32/32',
+    operateTime: '2024-01-15 10:30:00',
+    description: '項目正式創建，初始化項目基本信息',
+    duration: '30分鐘',
+  },
+  {
+    id: '2',
+    nodeName: '團隊組建',
+    status: 'completed',
+    operator: '陳大文',
+    operatorAvatar: '/api/placeholder/32/32',
+    operateTime: '2024-01-15 14:20:00',
+    description: '邀請團隊成員加入項目，分配初始角色',
+    duration: '2小時',
+  },
+  {
+    id: '3',
+    nodeName: '需求分析',
+    status: 'completed',
+    operator: '陳志華',
+    operatorAvatar: '/api/placeholder/32/32',
+    operateTime: '2024-01-16 09:15:00',
+    description: '完成項目需求分析，確定審查範圍和標準',
+    duration: '1天',
+  },
+  {
+    id: '4',
+    nodeName: '初步審查',
+    status: 'inProgress',
+    operator: '林雅婷',
+    operatorAvatar: '/api/placeholder/32/32',
+    operateTime: '2024-01-18 08:30:00',
+    description: '正在進行法律條文的初步審查工作',
+    duration: '處理中',
+  },
+  {
+    id: '5',
+    nodeName: '專家評審',
+    status: 'pending',
+    operator: '',
+    operatorAvatar: '',
+    operateTime: '',
+    description: '等待外部專家進行評審',
+    duration: '待定',
+  },
+  {
+    id: '6',
+    nodeName: '最終報告',
+    status: 'pending',
+    operator: '',
+    operatorAvatar: '',
+    operateTime: '',
+    description: '提交最終審查報告',
+    duration: '待定',
+  },
+]);
+
 // 項目附件
 const attachments = ref([
   {
@@ -531,6 +617,145 @@ const handleRestoreVersion = (attachment, version) => {
   message.success(`恢復到版本 ${version.version}`);
 };
 
+// 根據項目狀態更新流程步驟
+const updateProcessSteps = () => {
+  const status = projectInfo.status;
+  
+  // 重置所有步驟為 pending
+  processSteps.value.forEach(step => {
+    step.status = 'pending';
+  });
+  
+  if (status === '待處理') {
+    processSteps.value[0].status = 'active';
+  } else if (status === '處理中') {
+    processSteps.value[0].status = 'completed';
+    processSteps.value[1].status = 'active';
+  } else if (status === '已完成') {
+    processSteps.value[0].status = 'completed';
+    processSteps.value[1].status = 'completed';
+    processSteps.value[2].status = 'completed';
+  }
+};
+
+// 獲取步驟圓形樣式
+const getStepCircleStyle = (step) => {
+  if (step.status === 'pending') {
+    return {
+      width: '32px',
+      height: '32px',
+      borderRadius: '50%',
+      border: '2px solid #E5E7EB',
+      backgroundColor: '#FFFFFF',
+      color: '#9CA3AF',
+      fontSize: '14px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontWeight: 'bold'
+    };
+  } else if (step.status === 'active') {
+    return {
+      width: '32px',
+      height: '32px',
+      borderRadius: '50%',
+      backgroundColor: '#F97316',
+      color: '#FFFFFF',
+      fontSize: '14px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontWeight: 'bold'
+    };
+  } else { // completed
+    return {
+      width: '32px',
+      height: '32px',
+      borderRadius: '50%',
+      backgroundColor: '#10B981',
+      color: '#FFFFFF',
+      fontSize: '14px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontWeight: 'bold'
+    };
+  }
+};
+
+// 獲取步驟文字樣式
+const getStepTextStyle = (step) => {
+  if (step.status === 'pending') {
+    return {
+      fontSize: '14px',
+      color: '#9CA3AF',
+      marginTop: '8px',
+      textAlign: 'center',
+      fontWeight: '500'
+    };
+  } else if (step.status === 'active') {
+    return {
+      fontSize: '14px',
+      color: '#F97316',
+      marginTop: '8px',
+      textAlign: 'center',
+      fontWeight: '600'
+    };
+  } else { // completed
+    return {
+      fontSize: '14px',
+      color: '#10B981',
+      marginTop: '8px',
+      textAlign: 'center',
+      fontWeight: '600'
+    };
+  }
+};
+
+// 獲取連接線樣式
+const getConnectorStyle = (index) => {
+  const currentStep = processSteps.value[index];
+  const nextStep = processSteps.value[index + 1];
+  
+  if (currentStep.status === 'completed' && nextStep.status !== 'pending') {
+    return {
+      width: '60px',
+      height: '2px',
+      backgroundColor: '#10B981',
+      margin: '0 16px'
+    };
+  } else {
+    return {
+      width: '60px',
+      height: '2px',
+      backgroundColor: '#E5E7EB',
+      margin: '0 16px'
+    };
+  }
+};
+
+// 獲取節點狀態顏色
+const getNodeStatusColor = (status) => {
+  const colorMap = {
+    completed: 'text-green-500',
+    inProgress: 'text-blue-500',
+    pending: 'text-gray-400',
+  };
+  return colorMap[status] || 'text-gray-400';
+};
+
+// 獲取節點連接線樣式
+const getNodeLineClass = (status, isLast) => {
+  if (isLast) return 'hidden';
+  const baseClass = 'w-px h-12 ml-3 border-l-2';
+  const colorMap = {
+    completed: 'border-green-500',
+    inProgress: 'border-blue-500',
+    pending: 'border-gray-300',
+  };
+  return `${baseClass} ${colorMap[status] || 'border-gray-300'}`;
+};
+
 const handleViewAcknowledgmentDetail = (ack) => {
   message.info(`查看知悉詳情：${ack.taskName}`);
 };
@@ -541,6 +766,7 @@ const handleViewMoreAcknowledments = () => {
 
 onMounted(() => {
   console.log('項目詳情Tab頁面加載，項目ID:', route.params.id);
+  updateProcessSteps();
 });
 </script>
 
@@ -578,7 +804,7 @@ onMounted(() => {
       <Tabs v-model:activeKey="activeTab" type="card" class="project-tabs">
         <!-- 項目信息 Tab -->
         <TabPane key="projectInfo" tab="項目信息">
-          <Row :gutter="24">
+          <Row :gutter="5">
             <Col :xs="24" :lg="16">
               <Card title="基本信息" class="mb-6">
                 <div class="project-details space-y-3">
@@ -1051,6 +1277,33 @@ onMounted(() => {
             <Empty v-else description="暫無通知記錄" />
           </Card>
         </TabPane>
+        
+        <!-- 流程 Tab -->
+        <TabPane key="process" tab="流程">
+          <Card title="項目流程">
+            <!-- 流程狀態指示器 -->
+            <div class="process-indicator mb-8">
+              <div class="flex items-center justify-center">
+                <div v-for="(step, index) in processSteps" :key="step.id" class="flex items-center">
+                  <!-- 步驟圓形 -->
+                  <div class="flex flex-col items-center">
+                    <div :style="getStepCircleStyle(step)">
+                      {{ step.number }}
+                    </div>
+                    <div :style="getStepTextStyle(step)">
+                      {{ step.name }}
+                    </div>
+                  </div>
+                  
+                  <!-- 連接線 -->
+                  <div v-if="index < processSteps.length - 1" :style="getConnectorStyle(index)"></div>
+                </div>
+              </div>
+            </div>
+            
+
+          </Card>
+        </TabPane>
       </Tabs>
     </div>
   </Page>
@@ -1103,6 +1356,41 @@ onMounted(() => {
   background-color: #f5f5f5;
   border-radius: 4px;
   padding: 8px;
+}
+
+/* 流程狀態指示器樣式 */
+.process-indicator {
+  background: rgba(249, 250, 251, 0.8);
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid rgba(229, 231, 235, 0.6);
+}
+
+.process-nodes {
+  background: #ffffff;
+}
+
+/* 流程節點樣式 */
+.process-node-item {
+  position: relative;
+}
+
+.process-node-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 32px;
+  bottom: -16px;
+  width: 2px;
+  background: #e5e7eb;
+}
+
+.process-node-item.completed:not(:last-child)::after {
+  background: #10b981;
+}
+
+.process-node-item.in-progress:not(:last-child)::after {
+  background: #3b82f6;
 }
 
 /* 響應式設計 */
