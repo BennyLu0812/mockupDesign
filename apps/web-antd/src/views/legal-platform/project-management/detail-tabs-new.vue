@@ -75,16 +75,16 @@ const projectTags = ref([
 // 任務表格列配置
 const taskColumns = [
   {
+    title: '任務編號',
+    dataIndex: 'taskNumber',
+    key: 'taskNumber',
+    width: 140,
+  },
+  {
     title: '任務名稱',
     dataIndex: 'title',
     key: 'title',
     width: 200,
-  },
-  {
-    title: '負責人',
-    dataIndex: 'assignee',
-    key: 'assignee',
-    width: 120,
   },
   {
     title: '狀態',
@@ -93,22 +93,28 @@ const taskColumns = [
     width: 100,
   },
   {
+    title: '負責人',
+    dataIndex: 'assignee',
+    key: 'assignee',
+    width: 100,
+  },
+  {
+    title: '創建人',
+    dataIndex: 'creator',
+    key: 'creator',
+    width: 100,
+  },
+  {
+    title: '創建時間',
+    dataIndex: 'createTime',
+    key: 'createTime',
+    width: 160,
+  },
+  {
     title: '優先級',
     dataIndex: 'priority',
     key: 'priority',
     width: 100,
-  },
-  {
-    title: '進度',
-    dataIndex: 'progress',
-    key: 'progress',
-    width: 120,
-  },
-  {
-    title: '截止日期',
-    dataIndex: 'dueDate',
-    key: 'dueDate',
-    width: 120,
   },
   {
     title: '操作',
@@ -155,26 +161,59 @@ const projectMembers = ref([
 // 最新任務
 const recentTasks = ref([
   {
-    id: '1',
-    title: '條文初審',
-    description: '對新修訂的法律條文進行初步審查',
-    assignee: '李小美',
+    id: 1,
+    title: '法律條文審核任務',
+    projectName: '法律條文審查項目',
     status: 'inProgress',
+    assignee: '陳志華',
+    creator: '陳大文',
+    createTime: '2024-01-20 10:30:00',
     priority: 'high',
-    dueDate: '2024-02-15',
-    createTime: '2024-01-20',
-    progress: 60,
+    taskNumber: 'LP-2024-001',
   },
   {
-    id: '2',
-    title: '法條比對',
-    description: '與現行法律條文進行比對分析',
-    assignee: '王志明',
-    status: 'pending',
+    id: 2,
+    title: '法條比對分析',
+    projectName: '法律條文審查項目',
+    status: 'preparing',
+    assignee: '林雅婷',
+    creator: '陳大文',
+    createTime: '2024-01-22 14:20:00',
     priority: 'medium',
-    dueDate: '2024-02-20',
-    createTime: '2024-01-22',
-    progress: 0,
+    taskNumber: 'LP-2024-002',
+  },
+  {
+    id: 3,
+    title: '專家意見整理',
+    projectName: '法律條文審查項目',
+    status: 'completed',
+    assignee: '黃建國',
+    creator: '陳大文',
+    createTime: '2024-01-18 09:15:00',
+    priority: 'medium',
+    taskNumber: 'LP-2024-003',
+  },
+  {
+    id: 4,
+    title: '法規對比研究',
+    projectName: '法律條文審查項目',
+    status: 'inProgress',
+    assignee: '陳志華',
+    creator: '陳大文',
+    createTime: '2024-01-25 11:00:00',
+    priority: 'low',
+    taskNumber: 'LP-2024-004',
+  },
+  {
+    id: 5,
+    title: '初稿撰寫',
+    projectName: '法律條文審查項目',
+    status: 'preparing',
+    assignee: '林雅婷',
+    creator: '陳大文',
+    createTime: '2024-01-26 16:30:00',
+    priority: 'high',
+    taskNumber: 'LP-2024-005',
   },
 ]);
 
@@ -419,7 +458,6 @@ const handleViewTaskDetail = (task) => {
 };
 
 const handleViewMoreTasks = () => {
-  message.info('跳轉到任務管理頁面');
   router.push('/legal-platform/project-management/task-management/list');
 };
 
@@ -594,48 +632,17 @@ onMounted(() => {
                 :columns="taskColumns"
                 :dataSource="recentTasks" 
                 :pagination="false"
-                :scroll="{ x: 800 }"
+                :scroll="{ x: 1000 }"
               >
                 <template #bodyCell="{ column, record }">
-                  <!-- 任務名稱列 -->
-                  <template v-if="column.key === 'title'">
-                    <div>
-                      <Text strong>{{ record.title }}</Text>
-                      <div class="text-xs text-gray-500 mt-1">{{ record.description }}</div>
-                    </div>
-                  </template>
-                  
-                  <!-- 負責人列 -->
-                  <template v-else-if="column.key === 'assignee'">
-                    <div class="flex items-center space-x-2">
-                      <Avatar :size="24">{{ record.assignee.charAt(0) }}</Avatar>
-                      <span>{{ record.assignee }}</span>
-                    </div>
-                  </template>
-                  
                   <!-- 狀態列 -->
-                  <template v-else-if="column.key === 'status'">
+                  <template v-if="column.key === 'status'">
                     <Tag :color="getStatusColor(record.status)">{{ getStatusText(record.status) }}</Tag>
                   </template>
                   
                   <!-- 優先級列 -->
                   <template v-else-if="column.key === 'priority'">
                     <Tag :color="getPriorityColor(record.priority)">{{ getPriorityText(record.priority) }}</Tag>
-                  </template>
-                  
-                  <!-- 進度列 -->
-                  <template v-else-if="column.key === 'progress'">
-                    <div class="w-full">
-                      <div class="flex justify-between text-xs mb-1">
-                        <span>{{ record.progress }}%</span>
-                      </div>
-                      <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          class="bg-blue-500 h-2 rounded-full transition-all duration-300" 
-                          :style="{ width: record.progress + '%' }"
-                        ></div>
-                      </div>
-                    </div>
                   </template>
                   
                   <!-- 操作列 -->
@@ -649,8 +656,8 @@ onMounted(() => {
               
               <!-- 查看更多按鈕 -->
               <div class="text-center mt-4">
-                <Button type="link" @click="handleViewMoreTasks">
-                  查看更多任務
+                <Button type="primary" @click="handleViewMoreTasks">
+                  查看更多
                 </Button>
               </div>
             </div>
