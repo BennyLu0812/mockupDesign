@@ -217,6 +217,12 @@ const recentTasks = ref([
   },
 ]);
 
+// 控制評論顯示狀態
+const commentVisibility = ref({});
+
+// 控制版本顯示狀態
+const versionVisibility = ref({});
+
 // 項目附件
 const attachments = ref([
   {
@@ -228,6 +234,40 @@ const attachments = ref([
     uploader: '陳大文',
     tags: ['草案', '重要'],
     remark: '第一版草案，需要仔細審查',
+    version: '3.0',
+    versions: [
+      {
+        id: 'v1',
+        version: '1.0',
+        name: '法律條文草案_v1.0.pdf',
+        size: '2.1MB',
+        uploadTime: '2024-01-15 10:00:00',
+        uploader: '陳大文',
+        remark: '初始版本',
+        changes: '創建初始草案文件',
+      },
+      {
+        id: 'v2',
+        version: '2.0',
+        name: '法律條文草案_v2.0.pdf',
+        size: '2.3MB',
+        uploadTime: '2024-01-18 16:20:00',
+        uploader: '林雅婷',
+        remark: '修正第三條內容',
+        changes: '根據專家意見修改第三條法律條文',
+      },
+      {
+        id: 'v3',
+        version: '3.0',
+        name: '法律條文草案.pdf',
+        size: '2.5MB',
+        uploadTime: '2024-01-20 14:30:00',
+        uploader: '陳大文',
+        remark: '第一版草案，需要仔細審查',
+        changes: '增加附錄說明，完善法條解釋',
+        isCurrent: true,
+      },
+    ],
     comments: [
       {
         id: '1',
@@ -459,6 +499,36 @@ const handleViewTaskDetail = (task) => {
 
 const handleViewMoreTasks = () => {
   router.push('/legal-platform/project-management/task-management/list');
+};
+
+// 切換評論顯示狀態
+const toggleComments = (attachmentId) => {
+  commentVisibility.value[attachmentId] = !commentVisibility.value[attachmentId];
+};
+
+// 檢查評論是否顯示
+const isCommentsVisible = (attachmentId) => {
+  return commentVisibility.value[attachmentId] || false;
+};
+
+// 切換版本顯示狀態
+const toggleVersions = (attachmentId) => {
+  versionVisibility.value[attachmentId] = !versionVisibility.value[attachmentId];
+};
+
+// 檢查版本是否顯示
+const isVersionsVisible = (attachmentId) => {
+  return versionVisibility.value[attachmentId] || false;
+};
+
+// 下載指定版本
+const handleDownloadVersion = (attachment, version) => {
+  message.success(`下載版本 ${version.version}: ${version.name}`);
+};
+
+// 恢復到指定版本
+const handleRestoreVersion = (attachment, version) => {
+  message.success(`恢復到版本 ${version.version}`);
 };
 
 const handleViewAcknowledgmentDetail = (ack) => {
@@ -732,8 +802,35 @@ onMounted(() => {
                       <Text type="secondary">備註：{{ attachment.remark }}</Text>
                     </div>
                     
+                    <!-- 控制按鈕組 -->
+                    <div class="mb-3 flex items-center space-x-4">
+                      <!-- 評論控制按鈕 -->
+                      <Button 
+                        v-if="attachment.comments && attachment.comments.length > 0"
+                        type="link" 
+                        size="small" 
+                        @click="toggleComments(attachment.id)"
+                        class="p-0 h-auto text-blue-600"
+                      >
+                        <span :class="isCommentsVisible(attachment.id) ? 'icon-[lucide--chevron-up]' : 'icon-[lucide--chevron-down]'" class="size-4 mr-1" />
+                        {{ isCommentsVisible(attachment.id) ? '隱藏評論' : `查看評論 (${attachment.comments.length})` }}
+                      </Button>
+                      
+                      <!-- 版本控制按鈕 -->
+                      <Button 
+                        v-if="attachment.versions && attachment.versions.length > 1"
+                        type="link" 
+                        size="small" 
+                        @click="toggleVersions(attachment.id)"
+                        class="p-0 h-auto text-green-600"
+                      >
+                        <span :class="isVersionsVisible(attachment.id) ? 'icon-[lucide--chevron-up]' : 'icon-[lucide--chevron-down]'" class="size-4 mr-1" />
+                        {{ isVersionsVisible(attachment.id) ? '隱藏版本' : `查看版本 (${attachment.versions.length})` }}
+                      </Button>
+                    </div>
+                    
                     <!-- 評論區域 -->
-                    <div v-if="attachment.comments && attachment.comments.length > 0" class="comments-section">
+                    <div v-if="attachment.comments && attachment.comments.length > 0 && isCommentsVisible(attachment.id)" class="comments-section">
                       <Divider class="!my-3" />
                       <div class="space-y-3">
                         <div v-for="comment in attachment.comments" :key="comment.id" class="comment-item">
@@ -768,6 +865,55 @@ onMounted(() => {
                               
                               <Button type="link" size="small" class="text-xs p-0 h-auto mt-2" @click="handleReplyComment(attachment, comment)">
                                 回復
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- 版本歷史區域 -->
+                    <div v-if="attachment.versions && attachment.versions.length > 1 && isVersionsVisible(attachment.id)" class="versions-section">
+                      <Divider class="!my-3" />
+                      <div class="space-y-3">
+                        <div class="text-sm font-medium text-gray-700 mb-3">版本歷史</div>
+                        <div v-for="version in attachment.versions" :key="version.id" class="version-item">
+                          <div class="flex items-start justify-between p-3 border rounded-lg hover:bg-gray-50">
+                            <div class="flex-1">
+                              <div class="flex items-center space-x-2 mb-2">
+                                <Tag :color="version.isCurrent ? 'green' : 'blue'" size="small">
+                                  v{{ version.version }}
+                                </Tag>
+                                <Text strong class="text-sm">{{ version.name }}</Text>
+                                <Text v-if="version.isCurrent" type="success" class="text-xs">(當前版本)</Text>
+                              </div>
+                              
+                              <div class="flex items-center space-x-4 text-xs text-gray-500 mb-2">
+                                <span>{{ version.size }}</span>
+                                <span>{{ version.uploadTime }}</span>
+                                <span>上傳者：{{ version.uploader }}</span>
+                              </div>
+                              
+                              <div v-if="version.remark" class="text-xs text-gray-600 mb-1">
+                                <Text type="secondary">備註：{{ version.remark }}</Text>
+                              </div>
+                              
+                              <div v-if="version.changes" class="text-xs text-gray-600">
+                                <Text type="secondary">變更說明：{{ version.changes }}</Text>
+                              </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-2 ml-4">
+                              <Button type="link" size="small" @click="handleDownloadVersion(attachment, version)">
+                                <span class="icon-[lucide--download] size-3" />
+                              </Button>
+                              <Button 
+                                v-if="!version.isCurrent" 
+                                type="link" 
+                                size="small" 
+                                @click="handleRestoreVersion(attachment, version)"
+                              >
+                                <span class="icon-[lucide--rotate-ccw] size-3" />
                               </Button>
                             </div>
                           </div>
