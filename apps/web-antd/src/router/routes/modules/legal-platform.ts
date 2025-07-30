@@ -85,6 +85,15 @@ const routes: RouteRecordRaw[] = [
             },
           },
           {
+            name: 'ProjectDetailTabsNew',
+            path: 'detail-tabs-new/1',
+            component: () => import('#/views/legal-platform/project-management/detail-tabs-new.vue'),
+            meta: {
+              icon: 'lucide:layout-grid',
+              title: '項目詳情(新Tab佈局)',
+            },
+          },
+          {
             name: 'ProjectRoleManagement',
             path: 'role-management',
             component: () => import('#/views/legal-platform/project-management/role-management.vue'),

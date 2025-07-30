@@ -302,14 +302,14 @@ const projectMembers = ref([
   },
   {
     id: '2',
-    name: '張三',
+    name: '陳志華',
     role: '法律顧問',
     avatar: '/api/placeholder/40/40',
     status: 'offline',
   },
   {
     id: '3',
-    name: '李四',
+    name: '林雅婷',
     role: '研究員',
     avatar: '/api/placeholder/40/40',
     status: 'online',
@@ -358,7 +358,7 @@ const attachments = ref([
     comments: [
       {
         id: '1',
-        user: '張三',
+        user: '陳志華',
         avatar: '/api/placeholder/20/20',
         content: '報告內容很詳細，建議在第三章增加更多案例分析',
         time: '2024-01-20 14:30:00',
@@ -380,7 +380,7 @@ const attachments = ref([
     type: 'docx',
     size: '1.8MB',
     uploadTime: '2024-01-18 16:45:00',
-    uploader: '李四',
+    uploader: '林雅婷',
     tags: ['參考資料'],
     remark: '收集的相關法律參考資料',
     url: '/api/files/references.docx',
@@ -389,7 +389,7 @@ const attachments = ref([
       {
         version: '1.0',
         uploadTime: '2024-01-16 11:20:00',
-        uploader: '李四',
+        uploader: '林雅婷',
         size: '1.2MB',
         url: '/api/files/references_v1.docx',
         remark: '初始版本'
@@ -397,7 +397,7 @@ const attachments = ref([
       {
         version: '2.0',
         uploadTime: '2024-01-18 16:45:00',
-        uploader: '李四',
+        uploader: '林雅婷',
         size: '1.8MB',
         url: '/api/files/references.docx',
         remark: '增加了新的參考資料'
@@ -411,7 +411,7 @@ const attachments = ref([
     type: 'xlsx',
     size: '856KB',
     uploadTime: '2024-01-19 09:15:00',
-    uploader: '張三',
+    uploader: '陳志華',
     tags: ['進度管理', '圖表'],
     remark: '項目各階段進度統計',
     url: '/api/files/progress.xlsx',
@@ -420,7 +420,7 @@ const attachments = ref([
       {
         version: '1.0',
         uploadTime: '2024-01-17 14:30:00',
-        uploader: '張三',
+        uploader: '陳志華',
         size: '650KB',
         url: '/api/files/progress_v1.xlsx',
         remark: '初始版本'
@@ -428,7 +428,7 @@ const attachments = ref([
       {
         version: '2.0',
         uploadTime: '2024-01-18 16:20:00',
-        uploader: '張三',
+        uploader: '陳志華',
         size: '780KB',
         url: '/api/files/progress_v2.xlsx',
         remark: '更新了進度數據'
@@ -436,7 +436,7 @@ const attachments = ref([
       {
         version: '2.1',
         uploadTime: '2024-01-19 09:15:00',
-        uploader: '張三',
+        uploader: '陳志華',
         size: '856KB',
         url: '/api/files/progress.xlsx',
         remark: '添加了新的進度圖表'
@@ -526,7 +526,7 @@ const processNodes = ref([
     id: '3',
     nodeName: '需求分析',
     status: 'completed',
-    operator: '張三',
+    operator: '陳志華',
     operatorAvatar: '/api/placeholder/32/32',
     operateTime: '2024-01-16 09:15:00',
     description: '完成項目需求分析，確定審查範圍和標準',
@@ -536,7 +536,7 @@ const processNodes = ref([
     id: '4',
     nodeName: '初步審查',
     status: 'inProgress',
-    operator: '李四',
+    operator: '林雅婷',
     operatorAvatar: '/api/placeholder/32/32',
     operateTime: '2024-01-18 08:30:00',
     description: '正在進行法律條文的初步審查工作',
@@ -578,7 +578,7 @@ const notificationHistory = ref([
     type: 'project_update',
     title: '項目進度更新',
     content: '項目「法律條文審查項目」已進入初步審查階段',
-    recipients: ['陳大文', '張三', '李四'],
+    recipients: ['陳大文', '陳志華', '林雅婷'],
     methods: ['email', 'sms'],
     sendTime: '2024-01-18 08:35:00',
     status: 'sent',
@@ -588,7 +588,7 @@ const notificationHistory = ref([
     type: 'milestone_change',
     title: '里程碑狀態變更',
     content: '里程碑「需求分析」已完成',
-    recipients: ['陳大文', '張三'],
+    recipients: ['陳大文', '陳志華'],
     methods: ['email'],
     sendTime: '2024-01-16 17:20:00',
     status: 'sent',
@@ -597,8 +597,8 @@ const notificationHistory = ref([
     id: '3',
     type: 'document_upload',
     title: '新文檔上傳',
-    content: '李四上傳了新文檔「參考資料匯總.docx」',
-    recipients: ['陳大文', '張三'],
+    content: '林雅婷上傳了新文檔「參考資料匯總.docx」',
+    recipients: ['陳大文', '陳志華'],
     methods: ['email'],
     sendTime: '2024-01-18 16:50:00',
     status: 'sent',
@@ -618,18 +618,18 @@ const notificationRecipients = ref([
   },
   {
     id: '2',
-    name: '張三',
+    name: '陳志華',
     role: '法律顧問',
-    email: 'zhang@example.com',
+    email: 'chen.zh@example.com',
     phone: '+886-912-345-679',
     avatar: '/api/placeholder/32/32',
     selected: true,
   },
   {
     id: '3',
-    name: '李四',
+    name: '林雅婷',
     role: '研究員',
-    email: 'li@example.com',
+    email: 'lin.yt@example.com',
     phone: '+886-912-345-680',
     avatar: '/api/placeholder/32/32',
     selected: false,
@@ -723,7 +723,7 @@ const recentTasks = ref([
   {
     id: '2',
     title: '專家意見整理',
-    assignee: '張三',
+    assignee: '陳志華',
     status: 'completed',
     priority: 'medium',
     dueDate: '2024-01-22',
@@ -733,7 +733,7 @@ const recentTasks = ref([
   {
     id: '3',
     title: '法規對比分析',
-    assignee: '李四',
+    assignee: '林雅婷',
     status: 'pending',
     priority: 'medium',
     dueDate: '2024-01-28',
@@ -743,7 +743,7 @@ const recentTasks = ref([
   {
     id: '4',
     title: '初稿撰寫',
-    assignee: '王五',
+    assignee: '黃建國',
     status: 'inProgress',
     priority: 'high',
     dueDate: '2024-01-30',
@@ -783,7 +783,7 @@ const activities = ref([
   {
     id: '2',
     type: 'status_changed',
-    user: '張三',
+    user: '陳志華',
     content: '將項目狀態更改為「進行中」',
     time: '2024-01-19 16:45:00',
     avatar: '/api/placeholder/32/32',
@@ -791,7 +791,7 @@ const activities = ref([
   {
     id: '3',
     type: 'member_joined',
-    user: '李四',
+    user: '林雅婷',
     content: '加入了項目團隊',
     time: '2024-01-18 09:15:00',
     avatar: '/api/placeholder/32/32',
@@ -813,7 +813,7 @@ const acknowledgments = ref([
   {
     id: '1',
     taskName: '法條第一章審查',
-    assignee: '張三',
+    assignee: '陳志華',
     status: 'acknowledged',
     time: '2024-01-20 10:30:00',
     content: '已完成法條第一章的詳細審查工作，發現3處需要修改的條款，已整理成報告提交。',
@@ -832,7 +832,7 @@ const acknowledgments = ref([
   {
     id: '2',
     taskName: '法條第二章審查',
-    assignee: '李四',
+    assignee: '林雅婷',
     status: 'pending',
     time: '2024-01-19 15:20:00',
     content: '等待開始第二章的審查工作，需要先完成相關資料的收集。',
@@ -851,7 +851,7 @@ const acknowledgments = ref([
     ],
     comments: [
       {
-        user: '張三',
+        user: '陳志華',
         content: '整理得很全面，可以開始下一階段工作',
         time: '2024-01-18 14:30:00'
       }
@@ -860,7 +860,7 @@ const acknowledgments = ref([
   {
     id: '4',
     taskName: '法規對比分析',
-    assignee: '王五',
+    assignee: '黃建國',
     status: 'acknowledged',
     time: '2024-01-17 09:30:00',
     content: '完成了與現行法規的對比分析，發現5處衝突點，需要進一步討論解決方案。',
@@ -1482,9 +1482,9 @@ const createTaskFormData = reactive({
 // 任務負責人選項
 const taskResponsibleOptions = [
   { value: 'chen', label: '陳大文' },
-  { value: 'zhang', label: '張三' },
-  { value: 'li', label: '李四' },
-  { value: 'wang', label: '王五' },
+  { value: 'zhang', label: '陳志華' },
+  { value: 'li', label: '林雅婷' },
+  { value: 'wang', label: '黃建國' },
   { value: 'zhao', label: '趙六' },
   { value: 'qian', label: '錢七' },
 ];
@@ -1493,9 +1493,9 @@ const taskResponsibleOptions = [
 const taskParticipantOptions = [
   // 個人選項
   { value: 'chen', label: '陳大文', type: 'person' },
-  { value: 'zhang', label: '張三', type: 'person' },
-  { value: 'li', label: '李四', type: 'person' },
-  { value: 'wang', label: '王五', type: 'person' },
+  { value: 'zhang', label: '陳志華', type: 'person' },
+  { value: 'li', label: '林雅婷', type: 'person' },
+  { value: 'wang', label: '黃建國', type: 'person' },
   { value: 'zhao', label: '趙六', type: 'person' },
   { value: 'qian', label: '錢七', type: 'person' },
   // 小組選項
@@ -2392,9 +2392,9 @@ onMounted(() => {
                 placeholder="請選擇人員"
                 style="width: 100%"
               >
-                <SelectOption value="user1">張三</SelectOption>
-                <SelectOption value="user2">李四</SelectOption>
-                <SelectOption value="user3">王五</SelectOption>
+                <SelectOption value="user1">陳志華</SelectOption>
+                <SelectOption value="user2">林雅婷</SelectOption>
+                <SelectOption value="user3">黃建國</SelectOption>
               </Select>
             </div>
           </FormItem>
