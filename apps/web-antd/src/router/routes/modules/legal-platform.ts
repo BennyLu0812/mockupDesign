@@ -253,6 +253,53 @@ const routes: RouteRecordRaw[] = [
           },
         ],
       },
+      {
+        name: 'FileManagement',
+        path: 'file-management',
+        meta: {
+          icon: 'lucide:folder-open',
+          title: $t('page.legalPlatform.fileManagement'),
+        },
+        children: [
+          {
+            name: 'FileLibraryList',
+            path: 'library-list',
+            component: () => import('#/views/legal-platform/file-management/library-list.vue'),
+            meta: {
+              icon: 'lucide:database',
+              title: $t('page.legalPlatform.fileLibraryList'),
+            },
+          },
+          {
+            name: 'FileLibraryCreate',
+            path: 'library-create',
+            component: () => import('#/views/legal-platform/file-management/library-create.vue'),
+            meta: {
+              icon: 'lucide:plus',
+              title: $t('page.legalPlatform.fileLibraryCreate'),
+            },
+          },
+          {
+            name: 'FileLibraryDetail',
+            path: 'library-detail/:id',
+            component: () => import('#/views/legal-platform/file-management/library-detail.vue'),
+            meta: {
+              icon: 'lucide:eye',
+              title: $t('page.legalPlatform.fileLibraryDetail'),
+              hideInMenu: true,
+            },
+          },
+          {
+            name: 'FileLibraryConfig',
+            path: 'library-config',
+            component: () => import('#/views/legal-platform/file-management/library-config.vue'),
+            meta: {
+              icon: 'lucide:settings',
+              title: $t('page.legalPlatform.fileLibraryConfig'),
+            },
+          },
+        ],
+      },
     ],
   },
 ];
