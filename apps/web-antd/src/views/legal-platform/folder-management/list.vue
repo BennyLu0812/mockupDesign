@@ -59,8 +59,6 @@ const tableData = ref([
     folderType: 'public',
     department: '法務部',
     owner: '張三',
-    fileCount: 156,
-    folderSize: '2.3 GB',
     status: 'active',
     createTime: '2024-01-15 10:30:00',
     updateTime: '2024-01-20 14:20:00',
@@ -71,11 +69,9 @@ const tableData = ref([
     id: '2',
     folderName: '合同模板',
     folderPath: '/contract-templates',
-    folderType: 'shared',
+    folderType: 'public',
     department: '法務部',
     owner: '李四',
-    fileCount: 89,
-    folderSize: '1.2 GB',
     status: 'active',
     createTime: '2024-01-10 09:15:00',
     updateTime: '2024-01-18 16:45:00',
@@ -89,8 +85,6 @@ const tableData = ref([
     folderType: 'private',
     department: '研究部',
     owner: '王五',
-    fileCount: 234,
-    folderSize: '4.1 GB',
     status: 'inactive',
     createTime: '2024-01-05 11:20:00',
     updateTime: '2024-01-12 13:30:00',
@@ -132,18 +126,6 @@ const columns = [
     width: 100,
   },
   {
-    title: $t('page.legalPlatform.fileCount'),
-    dataIndex: 'fileCount',
-    key: 'fileCount',
-    width: 100,
-  },
-  {
-    title: $t('page.legalPlatform.folderSize'),
-    dataIndex: 'folderSize',
-    key: 'folderSize',
-    width: 120,
-  },
-  {
     title: $t('page.legalPlatform.folderStatus'),
     dataIndex: 'status',
     key: 'status',
@@ -167,7 +149,6 @@ const columns = [
 const folderTypeOptions = [
   { label: $t('page.legalPlatform.publicFolder'), value: 'public' },
   { label: $t('page.legalPlatform.privateFolder'), value: 'private' },
-  { label: $t('page.legalPlatform.sharedFolder'), value: 'shared' },
 ];
 
 // 部門選項
@@ -175,6 +156,7 @@ const departmentOptions = [
   { label: '法務部', value: 'legal' },
   { label: '研究部', value: 'research' },
   { label: '行政部', value: 'admin' },
+  { label: '央視', value: 'cctv' },
 ];
 
 // 狀態選項
@@ -271,15 +253,7 @@ const getStatusColor = (status: string) => {
   return status === 'active' ? 'green' : 'red';
 };
 
-// 獲取類型標籤顏色
-const getTypeColor = (type: string) => {
-  const colors = {
-    public: 'blue',
-    private: 'orange',
-    shared: 'purple',
-  };
-  return colors[type as keyof typeof colors] || 'default';
-};
+
 
 // 組件掛載時加載數據
 onMounted(() => {
@@ -415,9 +389,9 @@ onMounted(() => {
       >
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'folderType'">
-            <Tag :color="getTypeColor(record.folderType)">
+            <span>
               {{ folderTypeOptions.find(opt => opt.value === record.folderType)?.label }}
-            </Tag>
+            </span>
           </template>
           <template v-else-if="column.key === 'status'">
             <Tag :color="getStatusColor(record.status)">

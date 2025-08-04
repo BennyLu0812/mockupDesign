@@ -66,6 +66,22 @@
     "otherPersonnel": "其他人員",
     "notificationConfirmed": "知悉已確認",
     "notificationReplied": "知悉已回復",
-    "notificationForwarded": "知悉已轉發"
+    "notificationForwarded": "知悉已轉發",
+
+    "updateTime": "更新時間",
+    "edit": "編輯",
+    "folderName": "文件夾名稱",
+    "folderPath": "文件夾路徑",
+    "folderType": "文件夾類型",
+    "department": "所屬部門",
+    "folderOwner": "擁有者",
+    "folderStatus": "狀態",
+    "publicFolder": "公共文件夾",
+    "privateFolder": "私有文件夾",
+    "active": "啟用",
+    "inactive": "停用",
+    "parentFolder": "父文件夾",
+    "folderCreate": "新增文件夾",
+    "folderPermission": "權限管理"
   }
 }

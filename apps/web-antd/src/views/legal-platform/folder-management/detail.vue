@@ -46,54 +46,9 @@ const folderDetail = ref({
   tags: ['重要', '法律'],
   status: 'active',
   permissions: ['view', 'edit', 'upload', 'download'],
-  statistics: {
-    totalFiles: 156,
-    totalSize: '2.3 GB',
-    subFolders: 8,
-    recentActivity: 25,
-  },
 });
 
-// 文件夾樹形結構
-const folderTree = ref([
-  {
-    title: '法律文件庫',
-    key: 'legal-documents',
-    icon: 'folder',
-    children: [
-      {
-        title: '法規',
-        key: 'regulations',
-        icon: 'folder',
-        children: [
-          { title: '民法.pdf', key: 'civil-law.pdf', icon: 'file', size: '2.1 MB' },
-          { title: '刑法.pdf', key: 'criminal-law.pdf', icon: 'file', size: '1.8 MB' },
-        ],
-      },
-      {
-        title: '判例',
-        key: 'cases',
-        icon: 'folder',
-        children: [
-          { title: '最高法院判例.docx', key: 'supreme-court.docx', icon: 'file', size: '856 KB' },
-          { title: '地方法院判例.docx', key: 'local-court.docx', icon: 'file', size: '1.2 MB' },
-        ],
-      },
-      {
-        title: '合同模板',
-        key: 'contract-templates',
-        icon: 'folder',
-        children: [
-          { title: '勞動合同模板.docx', key: 'labor-contract.docx', icon: 'file', size: '245 KB' },
-          { title: '租賃合同模板.docx', key: 'lease-contract.docx', icon: 'file', size: '198 KB' },
-        ],
-      },
-    ],
-  },
-]);
 
-// 當前選中的文件夾
-const selectedFolder = ref('legal-documents');
 
 // 文件列表
 const fileList = ref([
@@ -104,7 +59,6 @@ const fileList = ref([
     fileSize: '2.1 MB',
     uploadTime: '2024-01-15 10:30:00',
     uploader: '張三',
-    downloadCount: 45,
     status: 'normal',
   },
   {
@@ -114,7 +68,6 @@ const fileList = ref([
     fileSize: '1.8 MB',
     uploadTime: '2024-01-16 14:20:00',
     uploader: '李四',
-    downloadCount: 32,
     status: 'normal',
   },
   {
@@ -124,7 +77,6 @@ const fileList = ref([
     fileSize: '856 KB',
     uploadTime: '2024-01-17 09:15:00',
     uploader: '王五',
-    downloadCount: 28,
     status: 'normal',
   },
 ]);
@@ -164,12 +116,7 @@ const fileColumns = [
     key: 'uploadTime',
     width: 180,
   },
-  {
-    title: '下載次數',
-    dataIndex: 'downloadCount',
-    key: 'downloadCount',
-    width: 100,
-  },
+
   {
     title: '操作',
     key: 'action',
@@ -201,20 +148,7 @@ const handlePermission = () => {
   router.push(`/legal-platform/folder-management/permission?id=${folderId.value}`);
 };
 
-// 文件夾樹選擇
-const handleTreeSelect = (selectedKeys: string[]) => {
-  if (selectedKeys.length > 0) {
-    selectedFolder.value = selectedKeys[0];
-    // 根據選中的文件夾加載文件列表
-    loadFileList(selectedKeys[0]);
-  }
-};
 
-// 加載文件列表
-const loadFileList = (folderKey: string) => {
-  console.log('加載文件夾文件:', folderKey);
-  // 這裡應該根據文件夾key調用API加載文件列表
-};
 
 // 搜索文件
 const handleSearch = () => {
@@ -357,9 +291,8 @@ onMounted(() => {
     </Card>
 
     <Row :gutter="16">
-      <!-- 左側：文件夾信息和統計 -->
-      <Col :span="8">
-        <!-- 文件夾信息 -->
+      <!-- 左側：文件夾信息 -->
+      <Col :span="6">
         <Card class="mb-4" title="文件夾信息">
           <Descriptions :column="1" size="small">
             <DescriptionsItem :label="$t('page.legalPlatform.folderPath')">
@@ -397,160 +330,97 @@ onMounted(() => {
             </DescriptionsItem>
           </Descriptions>
         </Card>
-
-        <!-- 統計信息 -->
-        <Card title="統計信息">
-          <Row :gutter="16">
-            <Col :span="12">
-              <Statistic 
-                title="文件總數" 
-                :value="folderDetail.statistics.totalFiles" 
-                :value-style="{ color: '#3f8600' }"
-              />
-            </Col>
-            <Col :span="12">
-              <Statistic 
-                title="總大小" 
-                :value="folderDetail.statistics.totalSize" 
-                :value-style="{ color: '#cf1322' }"
-              />
-            </Col>
-          </Row>
-          <Row :gutter="16" class="mt-4">
-            <Col :span="12">
-              <Statistic 
-                title="子文件夾" 
-                :value="folderDetail.statistics.subFolders" 
-                :value-style="{ color: '#1890ff' }"
-              />
-            </Col>
-            <Col :span="12">
-              <Statistic 
-                title="最近活動" 
-                :value="folderDetail.statistics.recentActivity" 
-                :value-style="{ color: '#722ed1' }"
-              />
-            </Col>
-          </Row>
-        </Card>
       </Col>
 
-      <!-- 右側：文件夾結構和文件列表 -->
-      <Col :span="16">
-        <Row :gutter="16">
-          <!-- 文件夾樹形結構 -->
-          <Col :span="8">
-            <Card title="文件夾結構" class="h-96">
-              <Tree
-                :tree-data="folderTree"
-                :selected-keys="[selectedFolder]"
-                default-expand-all
-                @select="handleTreeSelect"
-              >
-                <template #title="{ title, icon }">
-                  <span class="flex items-center">
-                    <span 
-                      :class="icon === 'folder' ? 'icon-[lucide--folder] text-yellow-500' : 'icon-[lucide--file] text-blue-500'"
-                      class="size-4 mr-1"
-                    />
-                    {{ title }}
-                  </span>
+      <!-- 右側：文件列表 -->
+      <Col :span="18">
+        <Card title="文件列表">
+          <!-- 操作工具欄 -->
+          <div class="mb-4 flex justify-between items-center">
+            <Space>
+              <Input.Search
+                v-model:value="searchKeyword"
+                placeholder="搜索文件"
+                style="width: 200px"
+                @search="handleSearch"
+              />
+              <Upload v-bind="uploadConfig" @change="handleUpload">
+                <Button type="primary">
+                  <template #icon>
+                    <span class="icon-[lucide--upload] size-4" />
+                  </template>
+                  上傳文件
+                </Button>
+              </Upload>
+              <Button @click="handleCreateFolder">
+                <template #icon>
+                  <span class="icon-[lucide--folder-plus] size-4" />
                 </template>
-              </Tree>
-            </Card>
-          </Col>
+                新建文件夾
+              </Button>
+            </Space>
+          </div>
 
-          <!-- 文件列表 -->
-          <Col :span="16">
-            <Card title="文件列表">
-              <!-- 操作工具欄 -->
-              <div class="mb-4 flex justify-between items-center">
-                <Space>
-                  <Input.Search
-                    v-model:value="searchKeyword"
-                    placeholder="搜索文件"
-                    style="width: 200px"
-                    @search="handleSearch"
+          <!-- 文件表格 -->
+          <Table
+            :columns="fileColumns"
+            :data-source="fileList"
+            :pagination="false"
+            size="small"
+            row-key="id"
+          >
+            <template #bodyCell="{ column, record }">
+              <template v-if="column.key === 'fileName'">
+                <div class="flex items-center">
+                  <span 
+                    :class="getFileIcon(record.fileType)"
+                    class="size-4 mr-2 text-blue-500"
                   />
-                  <Upload v-bind="uploadConfig" @change="handleUpload">
-                    <Button type="primary">
-                      <template #icon>
-                        <span class="icon-[lucide--upload] size-4" />
-                      </template>
-                      上傳文件
-                    </Button>
-                  </Upload>
-                  <Button @click="handleCreateFolder">
+                  {{ record.fileName }}
+                </div>
+              </template>
+              <template v-else-if="column.key === 'fileType'">
+                <Tag :color="getFileTypeColor(record.fileType)">
+                  {{ record.fileType.toUpperCase() }}
+                </Tag>
+              </template>
+              <template v-else-if="column.key === 'action'">
+                <Space>
+                  <Button type="link" size="small" @click="handlePreview(record)">
                     <template #icon>
-                      <span class="icon-[lucide--folder-plus] size-4" />
+                      <span class="icon-[lucide--eye] size-4" />
                     </template>
-                    新建文件夾
+                    預覽
                   </Button>
+                  <Button type="link" size="small" @click="handleDownload(record)">
+                    <template #icon>
+                      <span class="icon-[lucide--download] size-4" />
+                    </template>
+                    下載
+                  </Button>
+                  <Dropdown>
+                    <Button type="link" size="small">
+                      更多
+                      <span class="icon-[lucide--chevron-down] size-4 ml-1" />
+                    </Button>
+                    <template #overlay>
+                      <Menu>
+                        <MenuItem @click="handleRename(record)">
+                          <span class="icon-[lucide--edit] size-4 mr-2" />
+                          重命名
+                        </MenuItem>
+                        <MenuItem @click="handleDeleteFile(record)">
+                          <span class="icon-[lucide--trash-2] size-4 mr-2" />
+                          刪除
+                        </MenuItem>
+                      </Menu>
+                    </template>
+                  </Dropdown>
                 </Space>
-              </div>
-
-              <!-- 文件表格 -->
-              <Table
-                :columns="fileColumns"
-                :data-source="fileList"
-                :pagination="false"
-                size="small"
-                row-key="id"
-              >
-                <template #bodyCell="{ column, record }">
-                  <template v-if="column.key === 'fileName'">
-                    <div class="flex items-center">
-                      <span 
-                        :class="getFileIcon(record.fileType)"
-                        class="size-4 mr-2 text-blue-500"
-                      />
-                      {{ record.fileName }}
-                    </div>
-                  </template>
-                  <template v-else-if="column.key === 'fileType'">
-                    <Tag :color="getFileTypeColor(record.fileType)">
-                      {{ record.fileType.toUpperCase() }}
-                    </Tag>
-                  </template>
-                  <template v-else-if="column.key === 'action'">
-                    <Space>
-                      <Button type="link" size="small" @click="handlePreview(record)">
-                        <template #icon>
-                          <span class="icon-[lucide--eye] size-4" />
-                        </template>
-                        預覽
-                      </Button>
-                      <Button type="link" size="small" @click="handleDownload(record)">
-                        <template #icon>
-                          <span class="icon-[lucide--download] size-4" />
-                        </template>
-                        下載
-                      </Button>
-                      <Dropdown>
-                        <Button type="link" size="small">
-                          更多
-                          <span class="icon-[lucide--chevron-down] size-4 ml-1" />
-                        </Button>
-                        <template #overlay>
-                          <Menu>
-                            <MenuItem @click="handleRename(record)">
-                              <span class="icon-[lucide--edit] size-4 mr-2" />
-                              重命名
-                            </MenuItem>
-                            <MenuItem @click="handleDeleteFile(record)">
-                              <span class="icon-[lucide--trash-2] size-4 mr-2" />
-                              刪除
-                            </MenuItem>
-                          </Menu>
-                        </template>
-                      </Dropdown>
-                    </Space>
-                  </template>
-                </template>
-              </Table>
-            </Card>
-          </Col>
-        </Row>
+              </template>
+            </template>
+          </Table>
+        </Card>
       </Col>
     </Row>
   </Page>

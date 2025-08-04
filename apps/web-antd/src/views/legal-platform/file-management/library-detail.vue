@@ -187,12 +187,7 @@ const columns = [
     key: 'creator',
     width: 100,
   },
-  {
-    title: '下載次數',
-    dataIndex: 'downloadCount',
-    key: 'downloadCount',
-    width: 100,
-  },
+
   {
     title: '操作',
     key: 'operation',
@@ -459,33 +454,9 @@ onMounted(() => {
           </div>
         </Card>
 
-        <!-- 存儲統計 -->
-        <Card title="存儲統計" class="mb-4">
-          <div class="space-y-3">
-            <Statistic title="文件數量" :value="libraryInfo.fileCount" />
-            <Statistic title="文件夾數量" :value="libraryInfo.folderCount" />
-            <div>
-              <div class="text-sm text-gray-500 mb-1">存儲使用情況</div>
-              <Progress 
-                :percent="storageUsagePercent" 
-                :status="storageUsagePercent > 80 ? 'exception' : 'normal'"
-              />
-              <div class="text-xs text-gray-500 mt-1">
-                {{ libraryInfo.usedSize }} / {{ libraryInfo.quota.storageLimit }} GB
-              </div>
-            </div>
-          </div>
-        </Card>
 
-        <!-- 文件夾樹 -->
-        <Card title="文件夾結構">
-          <Tree
-            :tree-data="folderTree"
-            :default-expanded-keys="['/']"
-            :selected-keys="[currentPath]"
-            @select="handleTreeSelect"
-          />
-        </Card>
+
+
       </Col>
 
       <!-- 右側：文件列表 -->
@@ -516,24 +487,7 @@ onMounted(() => {
                 style="width: 250px"
                 @search="handleSearch"
               />
-              <Button.Group>
-                <Button 
-                  :type="viewMode === 'list' ? 'primary' : 'default'"
-                  @click="viewMode = 'list'"
-                >
-                  <template #icon>
-                    <span class="icon-[lucide--list] size-4" />
-                  </template>
-                </Button>
-                <Button 
-                  :type="viewMode === 'grid' ? 'primary' : 'default'"
-                  @click="viewMode = 'grid'"
-                >
-                  <template #icon>
-                    <span class="icon-[lucide--grid-3x3] size-4" />
-                  </template>
-                </Button>
-              </Button.Group>
+
             </div>
           </div>
 

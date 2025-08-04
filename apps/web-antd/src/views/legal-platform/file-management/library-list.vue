@@ -144,18 +144,7 @@ const columns = [
     key: 'owner',
     width: 100,
   },
-  {
-    title: $t('page.legalPlatform.fileCount'),
-    dataIndex: 'fileCount',
-    key: 'fileCount',
-    width: 100,
-  },
-  {
-    title: $t('page.legalPlatform.totalSize'),
-    dataIndex: 'totalSize',
-    key: 'totalSize',
-    width: 100,
-  },
+
   {
     title: $t('page.legalPlatform.fileLibraryStatus'),
     dataIndex: 'status',
@@ -279,16 +268,7 @@ const getStatusColor = (status: string) => {
   return status === '啟用' ? 'success' : 'default';
 };
 
-// 獲取類型標籤顏色
-const getTypeColor = (type: string) => {
-  const colorMap: Record<string, string> = {
-    '公共文件庫': 'blue',
-    '私有文件庫': 'orange',
-    '部門文件庫': 'green',
-    '項目文件庫': 'purple',
-  };
-  return colorMap[type] || 'default';
-};
+
 
 // 組件掛載時加載數據
 onMounted(() => {
@@ -443,18 +423,12 @@ onMounted(() => {
 
           <!-- 文件庫類型 -->
           <template v-else-if="column.key === 'type'">
-            <Tag :color="getTypeColor(record.type)">
+            <Tag>
               {{ record.type }}
             </Tag>
           </template>
 
-          <!-- 文件數量 -->
-          <template v-else-if="column.key === 'fileCount'">
-            <div class="text-center">
-              <div class="font-medium">{{ record.fileCount.toLocaleString() }}</div>
-              <div class="text-xs text-gray-500">{{ record.folderCount }} 文件夾</div>
-            </div>
-          </template>
+
 
           <!-- 狀態 -->
           <template v-else-if="column.key === 'status'">
@@ -514,9 +488,5 @@ onMounted(() => {
 <style scoped>
 .ant-table-tbody > tr > td {
   padding: 12px 8px;
-}
-
-.ant-tag {
-  margin: 2px;
 }
 </style>

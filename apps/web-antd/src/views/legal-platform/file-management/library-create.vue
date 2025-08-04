@@ -478,43 +478,7 @@ onMounted(() => {
         </Row>
       </Card>
 
-      <!-- 配額設置 -->
-      <Card title="配額設置" class="mb-4">
-        <Row :gutter="16">
-          <Col :span="8">
-            <FormItem :label="$t('page.legalPlatform.storageLimit')">
-              <InputNumber 
-                v-model:value="formData.quota.storageLimit" 
-                :min="1" 
-                :max="1000"
-                addon-after="GB"
-                class="w-full"
-              />
-            </FormItem>
-          </Col>
-          <Col :span="8">
-            <FormItem :label="$t('page.legalPlatform.fileCountLimit')">
-              <InputNumber 
-                v-model:value="formData.quota.fileCountLimit" 
-                :min="100" 
-                :max="100000"
-                class="w-full"
-              />
-            </FormItem>
-          </Col>
-          <Col :span="8">
-            <FormItem :label="$t('page.legalPlatform.singleFileLimit')">
-              <InputNumber 
-                v-model:value="formData.quota.singleFileLimit" 
-                :min="1" 
-                :max="1000"
-                addon-after="MB"
-                class="w-full"
-              />
-            </FormItem>
-          </Col>
-        </Row>
-      </Card>
+
 
       <!-- 文件類型限制 -->
       <Card title="文件類型限制" class="mb-4">
@@ -644,41 +608,7 @@ onMounted(() => {
         </Button>
       </Card>
 
-      <!-- 備份設置 -->
-      <Card title="備份設置" class="mb-4">
-        <Row :gutter="16">
-          <Col :span="8">
-            <FormItem :label="$t('page.legalPlatform.autoBackup')">
-              <Switch v-model:checked="formData.backup.enabled" />
-            </FormItem>
-          </Col>
-          <Col :span="8">
-            <FormItem :label="$t('page.legalPlatform.backupFrequency')">
-              <Select v-model:value="formData.backup.frequency" :disabled="!formData.backup.enabled">
-                <SelectOption 
-                  v-for="option in backupFrequencyOptions" 
-                  :key="option.value" 
-                  :value="option.value"
-                >
-                  {{ option.label }}
-                </SelectOption>
-              </Select>
-            </FormItem>
-          </Col>
-          <Col :span="8">
-            <FormItem :label="$t('page.legalPlatform.backupRetention')">
-              <InputNumber 
-                v-model:value="formData.backup.retention" 
-                :min="1" 
-                :max="365"
-                :disabled="!formData.backup.enabled"
-                addon-after="天"
-                class="w-full"
-              />
-            </FormItem>
-          </Col>
-        </Row>
-      </Card>
+
 
       <!-- 操作按鈕 -->
       <Card>
