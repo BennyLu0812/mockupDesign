@@ -21,6 +21,43 @@ const routes: RouteRecordRaw[] = [
         },
         children: [
           {
+            name: 'VersionManagement',
+            path: 'version-management',
+            meta: {
+              icon: 'lucide:git-commit',
+              title: $t('page.legalPlatform.versionManagement'),
+            },
+            children: [
+              {
+                name: 'VersionDefinition',
+                path: 'definition',
+                component: () => import('#/views/legal-platform/version-management/definition.vue'),
+                meta: {
+                  icon: 'lucide:plus',
+                  title: $t('page.legalPlatform.versionDefinition'),
+                },
+              },
+              {
+                name: 'SubVersionDefinition',
+                path: 'sub-definition',
+                component: () => import('#/views/legal-platform/version-management/sub-definition.vue'),
+                meta: {
+                  icon: 'lucide:plus-circle',
+                  title: $t('page.legalPlatform.subVersionDefinition'),
+                },
+              },
+              {
+                name: 'VersionSelection',
+                path: 'selection',
+                component: () => import('#/views/legal-platform/version-management/selection.vue'),
+                meta: {
+                  icon: 'lucide:check-circle',
+                  title: $t('page.legalPlatform.versionSelection'),
+                },
+              },
+            ],
+          },
+          {
             name: 'ProjectTemplateSelection',
             path: 'project-template-selection',
             component: () => import('#/views/legal-platform/project-template-selection/index.vue'),

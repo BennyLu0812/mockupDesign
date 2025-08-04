@@ -171,6 +171,10 @@
     "notificationList": "知悉列表",
     "createNotification": "新增知悉",
     "notificationDetail": "知悉詳情",
+    "versionManagement": "版本管理",
+    "versionDefinition": "版本定義",
+    "subVersionDefinition": "次級版本定義",
+    "versionSelection": "版本選擇",
 
     "notificationConfirm": "知悉確認",
     "notificationReply": "知悉回復",
