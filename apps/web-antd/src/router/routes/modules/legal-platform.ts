@@ -466,6 +466,34 @@ const routes: RouteRecordRaw[] = [
           },
         ],
       },
+      {
+        name: 'ConfidentialityManagement',
+        path: 'confidentiality-management',
+        meta: {
+          icon: 'lucide:lock',
+          title: $t('page.legalPlatform.confidentialityManagement'),
+        },
+        children: [
+          {
+            name: 'ConfidentialityRule',
+            path: 'rule',
+            component: () => import('#/views/legal-platform/confidentiality-management/rule.vue'),
+            meta: {
+              icon: 'lucide:gavel',
+              title: $t('page.legalPlatform.confidentialityRule'),
+            },
+          },
+          {
+            name: 'ConfidentialityFile',
+            path: 'file',
+            component: () => import('#/views/legal-platform/confidentiality-management/file.vue'),
+            meta: {
+              icon: 'lucide:file-lock-2',
+              title: $t('page.legalPlatform.confidentialityFile'),
+            },
+          },
+        ],
+      },
     ],
   },
 ];
