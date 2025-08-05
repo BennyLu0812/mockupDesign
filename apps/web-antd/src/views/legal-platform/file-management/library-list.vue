@@ -24,6 +24,8 @@ import {
 
 const router = useRouter();
 
+
+
 // 搜索表單
 const searchForm = reactive({
   libraryName: '',
@@ -55,7 +57,7 @@ const tableData = ref([
     name: '法律條文資料庫',
     description: '存放各類法律條文和相關文件',
     type: '部門文件庫',
-    department: '法務部',
+    department: '法制研究及立法統籌廳',
     owner: 'António Silva',
     status: '啟用',
     totalSize: '2.5 GB',
@@ -63,9 +65,9 @@ const tableData = ref([
     updateTime: '2024-01-20 14:25:00',
     tags: ['法律', '條文', '重要'],
     permissions: {
-      view: ['法務部', '秘書處'],
-      edit: ['法務部'],
-      delete: ['法務部'],
+      view: ['法制研究及立法統籌廳', '法律草擬廳'],
+      edit: ['法制研究及立法統籌廳'],
+      delete: ['法制研究及立法統籌廳'],
     },
   },
   {
@@ -73,7 +75,7 @@ const tableData = ref([
     name: '合同範本庫',
     description: '各類合同範本和模板文件',
     type: '公共文件庫',
-    department: '全部門',
+    department: '法律草擬廳',
     owner: 'João Silva',
     status: '啟用',
     totalSize: '1.2 GB',
@@ -81,9 +83,9 @@ const tableData = ref([
     updateTime: '2024-01-18 16:40:00',
     tags: ['合同', '範本', '通用'],
     permissions: {
-      view: ['全部門'],
-      edit: ['法務部', '行政部'],
-      delete: ['法務部'],
+      view: ['法律草擬廳'],
+      edit: ['法律草擬廳', '法制研究及立法統籌廳'],
+      delete: ['法律草擬廳'],
     },
   },
   {
@@ -91,7 +93,7 @@ const tableData = ref([
     name: '項目文件庫',
     description: '項目相關的所有文件和資料',
     type: '項目文件庫',
-    department: '項目組',
+    department: '法律翻譯廳',
     owner: 'Maria Santos',
     status: '啟用',
     totalSize: '4.8 GB',
@@ -99,9 +101,9 @@ const tableData = ref([
     updateTime: '2024-01-22 11:30:00',
     tags: ['項目', '文件', '協作'],
     permissions: {
-      view: ['項目組', '法務部'],
-      edit: ['項目組'],
-      delete: ['項目組'],
+      view: ['法律翻譯廳', '法制研究及立法統籌廳'],
+      edit: ['法律翻譯廳'],
+      delete: ['法律翻譯廳'],
     },
   },
 ]);
@@ -161,11 +163,9 @@ const columns = [
 
 // 部門選項
 const departmentOptions = [
-  { label: '法務部', value: '法務部' },
-  { label: '行政部', value: '行政部' },
-  { label: '秘書處', value: '秘書處' },
-  { label: '項目組', value: '項目組' },
-  { label: '全部門', value: '全部門' },
+  { label: '法制研究及立法統籌廳', value: '法制研究及立法統籌廳' },
+  { label: '法律草擬廳', value: '法律草擬廳' },
+  { label: '法律翻譯廳', value: '法律翻譯廳' },
 ];
 
 // 文件庫類型選項
@@ -261,6 +261,8 @@ const loadData = () => {
 const getStatusColor = (status: string) => {
   return status === '啟用' ? 'success' : 'default';
 };
+
+
 
 
 
@@ -390,6 +392,8 @@ onMounted(() => {
         </Button>
       </Space>
     </Card>
+
+
 
     <!-- 數據表格 -->
     <Card>

@@ -299,6 +299,15 @@ const routes: RouteRecordRaw[] = [
         },
         children: [
           {
+            name: 'FileLibrarySelection',
+            path: 'library-selection',
+            component: () => import('#/views/legal-platform/file-management/library-selection.vue'),
+            meta: {
+              icon: 'lucide:layout-template',
+              title: '文件庫選擇',
+            },
+          },
+          {
             name: 'FileLibraryList',
             path: 'library-list',
             component: () => import('#/views/legal-platform/file-management/library-list.vue'),

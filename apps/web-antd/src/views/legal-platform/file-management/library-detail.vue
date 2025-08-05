@@ -113,8 +113,8 @@ const folderTree = ref([
   },
 ]);
 
-// 文件列表
-const fileList = ref([
+// 原始文件列表（包含文件和文件夾）
+const allFileList = ref([
   {
     id: 1,
     name: '民法總則.pdf',
@@ -159,7 +159,45 @@ const fileList = ref([
     downloadCount: 67,
     tags: ['對照表'],
   },
+  {
+    id: 5,
+    name: '法規解釋',
+    type: 'folder',
+    size: '-',
+    modifyTime: '2024-01-18 10:20:00',
+    creator: 'António Silva',
+    fileType: 'folder',
+    downloadCount: 0,
+    tags: ['解釋'],
+  },
+  {
+    id: 6,
+    name: '案例分析',
+    type: 'folder',
+    size: '-',
+    modifyTime: '2024-01-17 15:45:00',
+    creator: 'Maria Santos',
+    fileType: 'folder',
+    downloadCount: 0,
+    tags: ['案例'],
+  },
+  {
+    id: 7,
+    name: '參考資料',
+    type: 'folder',
+    size: '-',
+    modifyTime: '2024-01-16 09:30:00',
+    creator: 'João Silva',
+    fileType: 'folder',
+    downloadCount: 0,
+    tags: ['參考'],
+  },
 ]);
+
+// 過濾後的文件列表（只顯示文件夾）
+const fileList = computed(() => {
+  return allFileList.value.filter(item => item.type === 'folder');
+});
 
 // 表格列配置
 const columns = [
@@ -355,6 +393,7 @@ const handleSearch = () => {
 const loadFileList = () => {
   console.log('加載文件列表:', currentPath.value);
   // 這裡應該根據當前路徑調用API加載文件列表
+  // 注意：fileList 已經通過 computed 自動過濾為只顯示文件夾
 };
 
 // 編輯文件庫
