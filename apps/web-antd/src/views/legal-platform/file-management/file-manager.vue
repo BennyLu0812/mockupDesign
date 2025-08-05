@@ -296,10 +296,7 @@ const handlePreview = (file: FileItem) => {
   message.info(`預覽文件: ${file.name}`);
 };
 
-// 文件屬性
-const handleProperties = (file: FileItem) => {
-  message.info(`查看文件屬性: ${file.name}`);
-};
+
 
 // 行選擇配置
 const rowSelection = {
@@ -448,53 +445,39 @@ const rowSelection = {
           <!-- 操作列 -->
           <template v-else-if="column.key === 'action'">
             <Space>
-              <Tooltip :title="$t('page.legalPlatform.download')">
-                <Button 
-                  type="text" 
-                  size="small"
-                  @click="handleSingleDownload(record)"
-                >
-                  <span class="icon-[lucide--download] size-4" />
-                </Button>
-              </Tooltip>
+              <Button 
+                type="text" 
+                size="small"
+                @click="handleSingleDownload(record)"
+              >
+                {{ $t('page.legalPlatform.download') }}
+              </Button>
               
-              <Tooltip :title="$t('page.legalPlatform.rename')">
-                <Button 
-                  type="text" 
-                  size="small"
-                  @click="startRename(record)"
-                >
-                  <span class="icon-[lucide--edit-3] size-4" />
-                </Button>
-              </Tooltip>
+              <Button 
+                type="text" 
+                size="small"
+                @click="startRename(record)"
+              >
+                {{ $t('page.legalPlatform.rename') }}
+              </Button>
               
-              <Tooltip v-if="record.type === 'file'" :title="$t('page.legalPlatform.preview')">
-                <Button 
-                  type="text" 
-                  size="small"
-                  @click="handlePreview(record)"
-                >
-                  <span class="icon-[lucide--eye] size-4" />
-                </Button>
-              </Tooltip>
+              <Button 
+                v-if="record.type === 'file'"
+                type="text" 
+                size="small"
+                @click="handlePreview(record)"
+              >
+                {{ $t('page.legalPlatform.preview') }}
+              </Button>
               
-              <Dropdown>
-                <Button type="text" size="small">
-                  <span class="icon-[lucide--more-horizontal] size-4" />
-                </Button>
-                <template #overlay>
-                  <Menu>
-                    <MenuItem @click="handleProperties(record)">
-                      <span class="icon-[lucide--info] size-4 mr-2" />
-                      {{ $t('page.legalPlatform.properties') }}
-                    </MenuItem>
-                    <MenuItem @click="handleSingleDelete(record)">
-                      <span class="icon-[lucide--trash-2] size-4 mr-2 text-red-500" />
-                      <span class="text-red-500">{{ $t('page.legalPlatform.delete') }}</span>
-                    </MenuItem>
-                  </Menu>
-                </template>
-              </Dropdown>
+              <Button 
+                type="text" 
+                size="small"
+                danger
+                @click="handleSingleDelete(record)"
+              >
+                {{ $t('page.legalPlatform.delete') }}
+              </Button>
             </Space>
           </template>
         </template>
