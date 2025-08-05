@@ -39,8 +39,8 @@ const folderDetail = ref({
   folderPath: '/legal-documents',
   folderType: 'public',
   department: '法務部',
-  owner: '張三',
-  creator: '張三',
+  owner: 'João Silva',
+    creator: 'João Silva',
   createTime: '2024-01-15 10:30:00',
   updateTime: '2024-01-20 14:20:00',
   tags: ['重要', '法律'],
@@ -58,7 +58,7 @@ const fileList = ref([
     fileType: 'pdf',
     fileSize: '2.1 MB',
     uploadTime: '2024-01-15 10:30:00',
-    uploader: '張三',
+    uploader: 'João Silva',
     status: 'normal',
   },
   {
@@ -67,7 +67,7 @@ const fileList = ref([
     fileType: 'pdf',
     fileSize: '1.8 MB',
     uploadTime: '2024-01-16 14:20:00',
-    uploader: '李四',
+    uploader: 'Maria Santos',
     status: 'normal',
   },
   {
@@ -76,7 +76,7 @@ const fileList = ref([
     fileType: 'docx',
     fileSize: '856 KB',
     uploadTime: '2024-01-17 09:15:00',
-    uploader: '王五',
+    uploader: 'Pedro Costa',
     status: 'normal',
   },
 ]);

@@ -135,7 +135,7 @@ const mockVersionHistory: BillVersionHistory[] = [
   {
     id: 'v1',
     version: '1.0',
-    modifiedBy: '張三',
+    modifiedBy: 'João Silva',
     modifiedTime: '2024-01-15 10:30:00',
     description: '初始版本創建',
     reviewStatus: 'approved',
@@ -144,7 +144,7 @@ const mockVersionHistory: BillVersionHistory[] = [
   {
     id: 'v2',
     version: '1.1',
-    modifiedBy: '李四',
+    modifiedBy: 'Maria Santos',
     modifiedTime: '2024-01-16 14:20:00',
     description: '修改第三章內容，增加新條款',
     reviewStatus: 'pending',
@@ -153,7 +153,7 @@ const mockVersionHistory: BillVersionHistory[] = [
   {
     id: 'v3',
     version: '1.2',
-    modifiedBy: '王五',
+    modifiedBy: 'Pedro Costa',
     modifiedTime: '2024-01-17 09:15:00',
     description: '修正法案標題和生效日期',
     reviewStatus: 'rejected',

@@ -55,7 +55,7 @@ const userData = ref([
     id: 'user001',
     userName: 'João Silva',
     email: 'zhangsan@company.com',
-    department: '法務部',
+    department: '法制研究及立法統籌廳',
     departmentId: 'dept001',
     role: '部門經理',
     roleId: 'role001',
@@ -76,7 +76,7 @@ const userData = ref([
     id: 'user002',
     userName: 'Maria Santos',
     email: 'lisi@company.com',
-    department: '法務部',
+    department: '法制研究及立法統籌廳',
     departmentId: 'dept001',
     role: '法務專員',
     roleId: 'role002',
@@ -97,7 +97,7 @@ const userData = ref([
     id: 'user003',
     userName: 'Pedro Costa',
     email: 'wangwu@company.com',
-    department: '人事部',
+    department: '法律草擬廳',
     departmentId: 'dept002',
     role: '人事專員',
     roleId: 'role003',
@@ -186,9 +186,9 @@ const columns = [
 
 // 部門選項
 const departmentOptions = [
-  { label: '法務部', value: 'dept001' },
-  { label: '人事部', value: 'dept002' },
-  { label: '財務部', value: 'dept003' },
+  { label: '法制研究及立法統籌廳', value: 'dept001' },
+  { label: '法律草擬廳', value: 'dept002' },
+  { label: '法律翻譯廳', value: 'dept003' },
   { label: '技術部', value: 'dept004' },
 ];
 
@@ -246,9 +246,9 @@ const addUserForm = reactive({
 
 // 可添加的用戶列表
 const availableUsers = ref([
-  { key: 'user005', title: 'Carlos Oliveira (carlos@company.com)', department: '法務部' },
-  { key: 'user006', title: 'Sofia Rodrigues (sofia@company.com)', department: '人事部' },
-  { key: 'user007', title: 'Miguel Pereira (miguel@company.com)', department: '財務部' },
+  { key: 'user005', title: 'Carlos Oliveira (carlos@company.com)', department: '法制研究及立法統籌廳' },
+  { key: 'user006', title: 'Sofia Rodrigues (sofia@company.com)', department: '法律草擬廳' },
+  { key: 'user007', title: 'Miguel Pereira (miguel@company.com)', department: '法律翻譯廳' },
   { key: 'user008', title: 'Luís Costa (luis@company.com)', department: '技術部' },
 ]);
 

@@ -344,6 +344,15 @@ const routes: RouteRecordRaw[] = [
               title: $t('page.legalPlatform.fileLibraryConfig'),
             },
           },
+          {
+            name: 'FileManager',
+            path: 'file-manager',
+            component: () => import('#/views/legal-platform/file-management/file-manager.vue'),
+            meta: {
+              icon: 'lucide:folder-tree',
+              title: $t('page.legalPlatform.fileManagerPage'),
+            },
+          },
         ],
       },
       {

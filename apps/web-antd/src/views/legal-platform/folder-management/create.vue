@@ -39,18 +39,6 @@ const formData = reactive({
   folderType: 'public',
   department: undefined,
   tags: [],
-  permissions: {
-    inheritFromParent: true,
-    customPermissions: [],
-  },
-  settings: {
-    maxFileSize: 100,
-    maxFileCount: 1000,
-    allowedFileTypes: [],
-    autoBackup: true,
-    enableVersionControl: true,
-    enableAuditLog: true,
-  },
 });
 
 // 表單驗證規則
@@ -76,9 +64,9 @@ const folderTypeOptions = [
 
 // 部門選項
 const departmentOptions = [
-  { label: '法務部', value: 'legal' },
-  { label: '研究部', value: 'research' },
-  { label: '行政部', value: 'admin' },
+  { label: '法制研究及立法統籌廳', value: 'legal-research' },
+  { label: '法律草擬廳', value: 'legal-drafting' },
+  { label: '法律翻譯廳', value: 'legal-translation' },
 ];
 
 // 父文件夾樹形數據
@@ -88,16 +76,34 @@ const folderTreeData = [
     value: 'root',
     children: [
       {
-        title: '法律文件庫',
-        value: 'legal-documents',
+        title: '法律條文資料庫',
+        value: 'legal-database',
         children: [
-          { title: '法規', value: 'regulations' },
-          { title: '判例', value: 'cases' },
+          { title: '法規條文', value: 'legal-regulations' },
+          { title: '司法解釋', value: 'judicial-interpretations' },
+          { title: '行政法規', value: 'administrative-regulations' },
+          { title: '地方法規', value: 'local-regulations' },
         ],
       },
       {
-        title: '合同模板',
+        title: '合同範本庫',
         value: 'contract-templates',
+        children: [
+          { title: '買賣合同', value: 'sales-contracts' },
+          { title: '租賃合同', value: 'lease-contracts' },
+          { title: '服務合同', value: 'service-contracts' },
+          { title: '勞動合同', value: 'employment-contracts' },
+        ],
+      },
+      {
+        title: '項目文件庫',
+        value: 'project-files',
+        children: [
+          { title: '立法項目', value: 'legislative-projects' },
+          { title: '法律諮詢', value: 'legal-consultation' },
+          { title: '案件檔案', value: 'case-files' },
+          { title: '研究報告', value: 'research-reports' },
+        ],
       },
     ],
   },
@@ -113,25 +119,7 @@ const tagOptions = [
   { label: '分析', value: 'analysis', color: 'cyan' },
 ];
 
-// 權限選項
-const permissionOptions = [
-  { label: $t('page.legalPlatform.viewPermission'), value: 'view' },
-  { label: $t('page.legalPlatform.editPermission'), value: 'edit' },
-  { label: $t('page.legalPlatform.deletePermission'), value: 'delete' },
-  { label: $t('page.legalPlatform.uploadPermission'), value: 'upload' },
-  { label: $t('page.legalPlatform.downloadPermission'), value: 'download' },
-  { label: $t('page.legalPlatform.sharePermission'), value: 'share' },
-];
 
-// 文件類型選項
-const fileTypeOptions = [
-  { label: 'PDF', value: 'pdf' },
-  { label: 'Word', value: 'doc,docx' },
-  { label: 'Excel', value: 'xls,xlsx' },
-  { label: 'PowerPoint', value: 'ppt,pptx' },
-  { label: '圖片', value: 'jpg,jpeg,png,gif' },
-  { label: '文本', value: 'txt' },
-];
 
 // 表單引用
 const formRef = ref();
@@ -177,20 +165,8 @@ const loadFolderData = async () => {
       folderDescription: '存放法律相關文件的文件夾',
       parentFolder: 'root',
       folderType: 'public',
-      department: 'legal',
+      department: 'legal-research',
       tags: ['important', 'legal'],
-      permissions: {
-        inheritFromParent: false,
-        customPermissions: ['view', 'edit', 'upload'],
-      },
-      settings: {
-        maxFileSize: 200,
-        maxFileCount: 2000,
-        allowedFileTypes: ['pdf', 'doc,docx'],
-        autoBackup: true,
-        enableVersionControl: true,
-        enableAuditLog: true,
-      },
     });
   }
 };
@@ -300,98 +276,6 @@ onMounted(() => {
               </Row>
             </CheckboxGroup>
           </FormItem>
-        </Card>
-
-        <!-- 權限設置 -->
-        <Card class="mb-6" size="small">
-          <template #title>
-            <span class="icon-[lucide--shield] size-4 mr-2" />
-            權限設置
-          </template>
-          
-          <FormItem name="inheritFromParent" label="繼承父文件夾權限">
-            <Switch v-model:checked="formData.permissions.inheritFromParent" />
-            <div class="text-gray-500 text-sm mt-1">
-              開啟後將自動繼承父文件夾的權限設置
-            </div>
-          </FormItem>
-
-          <FormItem 
-            v-if="!formData.permissions.inheritFromParent" 
-            name="customPermissions" 
-            label="自定義權限"
-          >
-            <CheckboxGroup v-model:value="formData.permissions.customPermissions">
-              <Row :gutter="[16, 8]">
-                <Col v-for="permission in permissionOptions" :key="permission.value" :span="8">
-                  <Checkbox :value="permission.value">
-                    {{ permission.label }}
-                  </Checkbox>
-                </Col>
-              </Row>
-            </CheckboxGroup>
-          </FormItem>
-        </Card>
-
-        <!-- 高級設置 -->
-        <Card class="mb-6" size="small">
-          <template #title>
-            <span class="icon-[lucide--settings] size-4 mr-2" />
-            高級設置
-          </template>
-          
-          <Row :gutter="16">
-            <Col :span="12">
-              <FormItem name="maxFileSize" label="單文件大小限制 (MB)">
-                <InputNumber 
-                  v-model:value="formData.settings.maxFileSize" 
-                  :min="1" 
-                  :max="1024" 
-                  class="w-full"
-                />
-              </FormItem>
-            </Col>
-            <Col :span="12">
-              <FormItem name="maxFileCount" label="文件數量限制">
-                <InputNumber 
-                  v-model:value="formData.settings.maxFileCount" 
-                  :min="1" 
-                  :max="10000" 
-                  class="w-full"
-                />
-              </FormItem>
-            </Col>
-          </Row>
-
-          <FormItem name="allowedFileTypes" label="允許的文件類型">
-            <CheckboxGroup v-model:value="formData.settings.allowedFileTypes">
-              <Row :gutter="[16, 8]">
-                <Col v-for="fileType in fileTypeOptions" :key="fileType.value" :span="6">
-                  <Checkbox :value="fileType.value">
-                    {{ fileType.label }}
-                  </Checkbox>
-                </Col>
-              </Row>
-            </CheckboxGroup>
-          </FormItem>
-
-          <Row :gutter="16">
-            <Col :span="8">
-              <FormItem name="autoBackup" label="自動備份">
-                <Switch v-model:checked="formData.settings.autoBackup" />
-              </FormItem>
-            </Col>
-            <Col :span="8">
-              <FormItem name="enableVersionControl" label="版本控制">
-                <Switch v-model:checked="formData.settings.enableVersionControl" />
-              </FormItem>
-            </Col>
-            <Col :span="8">
-              <FormItem name="enableAuditLog" label="審計日誌">
-                <Switch v-model:checked="formData.settings.enableAuditLog" />
-              </FormItem>
-            </Col>
-          </Row>
         </Card>
 
         <!-- 操作按鈕 -->

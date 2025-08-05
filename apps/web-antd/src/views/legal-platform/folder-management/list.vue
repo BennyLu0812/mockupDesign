@@ -57,7 +57,7 @@ const tableData = ref([
     folderName: '法律文件庫',
     folderPath: '/legal-documents',
     folderType: 'public',
-    department: '法務部',
+    department: '法制研究及立法統籌廳',
     owner: 'João Silva',
     status: 'active',
     createTime: '2024-01-15 10:30:00',
@@ -70,7 +70,7 @@ const tableData = ref([
     folderName: '合同模板',
     folderPath: '/contract-templates',
     folderType: 'public',
-    department: '法務部',
+    department: '法律草擬廳',
     owner: 'Maria Santos',
     status: 'active',
     createTime: '2024-01-10 09:15:00',
@@ -83,7 +83,7 @@ const tableData = ref([
     folderName: '案例分析',
     folderPath: '/case-analysis',
     folderType: 'private',
-    department: '研究部',
+    department: '法律翻譯廳',
     owner: 'Pedro Costa',
     status: 'inactive',
     createTime: '2024-01-05 11:20:00',
@@ -153,10 +153,9 @@ const folderTypeOptions = [
 
 // 部門選項
 const departmentOptions = [
-  { label: '法務部', value: 'legal' },
-  { label: '研究部', value: 'research' },
-  { label: '行政部', value: 'admin' },
-  { label: '央視', value: 'cctv' },
+  { label: '法制研究及立法統籌廳', value: 'legal-research' },
+  { label: '法律草擬廳', value: 'legal-drafting' },
+  { label: '法律翻譯廳', value: 'legal-translation' },
 ];
 
 // 狀態選項

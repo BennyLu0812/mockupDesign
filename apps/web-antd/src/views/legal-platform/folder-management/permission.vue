@@ -96,9 +96,9 @@ const rolePermissions = ref([
 const userPermissions = ref([
   {
     id: '1',
-    userName: '張三',
+    userName: 'João Silva',
     userEmail: 'zhangsan@example.com',
-    department: '法務部',
+    department: '法制研究及立法統籌廳',
     role: '管理員',
     permissions: ['view', 'edit', 'upload', 'download', 'delete'],
     permissionLevel: 'fullAccess',
@@ -106,9 +106,9 @@ const userPermissions = ref([
   },
   {
     id: '2',
-    userName: '李四',
+    userName: 'Maria Santos',
     userEmail: 'lisi@example.com',
-    department: '研究部',
+    department: '法律草擬廳',
     role: '編輯者',
     permissions: ['view', 'edit', 'upload', 'download'],
     permissionLevel: 'readWrite',
@@ -116,9 +116,9 @@ const userPermissions = ref([
   },
   {
     id: '3',
-    userName: '王五',
+    userName: 'Pedro Costa',
     userEmail: 'wangwu@example.com',
-    department: '行政部',
+    department: '法律翻譯廳',
     role: '查看者',
     permissions: ['view', 'download'],
     permissionLevel: 'readOnly',
@@ -311,9 +311,9 @@ const userForm = reactive({
 
 // 可選用戶列表（用於穿梭框）
 const availableUsers = ref([
-  { key: '1', title: '張三 (zhangsan@example.com)' },
-  { key: '2', title: '李四 (lisi@example.com)' },
-  { key: '3', title: '王五 (wangwu@example.com)' },
+  { key: '1', title: 'João Silva (joao.silva@example.com)' },
+    { key: '2', title: 'Maria Santos (maria.santos@example.com)' },
+    { key: '3', title: 'Pedro Costa (pedro.costa@example.com)' },
   { key: '4', title: '趙六 (zhaoliu@example.com)' },
   { key: '5', title: '錢七 (qianqi@example.com)' },
 ]);

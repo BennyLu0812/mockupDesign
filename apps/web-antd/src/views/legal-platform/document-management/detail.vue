@@ -105,7 +105,7 @@ const versionHistory = ref([
   {
     version: 'v2.0',
     uploadTime: '2024-01-15 10:30:00',
-    uploader: '張三',
+    uploader: 'João Silva',
     fileSize: '2.3 MB',
     changes: '重新設計了合同結構，優化了條款表述',
     isCurrent: false,
@@ -113,7 +113,7 @@ const versionHistory = ref([
   {
     version: 'v1.5',
     uploadTime: '2024-01-10 16:20:00',
-    uploader: '張三',
+    uploader: 'João Silva',
     fileSize: '2.1 MB',
     changes: '修正了付款條款中的錯誤，增加了違約責任說明',
     isCurrent: false,
@@ -170,7 +170,7 @@ const operationHistory = ref([
     id: 5,
     operation: 'edit',
     operationName: '文件編輯',
-    operator: '張三',
+    operator: 'João Silva',
     operatorId: 'user001',
     operationTime: '2024-01-15 10:30:00',
     description: '編輯了文件屬性',
@@ -187,7 +187,7 @@ const relatedFiles = ref([
     fileType: 'docx',
     fileSize: '1.8 MB',
     uploadTime: '2024-01-18 09:30:00',
-    uploader: '李四',
+    uploader: 'Maria Santos',
     relation: '同類模板',
   },
   {
@@ -205,7 +205,7 @@ const relatedFiles = ref([
     fileType: 'pdf',
     fileSize: '4.1 MB',
     uploadTime: '2024-01-14 11:45:00',
-    uploader: '張三',
+    uploader: 'João Silva',
     relation: '實例參考',
   },
 ]);
