@@ -227,14 +227,6 @@ const handleDownload = () => {
   message.success(`下載 ${selectedFiles.value.length} 個文件`);
 };
 
-// 分享
-const handleShare = () => {
-  if (selectedFiles.value.length === 0) {
-    message.warning('請選擇要分享的文件');
-    return;
-  }
-  message.success(`分享 ${selectedFiles.value.length} 個文件`);
-};
 
 // 移動到
 const handleMoveTo = () => {
@@ -356,16 +348,7 @@ const rowSelection = {
             {{ $t('page.legalPlatform.download') }}
           </Button>
           
-          <Button 
-            :disabled="selectedFiles.length === 0" 
-            @click="handleShare"
-          >
-            <template #icon>
-              <span class="icon-[lucide--share-2] size-4" />
-            </template>
-            {{ $t('page.legalPlatform.share') }}
-          </Button>
-          
+
           <Button 
             :disabled="selectedFiles.length === 0" 
             @click="handleMoveTo"
