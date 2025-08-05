@@ -234,7 +234,7 @@ const projectList = ref([
     projectDeadline: '2024-02-15',
     deadlineStatus: 'warning',
     daysRemaining: 3,
-    assignee: '張三',
+    assignee: 'João Silva',
     canModifyDeadline: true,
   },
   {
@@ -244,7 +244,7 @@ const projectList = ref([
     projectDeadline: '2024-02-10',
     deadlineStatus: 'overdue',
     daysRemaining: -2,
-    assignee: '李四',
+    assignee: 'Maria Santos',
     canModifyDeadline: true,
   },
   {
@@ -254,7 +254,7 @@ const projectList = ref([
     projectDeadline: '2024-03-01',
     deadlineStatus: 'normal',
     daysRemaining: 18,
-    assignee: '王五',
+    assignee: 'Pedro Costa',
     canModifyDeadline: false,
   },
 ])

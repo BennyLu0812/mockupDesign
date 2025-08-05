@@ -69,10 +69,10 @@ const projectStatusOptions = [
 // 參與人員選項
 const participantOptions = [
   { label: '陳大文', value: '陳大文' },
-  { label: '張三', value: '張三' },
-  { label: '李四', value: '李四' },
-  { label: '王五', value: '王五' },
-  { label: '趙六', value: '趙六' },
+  { label: 'João Silva', value: 'João Silva' },
+  { label: 'Maria Santos', value: 'Maria Santos' },
+  { label: 'Pedro Costa', value: 'Pedro Costa' },
+  { label: 'Ana Ferreira', value: 'Ana Ferreira' },
 ];
 
 // 法律法規相關數據
@@ -339,7 +339,7 @@ onMounted(() => {
       projectStartTime: dayjs('2024-01-01'),
       projectEndTime: dayjs('2024-12-31'),
       projectDueTime: dayjs('2024-12-31'),
-      projectParticipants: ['陳大文', '張三'],
+      projectParticipants: ['António Silva', 'João Silva'],
       projectRemarks: '這是一個法案項目示例',
       relatedLaws: [
         {

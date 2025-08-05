@@ -753,7 +753,7 @@ const recentTasks = ref([
   {
     id: '5',
     title: '資料收集',
-    assignee: '趙六',
+    assignee: 'Ana Ferreira',
     status: 'completed',
     priority: 'low',
     dueDate: '2024-01-20',
@@ -1485,8 +1485,8 @@ const taskResponsibleOptions = [
   { value: 'zhang', label: '陳志華' },
   { value: 'li', label: '林雅婷' },
   { value: 'wang', label: '黃建國' },
-  { value: 'zhao', label: '趙六' },
-  { value: 'qian', label: '錢七' },
+  { value: 'ana', label: 'Ana Ferreira' },
+  { value: 'carlos', label: 'Carlos Oliveira' },
 ];
 
 // 任務參與人員選項（包含個人和小組）
@@ -1496,8 +1496,8 @@ const taskParticipantOptions = [
   { value: 'zhang', label: '陳志華', type: 'person' },
   { value: 'li', label: '林雅婷', type: 'person' },
   { value: 'wang', label: '黃建國', type: 'person' },
-  { value: 'zhao', label: '趙六', type: 'person' },
-  { value: 'qian', label: '錢七', type: 'person' },
+  { value: 'ana', label: 'Ana Ferreira', type: 'person' },
+  { value: 'carlos', label: 'Carlos Oliveira', type: 'person' },
   // 小組選項
   { value: 'group_legal_review', label: '法律審查小組', type: 'group' },
   { value: 'group_data_collection', label: '資料收集小組', type: 'group' },

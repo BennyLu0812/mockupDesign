@@ -61,8 +61,8 @@ const rules: Record<string, Rule[]> = {
 // 項目參與人員選項
 const participantOptions = [
   { value: 'chen-da-wen', label: '陳大文' },
-  { value: 'zhang-san', label: '張三' },
-  { value: 'li-si', label: '李四' },
+  { value: 'joao-silva', label: 'João Silva' },
+  { value: 'maria-santos', label: 'Maria Santos' },
 ];
 
 // 項目狀態選項

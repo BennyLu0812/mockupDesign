@@ -45,7 +45,7 @@ const roleList = ref([
     members: [
       {
         id: '1',
-        name: '陳大文',
+        name: 'António Silva',
         email: 'chen@example.com',
         avatar: '/api/placeholder/40/40',
         joinTime: '2024-01-15',
@@ -61,14 +61,14 @@ const roleList = ref([
     members: [
       {
         id: '2',
-        name: '張三',
+        name: 'João Silva',
         email: 'zhang@example.com',
         avatar: '/api/placeholder/40/40',
         joinTime: '2024-01-16',
       },
       {
         id: '3',
-        name: '王五',
+        name: 'Pedro Costa',
         email: 'wang@example.com',
         avatar: '/api/placeholder/40/40',
         joinTime: '2024-01-18',
@@ -84,21 +84,21 @@ const roleList = ref([
     members: [
       {
         id: '4',
-        name: '李四',
+        name: 'Maria Santos',
         email: 'li@example.com',
         avatar: '/api/placeholder/40/40',
         joinTime: '2024-01-17',
       },
       {
         id: '5',
-        name: '趙六',
+        name: 'Ana Ferreira',
         email: 'zhao@example.com',
         avatar: '/api/placeholder/40/40',
         joinTime: '2024-01-19',
       },
       {
         id: '6',
-        name: '錢七',
+        name: 'Carlos Oliveira',
         email: 'qian@example.com',
         avatar: '/api/placeholder/40/40',
         joinTime: '2024-01-20',
@@ -111,19 +111,19 @@ const roleList = ref([
 const availableUsers = ref([
   {
     key: '7',
-    title: '孫八',
+    title: 'Sofia Rodrigues',
     description: 'sun@example.com',
     avatar: '/api/placeholder/40/40',
   },
   {
     key: '8',
-    title: '周九',
+    title: 'Miguel Pereira',
     description: 'zhou@example.com',
     avatar: '/api/placeholder/40/40',
   },
   {
     key: '9',
-    title: '吳十',
+    title: 'Luís Costa',
     description: 'wu@example.com',
     avatar: '/api/placeholder/40/40',
   },
@@ -228,21 +228,21 @@ const workGroupList = ref([
     description: '負責法條的詳細審查和分析工作',
     leader: {
       id: '1',
-      name: '陳大文',
+      name: 'António Silva',
       role: '項目負責人',
       avatar: '/api/placeholder/40/40',
     },
     members: [
       {
         id: '2',
-        name: '張三',
+        name: 'João Silva',
         role: '法律顧問',
         avatar: '/api/placeholder/40/40',
         joinTime: '2024-01-16',
       },
       {
         id: '4',
-        name: '李四',
+        name: 'Maria Santos',
         role: '研究員',
         avatar: '/api/placeholder/40/40',
         joinTime: '2024-01-17',
@@ -258,21 +258,21 @@ const workGroupList = ref([
     description: '負責收集和整理相關法律資料',
     leader: {
       id: '3',
-      name: '王五',
+      name: 'Pedro Costa',
       role: '法律顧問',
       avatar: '/api/placeholder/40/40',
     },
     members: [
       {
         id: '5',
-        name: '趙六',
+        name: 'Ana Ferreira',
         role: '研究員',
         avatar: '/api/placeholder/40/40',
         joinTime: '2024-01-19',
       },
       {
         id: '6',
-        name: '錢七',
+        name: 'Carlos Oliveira',
         role: '研究員',
         avatar: '/api/placeholder/40/40',
         joinTime: '2024-01-20',

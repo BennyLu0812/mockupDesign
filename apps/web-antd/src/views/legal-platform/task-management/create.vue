@@ -85,8 +85,8 @@ const taskStatusOptions = [
 // 任務參與人員選項
 const participantOptions = [
   { value: 'chen', label: '陳大文' },
-  { value: 'zhang', label: '張三' },
-  { value: 'li', label: '李四' },
+  { value: 'joao', label: 'João Silva' },
+  { value: 'maria', label: 'Maria Santos' },
 ];
 
 // 關聯項數量

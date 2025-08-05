@@ -53,7 +53,7 @@ const projectInfo = reactive({
   name: '法律條文審查項目',
   type: '法案項目',
   status: '處理中',
-  creator: '陳大文',
+  creator: 'António Silva',
   createTime: '2024-01-15 10:30:00',
   startTime: '2024-01-15',
   endTime: '2024-03-15',
@@ -78,7 +78,7 @@ const notificationForm = reactive({
 const notificationRecipients = ref([
   {
     id: '1',
-    name: '陳大文',
+    name: 'António Silva',
     role: '項目負責人',
     email: 'chen@example.com',
     avatar: '/api/placeholder/32/32',
@@ -135,19 +135,19 @@ const taskResponsibleOptions = [
   { value: 'zhang', label: '陳志華' },
   { value: 'li', label: '林雅婷' },
   { value: 'wang', label: '黃建國' },
-  { value: 'zhao', label: '趙六' },
-  { value: 'qian', label: '錢七' },
+  { value: 'ana', label: 'Ana Ferreira' },
+  { value: 'carlos', label: 'Carlos Oliveira' },
 ];
 
 // 任務參與人員選項（包含個人和小組）
 const taskParticipantOptions = [
   // 個人選項
-  { value: 'chen', label: '陳大文', type: 'person' },
-  { value: 'zhang', label: '陳志華', type: 'person' },
-  { value: 'li', label: '林雅婷', type: 'person' },
-  { value: 'wang', label: '黃建國', type: 'person' },
-  { value: 'zhao', label: '趙六', type: 'person' },
-  { value: 'qian', label: '錢七', type: 'person' },
+  { value: 'chen', label: 'António Silva', type: 'person' },
+  { value: 'zhang', label: 'João Silva', type: 'person' },
+  { value: 'li', label: 'Maria Santos', type: 'person' },
+  { value: 'wang', label: 'Pedro Costa', type: 'person' },
+  { value: 'ana', label: 'Ana Ferreira', type: 'person' },
+  { value: 'carlos', label: 'Carlos Oliveira', type: 'person' },
   // 小組選項
   { value: 'group_legal_review', label: '法律審查小組', type: 'group' },
   { value: 'group_data_collection', label: '資料收集小組', type: 'group' },
@@ -170,7 +170,7 @@ const projectTags = ref([
     color: 'blue',
     description: '項目法律審查標籤',
     createTime: '2024-01-15 10:30:00',
-    creator: '陳大文',
+    creator: 'António Silva',
   },
   {
     id: '2',
@@ -268,7 +268,7 @@ const taskColumns = [
 const projectMembers = ref([
   {
     id: '1',
-    name: '陳大文',
+    name: 'António Silva',
     role: '項目負責人',
     avatar: '/api/placeholder/40/40',
     email: 'chen@example.com',
@@ -278,7 +278,7 @@ const projectMembers = ref([
   },
   {
     id: '2',
-    name: '李小美',
+    name: 'Maria Santos',
     role: '法律顧問',
     avatar: '/api/placeholder/40/40',
     email: 'li@example.com',
@@ -288,7 +288,7 @@ const projectMembers = ref([
   },
   {
     id: '3',
-    name: '王志明',
+    name: 'Pedro Costa',
     role: '審查員',
     avatar: '/api/placeholder/40/40',
     email: 'wang@example.com',
@@ -305,8 +305,8 @@ const allTasks = ref([
     title: '法律條文審核任務',
     projectName: '法律條文審查項目',
     status: 'inProgress',
-    assignee: '陳志華',
-    creator: '陳大文',
+    assignee: 'João Silva',
+    creator: 'António Silva',
     createTime: '2024-01-20 10:30:00',
     priority: 'high',
     taskNumber: 'LP-2024-001',
@@ -316,8 +316,8 @@ const allTasks = ref([
     title: '法條比對分析',
     projectName: '法律條文審查項目',
     status: 'preparing',
-    assignee: '林雅婷',
-    creator: '陳大文',
+    assignee: 'Maria Santos',
+    creator: 'António Silva',
     createTime: '2024-01-22 14:20:00',
     priority: 'medium',
     taskNumber: 'LP-2024-002',
@@ -327,8 +327,8 @@ const allTasks = ref([
     title: '專家意見整理',
     projectName: '法律條文審查項目',
     status: 'completed',
-    assignee: '黃建國',
-    creator: '陳大文',
+    assignee: 'Carlos Oliveira',
+    creator: 'António Silva',
     createTime: '2024-01-18 09:15:00',
     priority: 'medium',
     taskNumber: 'LP-2024-003',
@@ -338,8 +338,8 @@ const allTasks = ref([
     title: '法規對比研究',
     projectName: '法律條文審查項目',
     status: 'inProgress',
-    assignee: '陳志華',
-    creator: '陳大文',
+    assignee: 'João Ferreira',
+    creator: 'António Silva',
     createTime: '2024-01-25 11:00:00',
     priority: 'low',
     taskNumber: 'LP-2024-004',
@@ -349,8 +349,8 @@ const allTasks = ref([
     title: '初稿撰寫',
     projectName: '法律條文審查項目',
     status: 'preparing',
-    assignee: '林雅婷',
-    creator: '陳大文',
+    assignee: 'Ana Ferreira',
+    creator: 'António Silva',
     createTime: '2024-01-26 16:30:00',
     priority: 'high',
     taskNumber: 'LP-2024-005',
@@ -360,8 +360,8 @@ const allTasks = ref([
     title: '法規條文修訂',
     projectName: '法律條文審查項目',
     status: 'pending',
-    assignee: '王小明',
-    creator: '陳大文',
+    assignee: 'Miguel Santos',
+    creator: 'António Silva',
     createTime: '2024-01-27 09:00:00',
     priority: 'medium',
     taskNumber: 'LP-2024-006',
@@ -371,8 +371,8 @@ const allTasks = ref([
     title: '法律意見書撰寫',
     projectName: '法律條文審查項目',
     status: 'inProgress',
-    assignee: '李小華',
-    creator: '陳大文',
+    assignee: 'Sofia Costa',
+    creator: 'António Silva',
     createTime: '2024-01-28 14:30:00',
     priority: 'high',
     taskNumber: 'LP-2024-007',
@@ -382,7 +382,7 @@ const allTasks = ref([
     title: '合規性檢查',
     projectName: '法律條文審查項目',
     status: 'completed',
-    assignee: '張三豐',
+    assignee: 'João Silva',
     creator: '陳大文',
     createTime: '2024-01-29 11:15:00',
     priority: 'low',
@@ -393,8 +393,8 @@ const allTasks = ref([
     title: '風險評估報告',
     projectName: '法律條文審查項目',
     status: 'preparing',
-    assignee: '劉華',
-    creator: '陳大文',
+    assignee: 'Ricardo Silva',
+    creator: 'António Silva',
     createTime: '2024-01-30 16:45:00',
     priority: 'medium',
     taskNumber: 'LP-2024-009',
@@ -404,8 +404,8 @@ const allTasks = ref([
     title: '最終審核確認',
     projectName: '法律條文審查項目',
     status: 'pending',
-    assignee: '周雅',
-    creator: '陳大文',
+    assignee: 'Catarina Oliveira',
+    creator: 'António Silva',
     createTime: '2024-01-31 10:00:00',
     priority: 'high',
     taskNumber: 'LP-2024-010',
@@ -521,7 +521,7 @@ const processNodes = ref([
     id: '1',
     nodeName: '項目創建',
     status: 'completed',
-    operator: '陳大文',
+    operator: 'António Silva',
     operatorAvatar: '/api/placeholder/32/32',
     operateTime: '2024-01-15 10:30:00',
     description: '項目正式創建，初始化項目基本信息',
@@ -531,7 +531,7 @@ const processNodes = ref([
     id: '2',
     nodeName: '團隊組建',
     status: 'completed',
-    operator: '陳大文',
+    operator: 'António Silva',
     operatorAvatar: '/api/placeholder/32/32',
     operateTime: '2024-01-15 14:20:00',
     description: '邀請團隊成員加入項目，分配初始角色',
@@ -541,7 +541,7 @@ const processNodes = ref([
     id: '3',
     nodeName: '需求分析',
     status: 'completed',
-    operator: '陳志華',
+    operator: 'João Ferreira',
     operatorAvatar: '/api/placeholder/32/32',
     operateTime: '2024-01-16 09:15:00',
     description: '完成項目需求分析，確定審查範圍和標準',
@@ -551,7 +551,7 @@ const processNodes = ref([
     id: '4',
     nodeName: '初步審查',
     status: 'inProgress',
-    operator: '林雅婷',
+    operator: 'Ana Ferreira',
     operatorAvatar: '/api/placeholder/32/32',
     operateTime: '2024-01-18 08:30:00',
     description: '正在進行法律條文的初步審查工作',
@@ -583,58 +583,55 @@ const processNodes = ref([
 const attachments = ref([
   {
     id: '1',
-    name: '法律條文草案.pdf',
-    type: 'pdf',
+    name: '第149/2025號行政長官批示.docx',
+    type: 'docx',
     size: '2.5MB',
     uploadTime: '2024-01-20 14:30:00',
-    uploader: '陳大文',
-    tags: ['草案', '重要'],
-    remark: '第一版草案，需要仔細審查',
+    uploader: 'António Silva',
+    tags: ['批示', '重要'],
+    remark: '第一版批示文件，需要仔細審查',
     version: '3.0',
     versions: [
       {
-        id: 'v1',
-        version: '1.0',
-        name: '法律條文草案_v1.0.pdf',
-        size: '2.1MB',
-        uploadTime: '2024-01-15 10:00:00',
-        uploader: '陳大文',
-        remark: '初始版本',
-        changes: '創建初始草案文件',
+        id: 'v3',
+        version: '3.0',
+        name: '第149/2025號行政長官批示.docx',
+        size: '2.5MB',
+        uploadTime: '2024-01-20 14:30:00',
+        uploader: 'António Silva',
+
+        isCurrent: true,
       },
       {
         id: 'v2',
         version: '2.0',
-        name: '法律條文草案_v2.0.pdf',
+        name: '第149/2025號行政長官批示_v2.0.docx',
         size: '2.3MB',
         uploadTime: '2024-01-18 16:20:00',
-        uploader: '林雅婷',
-        remark: '修正第三條內容',
-        changes: '根據專家意見修改第三條法律條文',
+        uploader: 'Ana Ferreira',
+
       },
       {
-        id: 'v3',
-        version: '3.0',
-        name: '法律條文草案.pdf',
-        size: '2.5MB',
-        uploadTime: '2024-01-20 14:30:00',
-        uploader: '陳大文',
-        remark: '第一版草案，需要仔細審查',
-        changes: '增加附錄說明，完善法條解釋',
-        isCurrent: true,
+        id: 'v1',
+        version: '1.0',
+        name: '第149/2025號行政長官批示_v1.0.docx',
+        size: '2.1MB',
+        uploadTime: '2024-01-15 10:00:00',
+        uploader: 'António Silva',
+
       },
     ],
     comments: [
       {
         id: '1',
-        user: '李小美',
+        user: 'Sofia Costa',
         content: '第三條需要修改',
         time: '2024-01-21 09:00:00',
         avatar: '/api/placeholder/40/40',
         replies: [
           {
             id: '1',
-            user: '陳大文',
+            user: 'António Silva',
             content: '已記錄，會在下一版本修改',
             time: '2024-01-21 10:00:00',
             avatar: '/api/placeholder/40/40',
@@ -674,7 +671,7 @@ const milestones = ref([
 const activities = ref([
   {
     id: '1',
-    user: '陳大文',
+    user: 'António Silva',
     content: '創建了項目',
     time: '2024-01-15 10:30:00',
     type: 'create',
@@ -682,8 +679,8 @@ const activities = ref([
   },
   {
     id: '2',
-    user: '李小美',
-    content: '上傳了附件「法律條文草案.pdf」',
+    user: 'Sofia Costa',
+    content: '上傳了附件「法律條文草案.excel」',
     time: '2024-01-20 14:30:00',
     type: 'upload',
     avatar: '/api/placeholder/40/40',
@@ -695,7 +692,7 @@ const acknowledgments = ref([
   {
     id: '1',
     taskName: '條文初審任務',
-    assignee: '李小美',
+    assignee: 'Sofia Costa',
     status: 'acknowledged',
     time: '2024-01-21 09:00:00',
     content: '已確認收到任務，將在期限內完成',
@@ -703,7 +700,7 @@ const acknowledgments = ref([
   {
     id: '2',
     taskName: '法規研究分析',
-    assignee: '王志明',
+    assignee: 'Miguel Santos',
     status: 'pending',
     time: '2024-01-20 14:30:00',
     content: '等待確認中',
@@ -711,7 +708,7 @@ const acknowledgments = ref([
   {
     id: '3',
     taskName: '合同審核任務',
-    assignee: '陳大文',
+    assignee: 'António Silva',
     status: 'acknowledged',
     time: '2024-01-19 16:45:00',
     content: '已知悉，正在處理中',
@@ -719,7 +716,7 @@ const acknowledgments = ref([
   {
     id: '4',
     taskName: '項目進度報告',
-    assignee: '李小美',
+    assignee: 'Sofia Costa',
     status: 'acknowledged',
     time: '2024-01-18 11:20:00',
     content: '報告已收到並審閱',
@@ -727,7 +724,7 @@ const acknowledgments = ref([
   {
     id: '5',
     taskName: '法律意見書撰寫',
-    assignee: '王志明',
+    assignee: 'Miguel Santos',
     status: 'pending',
     time: '2024-01-17 13:15:00',
     content: '待確認任務詳情',
@@ -735,7 +732,7 @@ const acknowledgments = ref([
   {
     id: '6',
     taskName: '會議紀要整理',
-    assignee: '陳大文',
+    assignee: 'António Silva',
     status: 'acknowledged',
     time: '2024-01-16 09:30:00',
     content: '會議紀要已整理完成',
@@ -1052,6 +1049,10 @@ const handlePreviewAttachment = (attachment) => {
   message.info(`預覽附件：${attachment.name}`);
 };
 
+const handleViewAttachment = (attachment) => {
+  message.info(`查看附件：${attachment.name}`);
+};
+
 const handleEditAttachment = (attachment) => {
   message.info(`編輯附件：${attachment.name}`);
 };
@@ -1175,6 +1176,126 @@ const handleDownloadVersion = (attachment, version) => {
 // 恢復到指定版本
 const handleRestoreVersion = (attachment, version) => {
   message.success(`恢復到版本 ${version.version}`);
+};
+
+// 查看指定版本
+const handleViewVersion = (attachment, version) => {
+  message.info(`查看版本 ${version.version}: ${version.name}`);
+};
+
+// 預覽指定版本
+const handlePreviewVersion = (attachment, version) => {
+  message.info(`預覽版本 ${version.version}: ${version.name}`);
+};
+
+// 版本對比相關變量
+const versionCompareVisible = ref(false);
+const compareVersions = ref({
+  current: null,
+  previous: null,
+  attachment: null
+});
+
+// 版本對比
+const handleVersionCompare = (attachment) => {
+  // 獲取當前版本和前一個版本
+  const versions = attachment.versions || [];
+  const currentVersion = versions.find(v => v.isCurrent);
+  const previousVersion = versions.find(v => !v.isCurrent);
+  
+  if (currentVersion && previousVersion) {
+    compareVersions.value = {
+      current: currentVersion,
+      previous: previousVersion,
+      attachment: attachment
+    };
+    versionCompareVisible.value = true;
+  } else {
+    message.warning('需要至少兩個版本才能進行對比');
+  }
+};
+
+// 關閉版本對比抽屜
+const closeVersionCompare = () => {
+  versionCompareVisible.value = false;
+  compareVersions.value = {
+    current: null,
+    previous: null,
+    attachment: null
+  };
+};
+
+// 模擬文檔內容數據
+const getDocumentContent = (version) => {
+  if (version.version === '3.0') {
+    return {
+      title: '第149/2025號行政長官批示',
+      content: [
+        '行政長官行使《澳門特別行政區基本法》第五十條賦予的職權，並根據第3/2001號法律通過的《澳門特別行政區立法會選舉法》第八十二條第三款的規定，作出本批示。',
+        '',
+        '一、二零二五年立法會選舉的直選及間選每一候選名單於澳門廣播電視股份有限公司電視台及電台的競選活動廣播時間訂定如下：',
+        '',
+        '（一）在澳門廣播電視股份有限公司（電視台）中文頻道共進行33次廣播，每次為時1分30秒；在葡文頻道共進行25次廣播，每次為時1分30秒；而中文頻道和葡文頻道的最後一次廣播均在九月十二日進行。',
+        '',
+        '（二）在澳門廣播電視股份有限公司（電台）中文頻道共進行54次廣播，每次為時1分鐘；在葡文頻道共進行36次廣播，每次為時1分鐘；而中文頻道和葡文頻道的最後一次廣播均在九月十二日進行。',
+        '',
+        '二、本批示自公佈翌日起生效。',
+        '',
+        '二零二五年七月二十八日',
+        '',
+        '行政長官　岑浩輝'
+      ]
+    };
+  } else if (version.version === '2.0') {
+    return {
+      title: '第149/2025號行政長官批示',
+      content: [
+        '行政長官行使《澳門特別行政區基本法》第五十條賦予的職權，並根據第3/2001號法律通過的《澳門特別行政區立法會選舉法》第八十二條第三款的規定，作出本批示。',
+        '',
+        '一、二零二五年立法會選舉的直選及間選每一候選名單於澳門廣播電視股份有限公司電視台及電台的競選活動廣播時間訂定如下：',
+        '',
+        '（一）在澳門廣播電視股份有限公司（電視台）中文頻道共進行30次廣播，每次為時1分30秒；在葡文頻道共進行20次廣播，每次為時1分30秒；而中文頻道和葡文頻道的最後一次廣播均在九月十日進行。',
+        '',
+        '（二）在澳門廣播電視股份有限公司（電台）中文頻道共進行50次廣播，每次為時1分鐘；在葡文頻道共進行30次廣播，每次為時1分鐘；而中文頻道和葡文頻道的最後一次廣播均在九月十日進行。',
+        '',
+        '二、本批示自公佈翌日起生效。',
+        '',
+        '二零二五年七月二十五日',
+        '',
+        '行政長官　岑浩輝'
+      ]
+    };
+  }
+  return { title: '', content: [] };
+};
+
+// 計算文檔差異
+const calculateDifferences = (oldContent, newContent) => {
+  const differences = [];
+  const maxLength = Math.max(oldContent.length, newContent.length);
+  
+  for (let i = 0; i < maxLength; i++) {
+    const oldLine = oldContent[i] || '';
+    const newLine = newContent[i] || '';
+    
+    if (oldLine !== newLine) {
+      differences.push({
+        lineNumber: i + 1,
+        type: oldLine === '' ? 'added' : newLine === '' ? 'removed' : 'modified',
+        oldText: oldLine,
+        newText: newLine
+      });
+    } else {
+      differences.push({
+        lineNumber: i + 1,
+        type: 'unchanged',
+        oldText: oldLine,
+        newText: newLine
+      });
+    }
+  }
+  
+  return differences;
 };
 
 // 標籤管理相關函數
@@ -1743,13 +1864,16 @@ onMounted(() => {
                       <Text strong class="text-lg">{{ attachment.name }}</Text>
                       <div class="flex items-center space-x-2">
                         <Button type="link" size="small" @click="handlePreviewAttachment(attachment)">
-                          <span class="icon-[lucide--eye] size-4" />
+                          預覽
                         </Button>
-                        <Button type="link" size="small" @click="handleEditAttachment(attachment)">
-                          <span class="icon-[lucide--edit] size-4" />
+                        <Button type="link" size="small" @click="handleViewAttachment(attachment)">
+                          查看
+                        </Button>
+                        <Button type="link" size="small" @click="handleVersionCompare(attachment)">
+                          版本對比
                         </Button>
                         <Button type="link" size="small" @click="handleDownloadAttachment(attachment)">
-                          <span class="icon-[lucide--download] size-4" />
+                          下載
                         </Button>
                         <Popconfirm
                           title="確定要刪除這個附件嗎？"
@@ -1758,7 +1882,7 @@ onMounted(() => {
                           @confirm="handleDeleteAttachment(attachment)"
                         >
                           <Button type="link" size="small" danger>
-                            <span class="icon-[lucide--trash-2] size-4" />
+                            刪除
                           </Button>
                         </Popconfirm>
                       </div>
@@ -1886,8 +2010,11 @@ onMounted(() => {
                             </div>
                             
                             <div class="flex items-center space-x-2 ml-4">
-                              <Button type="link" size="small" @click="handleDownloadVersion(attachment, version)">
-                                <span class="icon-[lucide--download] size-3" />
+                              <Button type="link" size="small" @click="handlePreviewVersion(attachment, version)">
+                                預覽
+                              </Button>
+                              <Button type="link" size="small" @click="handleViewVersion(attachment, version)">
+                                查看
                               </Button>
                               <Button 
                                 v-if="!version.isCurrent" 
@@ -1895,7 +2022,10 @@ onMounted(() => {
                                 size="small" 
                                 @click="handleRestoreVersion(attachment, version)"
                               >
-                                <span class="icon-[lucide--rotate-ccw] size-3" />
+                                還原
+                              </Button>
+                              <Button type="link" size="small" @click="handleDownloadVersion(attachment, version)">
+                                下載
                               </Button>
                             </div>
                           </div>
@@ -2506,6 +2636,135 @@ onMounted(() => {
         </div>
       </template>
     </Drawer>
+
+    <!-- 版本對比抽屜 -->
+    <Drawer
+      v-model:open="versionCompareVisible"
+      title="版本對比"
+      placement="right"
+      :width="1200"
+      :closable="true"
+      @close="closeVersionCompare"
+    >
+      <div v-if="compareVersions.current && compareVersions.previous" class="version-compare-container">
+        <!-- 版本信息頭部 -->
+        <div class="flex justify-between items-center mb-6 p-4 bg-gray-50 rounded-lg">
+          <div class="flex items-center space-x-4">
+            <div class="text-center">
+              <Tag color="red" size="large">v{{ compareVersions.previous.version }}</Tag>
+              <div class="text-sm text-gray-600 mt-1">{{ compareVersions.previous.uploadTime }}</div>
+              <div class="text-xs text-gray-500">{{ compareVersions.previous.uploader }}</div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="icon-[lucide--arrow-right] size-6 text-gray-400" />
+            </div>
+            <div class="text-center">
+              <Tag color="green" size="large">v{{ compareVersions.current.version }}</Tag>
+              <div class="text-sm text-gray-600 mt-1">{{ compareVersions.current.uploadTime }}</div>
+              <div class="text-xs text-gray-500">{{ compareVersions.current.uploader }}</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-lg font-semibold">{{ compareVersions.attachment.name }}</div>
+            <div class="text-sm text-gray-600">文檔版本對比</div>
+          </div>
+        </div>
+
+        <!-- 對比內容 -->
+        <div class="version-diff-content">
+          <div class="grid grid-cols-2 gap-4 h-full">
+            <!-- 舊版本 -->
+            <div class="border rounded-lg overflow-hidden">
+              <div class="bg-red-50 border-b px-4 py-2 flex items-center">
+                <span class="icon-[lucide--minus-circle] size-4 text-red-500 mr-2" />
+                <span class="font-medium text-red-700">v{{ compareVersions.previous.version }} (舊版本)</span>
+              </div>
+              <div class="p-4 bg-white max-h-96 overflow-y-auto">
+                <div class="space-y-2">
+                  <div 
+                    v-for="(line, index) in getDocumentContent(compareVersions.previous).content" 
+                    :key="`old-${index}`"
+                    class="flex items-start"
+                  >
+                    <span class="text-xs text-gray-400 w-8 flex-shrink-0 text-right mr-2">{{ index + 1 }}</span>
+                    <div 
+                      class="flex-1 min-h-[1.5rem] px-2 py-1 rounded"
+                      :class="{
+                        'bg-red-100 text-red-800': calculateDifferences(getDocumentContent(compareVersions.previous).content, getDocumentContent(compareVersions.current).content)[index]?.type === 'removed',
+                        'bg-yellow-100 text-yellow-800': calculateDifferences(getDocumentContent(compareVersions.previous).content, getDocumentContent(compareVersions.current).content)[index]?.type === 'modified',
+                        'text-gray-700': calculateDifferences(getDocumentContent(compareVersions.previous).content, getDocumentContent(compareVersions.current).content)[index]?.type === 'unchanged'
+                      }"
+                    >
+                      {{ line || '　' }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 新版本 -->
+            <div class="border rounded-lg overflow-hidden">
+              <div class="bg-green-50 border-b px-4 py-2 flex items-center">
+                <span class="icon-[lucide--plus-circle] size-4 text-green-500 mr-2" />
+                <span class="font-medium text-green-700">v{{ compareVersions.current.version }} (新版本)</span>
+              </div>
+              <div class="p-4 bg-white max-h-96 overflow-y-auto">
+                <div class="space-y-2">
+                  <div 
+                    v-for="(line, index) in getDocumentContent(compareVersions.current).content" 
+                    :key="`new-${index}`"
+                    class="flex items-start"
+                  >
+                    <span class="text-xs text-gray-400 w-8 flex-shrink-0 text-right mr-2">{{ index + 1 }}</span>
+                    <div 
+                      class="flex-1 min-h-[1.5rem] px-2 py-1 rounded"
+                      :class="{
+                        'bg-green-100 text-green-800': calculateDifferences(getDocumentContent(compareVersions.previous).content, getDocumentContent(compareVersions.current).content)[index]?.type === 'added',
+                        'bg-yellow-100 text-yellow-800': calculateDifferences(getDocumentContent(compareVersions.previous).content, getDocumentContent(compareVersions.current).content)[index]?.type === 'modified',
+                        'text-gray-700': calculateDifferences(getDocumentContent(compareVersions.previous).content, getDocumentContent(compareVersions.current).content)[index]?.type === 'unchanged'
+                      }"
+                    >
+                      {{ line || '　' }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 差異統計 -->
+          <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+            <div class="text-sm font-medium text-gray-700 mb-2">變更統計</div>
+            <div class="flex items-center space-x-6 text-sm">
+              <div class="flex items-center">
+                <span class="icon-[lucide--plus-circle] size-4 text-green-500 mr-1" />
+                <span class="text-green-700">
+                  新增: {{ calculateDifferences(getDocumentContent(compareVersions.previous).content, getDocumentContent(compareVersions.current).content).filter(d => d.type === 'added').length }} 行
+                </span>
+              </div>
+              <div class="flex items-center">
+                <span class="icon-[lucide--minus-circle] size-4 text-red-500 mr-1" />
+                <span class="text-red-700">
+                  刪除: {{ calculateDifferences(getDocumentContent(compareVersions.previous).content, getDocumentContent(compareVersions.current).content).filter(d => d.type === 'removed').length }} 行
+                </span>
+              </div>
+              <div class="flex items-center">
+                <span class="icon-[lucide--edit] size-4 text-yellow-500 mr-1" />
+                <span class="text-yellow-700">
+                  修改: {{ calculateDifferences(getDocumentContent(compareVersions.previous).content, getDocumentContent(compareVersions.current).content).filter(d => d.type === 'modified').length }} 行
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <template #footer>
+        <div class="flex justify-end space-x-2">
+          <Button @click="closeVersionCompare">關閉</Button>
+        </div>
+      </template>
+    </Drawer>
   </Page>
 </template>
 
@@ -2516,6 +2775,80 @@ onMounted(() => {
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   margin: 16px;
+}
+
+/* 版本對比樣式 */
+.version-compare-container {
+  height: calc(100vh - 200px);
+  overflow: hidden;
+}
+
+.version-diff-content {
+  height: calc(100% - 120px);
+}
+
+.version-diff-content .grid {
+  height: 100%;
+}
+
+.version-diff-content .border {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.version-diff-content .max-h-96 {
+  max-height: none;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* 差異高亮樣式 */
+.bg-red-100 {
+  background-color: #fee2e2 !important;
+  border-left: 3px solid #ef4444;
+}
+
+.bg-green-100 {
+  background-color: #dcfce7 !important;
+  border-left: 3px solid #22c55e;
+}
+
+.bg-yellow-100 {
+  background-color: #fef3c7 !important;
+  border-left: 3px solid #f59e0b;
+}
+
+/* 行號樣式 */
+.version-diff-content .text-xs {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+/* 內容樣式 */
+.version-diff-content .flex-1 {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* 滾動條樣式 */
+.version-diff-content .overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.version-diff-content .overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.version-diff-content .overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.version-diff-content .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }
 
 .project-tabs :deep(.ant-tabs-content-holder) {

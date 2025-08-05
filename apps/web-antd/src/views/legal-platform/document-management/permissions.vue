@@ -53,7 +53,7 @@ const userPermissions = ref([
   {
     id: 'perm-001',
     userId: 'user001',
-    userName: '張三',
+    userName: 'João Silva',
     userEmail: 'zhangsan@company.com',
     department: 'legal',
     departmentName: '法務部',
@@ -78,7 +78,7 @@ const userPermissions = ref([
   {
     id: 'perm-002',
     userId: 'user002',
-    userName: '李四',
+    userName: 'Maria Santos',
     userEmail: 'lisi@company.com',
     department: 'legal',
     departmentName: '法務部',
@@ -95,7 +95,7 @@ const userPermissions = ref([
       manage: false,
     },
     grantTime: '2024-01-12 10:30:00',
-    grantBy: '張三',
+    grantBy: 'João Silva',
     expiryTime: '2024-12-31 23:59:59',
     status: 'active',
     lastAccess: '2024-01-20 11:15:00',
@@ -103,7 +103,7 @@ const userPermissions = ref([
   {
     id: 'perm-003',
     userId: 'user003',
-    userName: '王五',
+    userName: 'Pedro Costa',
     userEmail: 'wangwu@company.com',
     department: 'hr',
     departmentName: '人事部',
@@ -128,7 +128,7 @@ const userPermissions = ref([
   {
     id: 'perm-004',
     userId: 'user004',
-    userName: '趙六',
+    userName: 'Ana Ferreira',
     userEmail: 'zhaoliu@company.com',
     department: 'finance',
     departmentName: '財務部',
@@ -354,10 +354,10 @@ const addUserForm = reactive({
 
 // 可選用戶數據
 const availableUsers = ref([
-  { key: 'user005', title: '錢七 (qianqi@company.com)', department: '市場部' },
-  { key: 'user006', title: '孫八 (sunba@company.com)', department: '技術部' },
-  { key: 'user007', title: '周九 (zhoujiu@company.com)', department: '法務部' },
-  { key: 'user008', title: '吳十 (wushi@company.com)', department: '人事部' },
+  { key: 'user005', title: 'Carlos Oliveira (carlos@company.com)', department: '市場部' },
+  { key: 'user006', title: 'Sofia Rodrigues (sofia@company.com)', department: '技術部' },
+  { key: 'user007', title: 'Miguel Pereira (miguel@company.com)', department: '法務部' },
+  { key: 'user008', title: 'Luís Costa (luis@company.com)', department: '人事部' },
 ]);
 
 // 表格列配置

@@ -89,7 +89,7 @@ const quotaConfig = reactive({
   dailyDownloadLimit: 5000, // MB
   userQuotas: [
     { userId: '1', userName: '陳大文', storageLimit: 5, fileCountLimit: 3000 },
-    { userId: '2', userName: '張三', storageLimit: 3, fileCountLimit: 2000 },
+    { userId: '2', userName: 'João Silva', storageLimit: 3, fileCountLimit: 2000 },
   ],
 });
 
@@ -150,10 +150,10 @@ const notificationConfig = reactive({
 // 用戶列表（用於權限分配）
 const userList = ref([
   { key: '1', title: '陳大文 (法務部)', department: '法務部' },
-  { key: '2', title: '張三 (法務部)', department: '法務部' },
-  { key: '3', title: '李四 (行政部)', department: '行政部' },
-  { key: '4', title: '王五 (秘書處)', department: '秘書處' },
-  { key: '5', title: '趙六 (項目組)', department: '項目組' },
+  { key: '2', title: 'João Silva (法務部)', department: '法務部' },
+  { key: '3', title: 'Maria Santos (行政部)', department: '行政部' },
+  { key: '4', title: 'Pedro Costa (秘書處)', department: '秘書處' },
+  { key: '5', title: 'Ana Ferreira (項目組)', department: '項目組' },
 ]);
 
 // 部門列表

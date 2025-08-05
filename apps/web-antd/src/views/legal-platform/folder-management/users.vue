@@ -53,7 +53,7 @@ const pagination = reactive({
 const userData = ref([
   {
     id: 'user001',
-    userName: '張三',
+    userName: 'João Silva',
     email: 'zhangsan@company.com',
     department: '法務部',
     departmentId: 'dept001',
@@ -69,13 +69,12 @@ const userData = ref([
       fileAccess: ['read', 'write', 'upload', 'download'],
       adminAccess: ['manage_users', 'manage_permissions'],
     },
-    folderCount: 15,
-    fileCount: 128,
+
     storageUsed: '2.5GB',
   },
   {
     id: 'user002',
-    userName: '李四',
+    userName: 'Maria Santos',
     email: 'lisi@company.com',
     department: '法務部',
     departmentId: 'dept001',
@@ -91,13 +90,12 @@ const userData = ref([
       fileAccess: ['read', 'write', 'upload', 'download'],
       adminAccess: [],
     },
-    folderCount: 8,
-    fileCount: 64,
+
     storageUsed: '1.2GB',
   },
   {
     id: 'user003',
-    userName: '王五',
+    userName: 'Pedro Costa',
     email: 'wangwu@company.com',
     department: '人事部',
     departmentId: 'dept002',
@@ -113,13 +111,12 @@ const userData = ref([
       fileAccess: ['read', 'download'],
       adminAccess: [],
     },
-    folderCount: 3,
-    fileCount: 25,
+
     storageUsed: '0.5GB',
   },
   {
     id: 'user004',
-    userName: '趙六',
+    userName: 'Ana Ferreira',
     email: 'zhaoliu@company.com',
     department: '法務部',
     departmentId: 'dept001',
@@ -135,8 +132,7 @@ const userData = ref([
       fileAccess: ['read'],
       adminAccess: [],
     },
-    folderCount: 1,
-    fileCount: 5,
+
     storageUsed: '0.1GB',
   },
 ]);
@@ -161,18 +157,7 @@ const columns = [
     key: 'role',
     width: 120,
   },
-  {
-    title: '文件夾數量',
-    dataIndex: 'folderCount',
-    key: 'folderCount',
-    width: 100,
-  },
-  {
-    title: '文件數量',
-    dataIndex: 'fileCount',
-    key: 'fileCount',
-    width: 100,
-  },
+
   {
     title: '存儲使用',
     dataIndex: 'storageUsed',
@@ -261,10 +246,10 @@ const addUserForm = reactive({
 
 // 可添加的用戶列表
 const availableUsers = ref([
-  { key: 'user005', title: '錢七 (qianqi@company.com)', department: '法務部' },
-  { key: 'user006', title: '孫八 (sunba@company.com)', department: '人事部' },
-  { key: 'user007', title: '周九 (zhoujiu@company.com)', department: '財務部' },
-  { key: 'user008', title: '吳十 (wushi@company.com)', department: '技術部' },
+  { key: 'user005', title: 'Carlos Oliveira (carlos@company.com)', department: '法務部' },
+  { key: 'user006', title: 'Sofia Rodrigues (sofia@company.com)', department: '人事部' },
+  { key: 'user007', title: 'Miguel Pereira (miguel@company.com)', department: '財務部' },
+  { key: 'user008', title: 'Luís Costa (luis@company.com)', department: '技術部' },
 ]);
 
 // 搜索

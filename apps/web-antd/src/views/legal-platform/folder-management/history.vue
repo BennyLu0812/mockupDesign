@@ -412,9 +412,7 @@ onMounted(() => {
       >
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'operationType'">
-            <Tag :color="getOperationTypeColor(record.operationType)">
-              {{ getOperationTypeName(record.operationType) }}
-            </Tag>
+            {{ getOperationTypeName(record.operationType) }}
           </template>
           <template v-else-if="column.key === 'targetName'">
             <div class="flex items-center">
@@ -428,9 +426,7 @@ onMounted(() => {
             </div>
           </template>
           <template v-else-if="column.key === 'targetType'">
-            <Tag :color="getTargetTypeColor(record.targetType)">
-              {{ record.targetType === 'folder' ? '文件夾' : '文件' }}
-            </Tag>
+            {{ record.targetType === 'folder' ? '文件夾' : '文件' }}
           </template>
           <template v-else-if="column.key === 'operator'">
             <div class="flex items-center">
@@ -479,9 +475,7 @@ onMounted(() => {
           {{ currentRecord.operationTime }}
         </DescriptionsItem>
         <DescriptionsItem label="操作類型">
-          <Tag :color="getOperationTypeColor(currentRecord.operationType)">
-            {{ getOperationTypeName(currentRecord.operationType) }}
-          </Tag>
+          {{ getOperationTypeName(currentRecord.operationType) }}
         </DescriptionsItem>
         <DescriptionsItem label="目標對象">
           <div class="flex items-center">
@@ -493,9 +487,7 @@ onMounted(() => {
           </div>
         </DescriptionsItem>
         <DescriptionsItem label="對象類型">
-          <Tag :color="getTargetTypeColor(currentRecord.targetType)">
-            {{ currentRecord.targetType === 'folder' ? '文件夾' : '文件' }}
-          </Tag>
+          {{ currentRecord.targetType === 'folder' ? '文件夾' : '文件' }}
         </DescriptionsItem>
         <DescriptionsItem label="操作人">
           {{ currentRecord.operator }} ({{ currentRecord.operatorId }})

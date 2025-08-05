@@ -51,8 +51,8 @@ const tableData = ref([
     title: '法律条文审核任务',
     projectName: '法律諮詢系統開發',
     status: 'inProgress',
-    assignee: '陳大文',
-    creator: '張三',
+    assignee: 'António Silva',
+    creator: 'João Silva',
     createTime: '2024-01-15 10:30:00',
     priority: 'high',
     taskNumber: 'LP-2024-001',
@@ -63,8 +63,8 @@ const tableData = ref([
     title: '合同审核任务',
     projectName: '合同管理平台',
     status: 'preparing',
-    assignee: '李四',
-    creator: '陳大文',
+    assignee: 'Maria Santos',
+    creator: 'António Silva',
     createTime: '2024-01-14 14:20:00',
     priority: 'medium',
     taskNumber: 'LP-2024-002',
@@ -75,8 +75,8 @@ const tableData = ref([
     title: '法規研究分析',
     projectName: '法規檢索系統',
     status: 'completed',
-    assignee: '張三',
-    creator: '李四',
+    assignee: 'João Silva',
+    creator: 'Maria Santos',
     createTime: '2024-01-13 09:15:00',
     priority: 'low',
     taskNumber: 'LP-2024-003',
@@ -185,23 +185,23 @@ const createFormData = reactive({
 
 // 任務負責人選項
 const taskResponsibleOptions = [
-  { value: 'chen', label: '陳大文' },
-  { value: 'zhang', label: '張三' },
-  { value: 'li', label: '李四' },
-  { value: 'wang', label: '王五' },
-  { value: 'zhao', label: '趙六' },
-  { value: 'qian', label: '錢七' },
+  { value: 'chen', label: 'António Silva' },
+  { value: 'joao', label: 'João Silva' },
+  { value: 'maria', label: 'Maria Santos' },
+  { value: 'pedro', label: 'Pedro Costa' },
+  { value: 'ana', label: 'Ana Ferreira' },
+  { value: 'carlos', label: 'Carlos Oliveira' },
 ];
 
 // 任務參與人員選項（包含個人和小組）
 const taskParticipantOptions = [
   // 個人選項
-  { value: 'chen', label: '陳大文', type: 'person' },
-  { value: 'zhang', label: '張三', type: 'person' },
-  { value: 'li', label: '李四', type: 'person' },
-  { value: 'wang', label: '王五', type: 'person' },
-  { value: 'zhao', label: '趙六', type: 'person' },
-  { value: 'qian', label: '錢七', type: 'person' },
+  { value: 'chen', label: 'António Silva', type: 'person' },
+  { value: 'joao', label: 'João Silva', type: 'person' },
+  { value: 'maria', label: 'Maria Santos', type: 'person' },
+  { value: 'pedro', label: 'Pedro Costa', type: 'person' },
+  { value: 'ana', label: 'Ana Ferreira', type: 'person' },
+  { value: 'carlos', label: 'Carlos Oliveira', type: 'person' },
   // 小組選項
   { value: 'group_legal_review', label: '法律審查小組', type: 'group' },
   { value: 'group_data_collection', label: '資料收集小組', type: 'group' },
@@ -284,7 +284,7 @@ const handleDetail = (record: any) => {
   selectedTask.value = {
     ...record,
     // 添加完整的模擬數據，避免顯示「未設定」
-    taskResponsible: record.taskResponsible || '陳大文',
+    taskResponsible: record.taskResponsible || 'António Silva',
     taskStartTime: record.taskStartTime || '2024-01-15 09:00:00',
     taskEndTime: record.taskEndTime || '2024-01-25 18:00:00',
     taskParticipants: record.taskParticipants || ['chen', 'zhang', 'group_legal_review'],

@@ -133,7 +133,7 @@ const migrationHistory = ref([
     endTime: '2024-01-20 10:15:00',
     filesProcessed: 125,
     totalSize: '2.5GB',
-    operator: '張三',
+    operator: 'João Silva',
   },
   {
     id: '2',
@@ -145,7 +145,7 @@ const migrationHistory = ref([
     endTime: '2024-01-19 14:45:00',
     filesProcessed: 89,
     totalSize: '1.8GB',
-    operator: '李四',
+    operator: 'Maria Santos',
   },
   {
     id: '3',
@@ -157,7 +157,7 @@ const migrationHistory = ref([
     endTime: '2024-01-18 16:05:00',
     filesProcessed: 15,
     totalSize: '0.3GB',
-    operator: '王五',
+    operator: 'Pedro Costa',
     error: '連接超時',
   },
 ]);

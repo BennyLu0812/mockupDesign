@@ -206,7 +206,7 @@ import type { TableColumnsType } from 'ant-design-vue';
 
 // 當前用戶信息
 const currentUser = reactive({
-  name: '陳大文',
+  name: 'António Silva',
   role: '項目負責人',
   department: '法務部',
   status: '在線',

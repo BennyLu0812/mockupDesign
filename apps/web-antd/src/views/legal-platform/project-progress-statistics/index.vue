@@ -76,7 +76,7 @@ const projectProgressData = ref([
     currentProgress: '專家意見收集中',
     processingStatus: '正常進行',
     deadlineNode: '2024-02-28',
-    teamLeader: '陳大文',
+    teamLeader: 'António Silva',
     riskLevel: 'low',
   },
   {
@@ -95,7 +95,7 @@ const projectProgressData = ref([
     currentProgress: '初步審查完成',
     processingStatus: '需要加速',
     deadlineNode: '2024-02-15',
-    teamLeader: '張三',
+    teamLeader: 'João Silva',
     riskLevel: 'medium',
   },
   {
@@ -114,7 +114,7 @@ const projectProgressData = ref([
     currentProgress: '已完成交付',
     processingStatus: '已完成',
     deadlineNode: '2024-01-25',
-    teamLeader: '李四',
+    teamLeader: 'Maria Santos',
     riskLevel: 'low',
   },
   {
@@ -133,7 +133,7 @@ const projectProgressData = ref([
     currentProgress: '資源準備中',
     processingStatus: '正常準備',
     deadlineNode: '2024-02-10',
-    teamLeader: '王五',
+    teamLeader: 'Pedro Costa',
     riskLevel: 'low',
   },
   {
@@ -152,7 +152,7 @@ const projectProgressData = ref([
     currentProgress: '中期評估完成',
     processingStatus: '正常進行',
     deadlineNode: '2024-02-20',
-    teamLeader: '趙六',
+    teamLeader: 'Ana Ferreira',
     riskLevel: 'medium',
   },
 ]);
