@@ -66,6 +66,19 @@
     "otherPersonnel": "Other Personnel",
     "notificationConfirmed": "Notification Confirmed",
     "notificationReplied": "Notification Replied",
-    "notificationForwarded": "Notification Forwarded"
+    "notificationForwarded": "Notification Forwarded",
+    "viewVersions": "View Versions",
+    "fileName": "File Name",
+    "lastModifiedTime": "Last Modified Time",
+    "lastModifiedBy": "Last Modified By",
+    "fileSize": "File Size",
+    "uploadFile": "Upload File",
+    "uploadFolder": "Upload Folder",
+    "newFolder": "New Folder",
+    "download": "Download",
+    "share": "Share",
+    "moveTo": "Move To",
+    "rename": "Rename",
+    "preview": "Preview"
   }
 }

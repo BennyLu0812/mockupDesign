@@ -66,6 +66,19 @@
     "otherPersonnel": "其他人員",
     "notificationConfirmed": "知悉已確認",
     "notificationReplied": "知悉已回覆",
-    "notificationForwarded": "知悉已轉發"
+    "notificationForwarded": "知悉已轉發",
+    "viewVersions": "查看版本",
+    "fileName": "檔案名稱",
+    "lastModifiedTime": "最後修改時間",
+    "lastModifiedBy": "最後修改人",
+    "fileSize": "檔案大小",
+    "uploadFile": "上傳檔案",
+    "uploadFolder": "上傳資料夾",
+    "newFolder": "新建資料夾",
+    "download": "下載",
+    "share": "分享",
+    "moveTo": "移動到",
+    "rename": "重新命名",
+    "preview": "預覽"
   }
 }

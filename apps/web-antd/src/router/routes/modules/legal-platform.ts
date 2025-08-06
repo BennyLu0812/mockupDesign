@@ -353,6 +353,15 @@ const routes: RouteRecordRaw[] = [
               title: $t('page.legalPlatform.fileManagerPage'),
             },
           },
+          {
+            name: 'DocumentEditor',
+            path: 'document-editor',
+            component: () => import('#/views/legal-platform/file-management/document-editor.vue'),
+            meta: {
+              icon: 'lucide:file-edit',
+              title: $t('page.legalPlatform.documentEditor'),
+            },
+          },
         ],
       },
       {

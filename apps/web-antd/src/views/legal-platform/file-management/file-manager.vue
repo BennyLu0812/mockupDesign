@@ -20,6 +20,8 @@ import {
   RadioGroup,
   Select,
   SelectOption,
+  Descriptions,
+  DescriptionsItem,
 } from 'ant-design-vue';
 
 // 文件/文件夾數據接口
@@ -126,45 +128,6 @@ const fileData = ref<FileItem[]>([
         ],
       },
     ],
-  },
-  {
-    id: '2',
-    name: '合同範本',
-    type: 'folder',
-    lastModified: '2024-01-14 13:45:00',
-    lastModifiedBy: 'João Silva',
-    tags: ['出街', '已公佈'],
-    children: [
-      {
-        id: '2-1',
-        name: '勞動合同範本.docx',
-        type: 'file',
-        size: '156 KB',
-        lastModified: '2024-01-13 10:30:00',
-        lastModifiedBy: 'Maria Santos',
-        parentId: '2',
-        tags: ['出街'],
-      },
-      {
-        id: '2-2',
-        name: '租賃合同範本.docx',
-        type: 'file',
-        size: '203 KB',
-        lastModified: '2024-01-12 15:15:00',
-        lastModifiedBy: 'Pedro Costa',
-        parentId: '2',
-        tags: ['不出街', '過度文件'],
-      },
-    ],
-  },
-  {
-    id: '3',
-    name: '項目文件',
-    type: 'file',
-    size: '8.9 MB',
-    lastModified: '2024-01-11 09:20:00',
-    lastModifiedBy: 'João Silva',
-    tags: ['已公佈'],
   },
 ]);
 
@@ -412,7 +375,143 @@ const handlePreview = (file: FileItem) => {
   message.info(`預覽文件: ${file.name}`);
 };
 
+// 版本歷史抽屜相關
+const versionDrawerVisible = ref(false);
+const currentFileVersions = ref(null);
 
+// 文件庫信息
+const libraryInfo = ref({
+  id: 1,
+  name: '法律條文資料庫',
+  description: '存放各類法律條文和相關文件',
+  type: '部門文件庫',
+  department: '法制研究及立法統籌廳',
+  owner: 'António Silva',
+  status: '啟用',
+  fileCount: 156,
+  folderCount: 12,
+  totalSize: '1.2 GB',
+  usedSize: '0.8 GB',
+  createTime: '2024-01-15 10:30:00',
+  updateTime: '2024-01-20 14:25:00',
+  tags: ['法律', '文件', '重要'],
+  customFields: [
+    {
+      name: 'priority',
+      displayName: '優先級',
+      value: '高',
+    },
+    {
+      name: 'category',
+      displayName: '分類',
+      value: '法律文件',
+    },
+  ],
+});
+
+// 查看版本
+const handleViewVersions = (file: FileItem) => {
+  // 模擬版本數據
+  currentFileVersions.value = {
+    id: file.id,
+    name: file.name,
+    type: file.type,
+    size: file.size,
+    lastModified: file.lastModified,
+    versions: [
+      {
+        id: '1',
+        version: '3.0',
+        name: file.name,
+        size: file.size,
+        uploadTime: file.lastModified,
+        uploader: 'António Silva',
+        isCurrent: true,
+        remark: '最新版本，修復了格式問題',
+        changes: '修正了文檔格式，更新了部分內容'
+      },
+      {
+        id: '2',
+        version: '2.1',
+        name: file.name,
+        size: '1.8MB',
+        uploadTime: '2024-01-15 14:30:00',
+        uploader: 'João Ferreira',
+        isCurrent: false,
+        remark: '修復了內容錯誤',
+        changes: '修正了第三章節的內容錯誤'
+      },
+      {
+        id: '3',
+        version: '2.0',
+        name: file.name,
+        size: '1.7MB',
+        uploadTime: '2024-01-10 09:15:00',
+        uploader: 'Ana Ferreira',
+        isCurrent: false,
+        remark: '重大更新',
+        changes: '重新組織了文檔結構，添加了新的章節'
+      },
+      {
+        id: '4',
+        version: '1.0',
+        name: file.name,
+        size: '1.5MB',
+        uploadTime: '2024-01-05 16:20:00',
+        uploader: 'António Silva',
+        isCurrent: false,
+        remark: '初始版本',
+        changes: '創建了文檔的初始版本'
+      }
+    ]
+  };
+  versionDrawerVisible.value = true;
+};
+
+// 關閉版本歷史抽屜
+const closeVersionDrawer = () => {
+  versionDrawerVisible.value = false;
+  currentFileVersions.value = null;
+};
+
+// 版本操作方法
+const handlePreviewVersion = (version) => {
+  message.info(`預覽版本 ${version.version}: ${version.name}`);
+};
+
+const handleViewVersion = (version) => {
+  message.info(`查看版本 ${version.version}: ${version.name}`);
+};
+
+const handleRestoreVersion = (version) => {
+  message.success(`已恢復到版本 ${version.version}`);
+  // 更新當前版本狀態
+  if (currentFileVersions.value) {
+    currentFileVersions.value.versions.forEach(v => {
+      v.isCurrent = v.id === version.id;
+    });
+  }
+};
+
+const handleDownloadVersion = (version) => {
+  message.success(`下載版本 ${version.version}: ${version.name}`);
+};
+
+// 獲取文件類型顏色
+const getFileTypeColor = (fileType: string) => {
+  const colorMap: Record<string, string> = {
+    folder: 'blue',
+    pdf: 'red',
+    doc: 'blue',
+    docx: 'blue',
+    xls: 'green',
+    xlsx: 'green',
+    ppt: 'orange',
+    pptx: 'orange',
+    txt: 'gray',
+  };
+  return colorMap[fileType] || 'default';
+};
 
 // 行選擇配置
 const rowSelection = {
@@ -426,6 +525,46 @@ const rowSelection = {
 
 <template>
   <Page>
+    <!-- 文件庫信息區域 -->
+    <Card title="文件庫信息" class="mb-4">
+      <div class="flex justify-between items-start">
+        <div class="flex-1">
+          <Descriptions :column="4" size="small">
+            <DescriptionsItem :label="$t('page.legalPlatform.fileLibraryName')">
+              <span class="font-medium text-lg">{{ libraryInfo.name }}</span>
+            </DescriptionsItem>
+            <DescriptionsItem :label="$t('page.legalPlatform.fileLibraryDepartment')">
+              {{ libraryInfo.department }}
+            </DescriptionsItem>
+            <DescriptionsItem :label="$t('page.legalPlatform.fileLibraryOwner')">
+              {{ libraryInfo.owner }}
+            </DescriptionsItem>
+            <DescriptionsItem :label="$t('page.legalPlatform.fileLibraryStatus')">
+              <Tag :color="libraryInfo.status === '啟用' ? 'success' : 'default'">
+                {{ libraryInfo.status }}
+              </Tag>
+            </DescriptionsItem>
+            <DescriptionsItem :label="$t('page.legalPlatform.createTime')">
+              {{ libraryInfo.createTime }}
+            </DescriptionsItem>
+            <DescriptionsItem label="描述">
+              {{ libraryInfo.description }}
+            </DescriptionsItem>
+            <DescriptionsItem label="標籤">
+              <div class="flex flex-wrap gap-1">
+                <Tag v-for="tag in libraryInfo.tags" :key="tag" color="blue">
+                  {{ tag }}
+                </Tag>
+              </div>
+            </DescriptionsItem>
+          </Descriptions>
+          
+
+        </div>
+      </div>
+    </Card>
+    
+    <!-- 文件管理區域 -->
     <Card>
       <!-- 頂部操作欄 -->
       <div class="mb-4">
@@ -618,11 +757,123 @@ const rowSelection = {
               >
                 {{ $t('page.legalPlatform.delete') }}
               </Button>
+              
+              <Dropdown v-if="record.type === 'file'">
+                <template #overlay>
+                  <Menu>
+                    <MenuItem 
+                      key="viewVersions"
+                      @click="handleViewVersions(record)"
+                    >
+                      {{ $t('page.legalPlatform.viewVersions') }}
+                    </MenuItem>
+                  </Menu>
+                </template>
+                <Button type="text" size="small">
+                  更多
+                  <span class="icon-[lucide--chevron-down] size-3 ml-1" />
+                </Button>
+              </Dropdown>
             </Space>
           </template>
         </template>
       </Table>
     </Card>
+
+    <!-- 版本歷史抽屜 -->
+    <Drawer
+      v-model:open="versionDrawerVisible"
+      :title="currentFileVersions ? `${currentFileVersions.name} - 版本歷史` : '版本歷史'"
+      :width="800"
+      placement="right"
+      @close="closeVersionDrawer"
+    >
+      <div v-if="currentFileVersions" class="version-drawer-content">
+        <!-- 文件信息 -->
+        <div class="file-info-section">
+          <h4>文件信息</h4>
+          <div class="file-info">
+            <div class="info-item">
+              <span class="label">文件名稱：</span>
+              <span class="value">{{ currentFileVersions.name }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">文件類型：</span>
+              <span class="value">{{ currentFileVersions.type === 'folder' ? '文件夾' : '文件' }}</span>
+            </div>
+            <div v-if="currentFileVersions.size" class="info-item">
+              <span class="label">當前大小：</span>
+              <span class="value">{{ currentFileVersions.size }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">最後修改：</span>
+              <span class="value">{{ currentFileVersions.lastModified }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 版本列表 -->
+        <div class="versions-section">
+          <h4>版本歷史</h4>
+          <div class="versions-list">
+            <div 
+              v-for="version in currentFileVersions.versions" 
+              :key="version.id"
+              class="version-item"
+              :class="{ 'current-version': version.isCurrent }"
+            >
+              <div class="version-header">
+                <div class="version-info">
+                  <div class="version-title">
+                    <span class="version-number">版本 {{ version.version }}</span>
+                    <Tag v-if="version.isCurrent" color="green">當前版本</Tag>
+                  </div>
+                  <div class="version-meta">
+                    <span class="upload-time">{{ version.uploadTime }}</span>
+                    <span class="uploader">由 {{ version.uploader }} 上傳</span>
+                    <span class="file-size">{{ version.size }}</span>
+                  </div>
+                </div>
+                <div class="version-actions">
+                  <Space>
+                    <Button 
+                      size="small" 
+                      @click="handlePreviewVersion(version)"
+                    >
+                      預覽
+                    </Button>
+                    <Button 
+                      size="small" 
+                      @click="handleViewVersion(version)"
+                    >
+                      查看
+                    </Button>
+                    <Button 
+                      size="small" 
+                      @click="handleDownloadVersion(version)"
+                    >
+                      下載
+                    </Button>
+                    <Button 
+                      v-if="!version.isCurrent"
+                      size="small" 
+                      type="primary"
+                      @click="handleRestoreVersion(version)"
+                    >
+                      恢復此版本
+                    </Button>
+                  </Space>
+                </div>
+              </div>
+              
+              <div v-if="version.remark" class="version-remark">
+                 <strong>備註：</strong>{{ version.remark }}
+               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Drawer>
 
     <!-- 分享抽屜 -->
     <Drawer
@@ -843,4 +1094,97 @@ const rowSelection = {
   border-top: 1px solid #f0f0f0;
   text-align: right;
 }
+
+/* 版本歷史抽屜樣式 */
+.version-drawer-content {
+  padding: 0;
+}
+
+.versions-section {
+  margin-bottom: 24px;
+}
+
+.versions-section h4 {
+  margin-bottom: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.versions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.version-item {
+  padding: 16px;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  background-color: #fafafa;
+  transition: all 0.3s ease;
+}
+
+.version-item:hover {
+  border-color: #d9d9d9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.version-item.current-version {
+  border-color: #52c41a;
+  background-color: #f6ffed;
+}
+
+.version-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.version-info {
+  flex: 1;
+}
+
+.version-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.version-number {
+  font-size: 16px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.version-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: #8c8c8c;
+}
+
+.version-meta span {
+  display: block;
+}
+
+.version-actions {
+  flex-shrink: 0;
+}
+
+.version-remark {
+   margin-bottom: 8px;
+   font-size: 14px;
+   line-height: 1.5;
+ }
+ 
+ .version-remark strong {
+   color: #262626;
+   margin-right: 8px;
+ }
+
+
 </style>

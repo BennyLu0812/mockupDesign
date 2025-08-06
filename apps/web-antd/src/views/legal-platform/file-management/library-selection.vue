@@ -68,10 +68,7 @@ const getLibraryIconClass = (iconName: string) => {
   <Page title="文件庫選擇">
     <div class="library-selection">
       <!-- 頁面標題 -->
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-semibold text-gray-800">
-          選擇文件庫類型
-        </h1>
+      <div class="flex justify-end items-center mb-6">
         <Button type="default" @click="router.back()">
           <span class="icon-[lucide--arrow-left] size-4 mr-1" />
           返回
@@ -126,7 +123,7 @@ const getLibraryIconClass = (iconName: string) => {
                 @click.stop="handleSelectLibraryType(libraryType)"
               >
                 <span class="icon-[lucide--plus] size-4 mr-1" />
-                選擇此類型
+                選擇此庫
               </Button>
             </div>
           </Card>

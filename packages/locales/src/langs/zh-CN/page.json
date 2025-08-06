@@ -82,6 +82,19 @@
     "inactive": "停用",
     "parentFolder": "父文件夾",
     "folderCreate": "新增文件夾",
-    "folderPermission": "權限管理"
+    "folderPermission": "權限管理",
+    "viewVersions": "查看版本",
+    "fileName": "文件名稱",
+    "lastModifiedTime": "最後修改時間",
+    "lastModifiedBy": "最後修改人",
+    "fileSize": "文件大小",
+    "uploadFile": "上傳文件",
+    "uploadFolder": "上傳文件夾",
+    "newFolder": "新建文件夾",
+    "download": "下載",
+    "share": "分享",
+    "moveTo": "移動到",
+    "rename": "重命名",
+    "preview": "預覽"
   }
 }

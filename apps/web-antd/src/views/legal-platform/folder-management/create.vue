@@ -36,7 +36,6 @@ const formData = reactive({
   folderName: '',
   folderDescription: '',
   parentFolder: undefined,
-  folderType: 'public',
   department: undefined,
   tags: [],
 });
@@ -47,20 +46,10 @@ const rules = {
     { required: true, message: '請輸入文件夾名稱', trigger: 'blur' },
     { min: 2, max: 50, message: '文件夾名稱長度在 2 到 50 個字符', trigger: 'blur' },
   ],
-  folderType: [
-    { required: true, message: '請選擇文件夾類型', trigger: 'change' },
-  ],
   department: [
     { required: true, message: '請選擇所屬部門', trigger: 'change' },
   ],
 };
-
-// 文件夾類型選項
-const folderTypeOptions = [
-  { label: $t('page.legalPlatform.publicFolder'), value: 'public' },
-  { label: $t('page.legalPlatform.privateFolder'), value: 'private' },
-  { label: $t('page.legalPlatform.sharedFolder'), value: 'shared' },
-];
 
 // 部門選項
 const departmentOptions = [
@@ -210,25 +199,6 @@ onMounted(() => {
               </FormItem>
             </Col>
             <Col :span="12">
-              <FormItem name="folderType" :label="$t('page.legalPlatform.folderType')">
-                <Select 
-                  v-model:value="formData.folderType" 
-                  :placeholder="$t('page.legalPlatform.folderType')"
-                >
-                  <SelectOption 
-                    v-for="option in folderTypeOptions" 
-                    :key="option.value" 
-                    :value="option.value"
-                  >
-                    {{ option.label }}
-                  </SelectOption>
-                </Select>
-              </FormItem>
-            </Col>
-          </Row>
-
-          <Row :gutter="16">
-            <Col :span="12">
               <FormItem name="department" :label="$t('page.legalPlatform.department')">
                 <Select 
                   v-model:value="formData.department" 
@@ -244,6 +214,9 @@ onMounted(() => {
                 </Select>
               </FormItem>
             </Col>
+          </Row>
+
+          <Row :gutter="16">
             <Col :span="12">
               <FormItem name="parentFolder" :label="$t('page.legalPlatform.parentFolder')">
                 <TreeSelect
