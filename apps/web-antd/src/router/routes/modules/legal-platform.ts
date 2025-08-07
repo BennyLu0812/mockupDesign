@@ -373,76 +373,12 @@ const routes: RouteRecordRaw[] = [
         },
         children: [
           {
-            name: 'FolderList',
-            path: 'list',
-            component: () => import('#/views/legal-platform/folder-management/list.vue'),
-            meta: {
-              icon: 'lucide:folder-open',
-              title: $t('page.legalPlatform.folderList'),
-            },
-          },
-          {
             name: 'FolderCreate',
             path: 'create',
             component: () => import('#/views/legal-platform/folder-management/create.vue'),
             meta: {
               icon: 'lucide:plus',
               title: $t('page.legalPlatform.folderCreate'),
-            },
-          },
-          {
-            name: 'FolderDetail',
-            path: 'detail/:id',
-            component: () => import('#/views/legal-platform/folder-management/detail.vue'),
-            meta: {
-              icon: 'lucide:eye',
-              title: $t('page.legalPlatform.folderDetail'),
-              hideInMenu: true,
-            },
-          },
-          {
-            name: 'FolderPermission',
-            path: 'permission',
-            component: () => import('#/views/legal-platform/folder-management/permission.vue'),
-            meta: {
-              icon: 'lucide:shield',
-              title: $t('page.legalPlatform.folderPermission'),
-            },
-          },
-          {
-            name: 'FolderTags',
-            path: 'tags',
-            component: () => import('#/views/legal-platform/folder-management/tags.vue'),
-            meta: {
-              icon: 'lucide:tags',
-              title: $t('page.legalPlatform.folderTags'),
-            },
-          },
-          {
-            name: 'FolderHistory',
-            path: 'history',
-            component: () => import('#/views/legal-platform/folder-management/history.vue'),
-            meta: {
-              icon: 'lucide:history',
-              title: $t('page.legalPlatform.folderHistory'),
-            },
-          },
-          {
-            name: 'FolderUsers',
-            path: 'users',
-            component: () => import('#/views/legal-platform/folder-management/users.vue'),
-            meta: {
-              icon: 'lucide:users',
-              title: $t('page.legalPlatform.folderUsers'),
-            },
-          },
-          {
-            name: 'FolderMigration',
-            path: 'migration',
-            component: () => import('#/views/legal-platform/folder-management/migration.vue'),
-            meta: {
-              icon: 'lucide:move',
-              title: $t('page.legalPlatform.folderMigration'),
             },
           },
         ],
@@ -491,7 +427,72 @@ const routes: RouteRecordRaw[] = [
               icon: 'lucide:folder',
               title: '文件夾管理',
             },
-            children: [],
+            children: [
+              {
+                name: 'TrashFolderList',
+                path: 'list',
+                component: () => import('#/views/legal-platform/folder-management/list.vue'),
+                meta: {
+                  icon: 'lucide:folder-open',
+                  title: $t('page.legalPlatform.folderList'),
+                },
+              },
+              {
+                name: 'TrashFolderDetail',
+                path: 'detail/:id',
+                component: () => import('#/views/legal-platform/folder-management/detail.vue'),
+                meta: {
+                  icon: 'lucide:eye',
+                  title: $t('page.legalPlatform.folderDetail'),
+                  hideInMenu: true,
+                },
+              },
+              {
+                name: 'TrashFolderPermission',
+                path: 'permission',
+                component: () => import('#/views/legal-platform/folder-management/permission.vue'),
+                meta: {
+                  icon: 'lucide:shield',
+                  title: $t('page.legalPlatform.folderPermission'),
+                },
+              },
+              {
+                name: 'TrashFolderTags',
+                path: 'tags',
+                component: () => import('#/views/legal-platform/folder-management/tags.vue'),
+                meta: {
+                  icon: 'lucide:tags',
+                  title: $t('page.legalPlatform.folderTags'),
+                },
+              },
+              {
+                name: 'TrashFolderHistory',
+                path: 'history',
+                component: () => import('#/views/legal-platform/folder-management/history.vue'),
+                meta: {
+                  icon: 'lucide:history',
+                  title: $t('page.legalPlatform.folderHistory'),
+                },
+              },
+              {
+                name: 'TrashFolderUsers',
+                path: 'users',
+                component: () => import('#/views/legal-platform/folder-management/users.vue'),
+                meta: {
+                  icon: 'lucide:users',
+                  title: $t('page.legalPlatform.folderUsers'),
+                },
+              },
+              {
+                name: 'TrashFolderMigration',
+                path: 'migration',
+                component: () => import('#/views/legal-platform/folder-management/migration.vue'),
+                meta: {
+                  icon: 'lucide:move',
+                  title: $t('page.legalPlatform.folderMigration'),
+                },
+              },
+            ],
           },
           {
             name: 'TrashFileManagement',
