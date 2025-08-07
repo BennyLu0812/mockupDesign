@@ -456,76 +456,12 @@ const routes: RouteRecordRaw[] = [
         },
         children: [
           {
-            name: 'DocumentList',
-            path: 'list',
-            component: () => import('#/views/legal-platform/document-management/list.vue'),
-            meta: {
-              icon: 'lucide:file-text',
-              title: $t('page.legalPlatform.documentList'),
-            },
-          },
-          {
-            name: 'DocumentUpload',
-            path: 'upload',
-            component: () => import('#/views/legal-platform/document-management/upload.vue'),
-            meta: {
-              icon: 'lucide:upload',
-              title: $t('page.legalPlatform.documentUpload'),
-            },
-          },
-          {
-            name: 'DocumentDetail',
-            path: 'detail/:id',
-            component: () => import('#/views/legal-platform/document-management/detail.vue'),
-            meta: {
-              icon: 'lucide:eye',
-              title: $t('page.legalPlatform.documentDetail'),
-              hideInMenu: true,
-            },
-          },
-          {
             name: 'DocumentRecycleBin',
             path: 'recycle-bin',
             component: () => import('#/views/legal-platform/document-management/recycle.vue'),
             meta: {
               icon: 'lucide:trash-2',
               title: $t('page.legalPlatform.documentRecycleBin'),
-            },
-          },
-          {
-            name: 'DocumentAttributes',
-            path: 'attributes',
-            component: () => import('#/views/legal-platform/document-management/attributes.vue'),
-            meta: {
-              icon: 'lucide:tag',
-              title: $t('page.legalPlatform.documentAttributes'),
-            },
-          },
-          {
-            name: 'DocumentHistory',
-            path: 'history',
-            component: () => import('#/views/legal-platform/document-management/history.vue'),
-            meta: {
-              icon: 'lucide:history',
-              title: $t('page.legalPlatform.documentHistory'),
-            },
-          },
-          {
-            name: 'DocumentBatchOperation',
-            path: 'batch-operation',
-            component: () => import('#/views/legal-platform/document-management/batch.vue'),
-            meta: {
-              icon: 'lucide:layers',
-              title: $t('page.legalPlatform.documentBatchOperation'),
-            },
-          },
-          {
-            name: 'DocumentPermission',
-            path: 'permission',
-            component: () => import('#/views/legal-platform/document-management/permissions.vue'),
-            meta: {
-              icon: 'lucide:shield',
-              title: $t('page.legalPlatform.documentPermission'),
             },
           },
         ],
@@ -564,7 +500,72 @@ const routes: RouteRecordRaw[] = [
               icon: 'lucide:file-text',
               title: '文件管理',
             },
-            children: [],
+            children: [
+              {
+                name: 'TrashDocumentList',
+                path: 'list',
+                component: () => import('#/views/legal-platform/document-management/list.vue'),
+                meta: {
+                  icon: 'lucide:file-text',
+                  title: $t('page.legalPlatform.documentList'),
+                },
+              },
+              {
+                name: 'TrashDocumentUpload',
+                path: 'upload',
+                component: () => import('#/views/legal-platform/document-management/upload.vue'),
+                meta: {
+                  icon: 'lucide:upload',
+                  title: $t('page.legalPlatform.documentUpload'),
+                },
+              },
+              {
+                name: 'TrashDocumentDetail',
+                path: 'detail/:id',
+                component: () => import('#/views/legal-platform/document-management/detail.vue'),
+                meta: {
+                  icon: 'lucide:eye',
+                  title: $t('page.legalPlatform.documentDetail'),
+                  hideInMenu: true,
+                },
+              },
+              {
+                name: 'TrashDocumentAttributes',
+                path: 'attributes',
+                component: () => import('#/views/legal-platform/document-management/attributes.vue'),
+                meta: {
+                  icon: 'lucide:tag',
+                  title: $t('page.legalPlatform.documentAttributes'),
+                },
+              },
+              {
+                name: 'TrashDocumentHistory',
+                path: 'history',
+                component: () => import('#/views/legal-platform/document-management/history.vue'),
+                meta: {
+                  icon: 'lucide:history',
+                  title: $t('page.legalPlatform.documentHistory'),
+                },
+              },
+              {
+                name: 'TrashDocumentBatchOperation',
+                path: 'batch-operation',
+                component: () => import('#/views/legal-platform/document-management/batch.vue'),
+                meta: {
+                  icon: 'lucide:layers',
+                  title: $t('page.legalPlatform.documentBatchOperation'),
+                },
+              },
+              {
+                name: 'TrashDocumentPermission',
+                path: 'permission',
+                component: () => import('#/views/legal-platform/document-management/permissions.vue'),
+                meta: {
+                  icon: 'lucide:shield',
+                  title: $t('page.legalPlatform.documentPermission'),
+                },
+              },
+            ],
           },
           {
             name: 'TrashConfidentialityManagement',
