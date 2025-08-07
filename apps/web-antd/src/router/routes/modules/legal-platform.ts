@@ -530,31 +530,69 @@ const routes: RouteRecordRaw[] = [
           },
         ],
       },
+
       {
-        name: 'ConfidentialityManagement',
-        path: 'confidentiality-management',
+        name: 'TrashBin',
+        path: 'trash-bin',
         meta: {
-          icon: 'lucide:lock',
-          title: $t('page.legalPlatform.confidentialityManagement'),
+          icon: 'lucide:trash-2',
+          title: '垃圾桶',
         },
         children: [
           {
-            name: 'ConfidentialityRule',
-            path: 'rule',
-            component: () => import('#/views/legal-platform/confidentiality-management/rule.vue'),
+            name: 'TrashFileLibraryManagement',
+            path: 'file-library-management',
             meta: {
-              icon: 'lucide:gavel',
-              title: $t('page.legalPlatform.confidentialityRule'),
+              icon: 'lucide:database',
+              title: '文件庫管理',
             },
+            children: [],
           },
           {
-            name: 'ConfidentialityFile',
-            path: 'file',
-            component: () => import('#/views/legal-platform/confidentiality-management/file.vue'),
+            name: 'TrashFolderManagement',
+            path: 'folder-management',
             meta: {
-              icon: 'lucide:file-lock-2',
-              title: $t('page.legalPlatform.confidentialityFile'),
+              icon: 'lucide:folder',
+              title: '文件夾管理',
             },
+            children: [],
+          },
+          {
+            name: 'TrashFileManagement',
+            path: 'file-management',
+            meta: {
+              icon: 'lucide:file-text',
+              title: '文件管理',
+            },
+            children: [],
+          },
+          {
+            name: 'TrashConfidentialityManagement',
+            path: 'confidentiality-management',
+            meta: {
+              icon: 'lucide:lock',
+              title: '保密設置',
+            },
+            children: [
+              {
+                name: 'TrashConfidentialityRule',
+                path: 'rule',
+                component: () => import('#/views/legal-platform/confidentiality-management/rule.vue'),
+                meta: {
+                  icon: 'lucide:gavel',
+                  title: '保密規則',
+                },
+              },
+              {
+                name: 'TrashConfidentialityFile',
+                path: 'file',
+                component: () => import('#/views/legal-platform/confidentiality-management/file.vue'),
+                meta: {
+                  icon: 'lucide:file-lock-2',
+                  title: '保密文件',
+                },
+              },
+            ],
           },
         ],
       },
