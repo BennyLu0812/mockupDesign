@@ -335,33 +335,8 @@ const routes: RouteRecordRaw[] = [
               hideInMenu: true,
             },
           },
-          {
-            name: 'FileLibraryConfig',
-            path: 'library-config',
-            component: () => import('#/views/legal-platform/file-management/library-config.vue'),
-            meta: {
-              icon: 'lucide:settings',
-              title: $t('page.legalPlatform.fileLibraryConfig'),
-            },
-          },
-          {
-            name: 'FileManager',
-            path: 'file-manager',
-            component: () => import('#/views/legal-platform/file-management/file-manager.vue'),
-            meta: {
-              icon: 'lucide:folder-tree',
-              title: $t('page.legalPlatform.fileManagerPage'),
-            },
-          },
-          {
-            name: 'DocumentEditor',
-            path: 'document-editor',
-            component: () => import('#/views/legal-platform/file-management/document-editor.vue'),
-            meta: {
-              icon: 'lucide:file-edit',
-              title: $t('page.legalPlatform.documentEditor'),
-            },
-          },
+
+
         ],
       },
       {
@@ -400,6 +375,24 @@ const routes: RouteRecordRaw[] = [
               title: $t('page.legalPlatform.documentRecycleBin'),
             },
           },
+          {
+            name: 'FileManager',
+            path: 'file-manager',
+            component: () => import('#/views/legal-platform/file-management/file-manager.vue'),
+            meta: {
+              icon: 'lucide:folder-tree',
+              title: $t('page.legalPlatform.fileManagerPage'),
+            },
+          },
+          {
+            name: 'DocumentEditor',
+            path: 'document-editor',
+            component: () => import('#/views/legal-platform/file-management/document-editor.vue'),
+            meta: {
+              icon: 'lucide:file-edit',
+              title: $t('page.legalPlatform.documentEditor'),
+            },
+          },
         ],
       },
 
@@ -418,7 +411,17 @@ const routes: RouteRecordRaw[] = [
               icon: 'lucide:database',
               title: '文件庫管理',
             },
-            children: [],
+            children: [
+              {
+                name: 'TrashFileLibraryConfig',
+                path: 'library-config',
+                component: () => import('#/views/legal-platform/file-management/library-config.vue'),
+                meta: {
+                  icon: 'lucide:settings',
+                  title: $t('page.legalPlatform.fileLibraryConfig'),
+                },
+              },
+            ],
           },
           {
             name: 'TrashFolderManagement',
